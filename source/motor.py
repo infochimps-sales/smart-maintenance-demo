@@ -1,13 +1,15 @@
-#vehicle.py
+#motor.py
 
 import numpy as np
 import pandas as pd
+from sklearn.svm import SVC
 
-class Vehicle:
+class Motor:
 
-    def __init__(self, id, time, fail_prob_rate, time_previous_maint, maint_interval, 
+    def __init__(self, id, time, maint_type, fail_prob_rate, time_previous_maint, maint_interval, 
             maint_duration, repair_duration):
         self.id = id
+        self.maint_type = maint_type
         self.fail_prob_rate = fail_prob_rate
         self.time_previous_maint = time_previous_maint
         self.maint_interval = maint_interval
@@ -16,10 +18,11 @@ class Vehicle:
         self.time_when_repaired = None
         self.time_next_maint = self.time_previous_maint + self.maint_interval
         self.state = 'operating'
+        self.clf = SVC(kernel='poly', degree=3)
         
     def status(self, time):
-        f_prob = self.fail_prob(time)
-        return {'time':time, 'id':self.id, 'state':self.state, 'fail_prob':f_prob}
+        return {'time':time, 'id':self.id, 'state':self.state, 'maint_type': self.maint_type,
+            'fail_prob':self.fail_prob(time)}
 
     def fail_prob(self, time):
         return self.fail_prob_rate*(time - self.time_previous_maint)
