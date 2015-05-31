@@ -6,67 +6,112 @@ from sklearn.svm import SVC
 
 class Motor:
 
-    def __init__(self, id, maint_type, fail_prob_rate, maint_interval, maint_duration, 
+    def __init__(self, idnum, Time, maint_type, fail_prob_rate, maint_interval, maint_duration, 
             repair_duration):
-        self.id = id
+        self.id = idnum
         self.maint_type = maint_type
         self.fail_prob_rate = fail_prob_rate
-        self.time_previous_maint = 0.0
         self.maint_interval = maint_interval
         self.maint_duration = maint_duration
         self.repair_duration = repair_duration
-        self.time_when_repaired = None
-        self.just_failed = False
-        self.time_next_maint = self.time_previous_maint + self.maint_interval
+        self.Time_previous_maint = Time
+        self.Time_next_maint = Time + self.maint_interval
+        self.Time_to_next_repair = None
         self.state = 'operating'
         self.clf = SVC(kernel='poly', degree=3)
-        self.events = pd.DataFrame()
+        self.train_clf = False
+        self.Time_to_fail = None
+        self.ttf_threshold = -1
+        self.events = []
         
-    def status(self, time):
-        return {'time':time, 'id':self.id, 'state':self.state, 'maint_type': self.maint_type,
-            'time_previous_maint':self.time_previous_maint, 'fail_prob':self.fail_prob(time),
-            'just_failed':self.just_failed}
+    def status(self, Time):
+        Time_to_previous_maint = None
+        failprob = None
+        if (self.state == 'operating'):
+            Time_to_previous_maint = Time - self.Time_previous_maint
+            failprob = self.fail_prob(Time)
+        return {'Time':Time, 'id':self.id, 'state':self.state, 'maint_type': self.maint_type,
+            'Time_previous_maint':self.Time_previous_maint, 
+            'Time_next_maint':self.Time_next_maint, 
+            'Time_to_previous_maint':Time_to_previous_maint, 
+            'Time_to_next_repair':self.Time_to_next_repair,
+            'fail_prob':failprob }
 
-    def fail_prob(self, time):
-        return self.fail_prob_rate*(time - self.time_previous_maint)
+    def fail_prob(self, Time):
+        return self.fail_prob_rate*(Time - self.Time_previous_maint)
 
-    def failure_check(self, time):
-        failprob = self.fail_prob(time)
+    def operate(self, Time):
+        if ((self.state == 'repair') or (self.state == 'maintenance')): 
+            #check if motor repairs/maintenance is done
+            if (Time >= self.Time_resume_operating):
+                self.state = 'operating'
+                self.Time_previous_maint = Time - 1
+                self.Time_next_maint = Time + self.maint_interval
+                self.Time_to_next_repair = None
+        if (self.state == 'operating'): 
+            self.maint_check(Time)
+            self.repair_check(Time)
+        self.events.append(self.status(Time))       
+
+    def maint_check(self, Time):
+        if (self.maint_type == 'run-to-fail'):
+            #no maintenance
+            pass
+        if (self.maint_type == 'scheduled'):
+            if (Time >= self.Time_next_maint):
+                #scheduled maintenance is triggered
+                self.maintenance(Time)
+        #if (self.maint_type == 'predictive'):
+        #    #go to maintenance if the predicted Time-to-fail is soon enough
+        #    ttf_predicted = self.predict_ttf(Time)
+        #    if (ttf_predicted <= self.ttf_threshold):
+        #        print '    ttf_predicted = ', ttf_predicted
+        #        self.maintenance(Time)
+            return
+
+    def repair_check(self, Time):
+        failprob = self.fail_prob(Time)
         rn = np.random.uniform(low=0.0, high=1.0, size=None)
         if (rn < failprob):
-            self.state = 'failed'
-            self.just_failed = True
-            self.time_when_repaired = time + self.repair_duration
+            #the motor has just failed and goes to maintenance
+            self.state = 'repair'
+            self.Time_next_maint = None
+            self.Time_previous_maint = None
+            self.Time_resume_operating = Time + self.repair_duration
+            print Time, rn, failprob
+            for j in np.arange(len(self.events) -1, -1, -1):
+                if (self.events[j]['state'] == 'operating'):
+                    self.events[j]['Time_to_next_repair'] = Time - self.events[j]['Time']
+                else:
+                    break
 
-    def maint_check(self, time):
-        if ((self.state == 'maintenance') and (time >= self.time_when_repaired)):
-            #motor transitions from maintenance to operating
-            self.state = 'operating'
-            self.time_previous_maint = time 
-            self.time_next_maint = time + self.maint_interval
-        if (self.maint_type == 'scheduled'):
-            #scheduled maintenance is begun
-            if ((self.state == 'operating') and (time >= self.time_next_maint)):
-                self.state = 'maintenance'
-                self.time_when_repaired = time + self.maint_duration
-        if (self.maint_type == 'run-to-fail'):
-            pass
- 
-    def repair_check(self, time):
-        if (time >= self.time_when_repaired):
-            self.state = 'operating'
-            self.time_previous_maint = time 
-            self.time_next_maint = time + self.maint_interval
-        else:
-            self.just_failed = False
+    def maintenance(self, Time):
+        self.state = 'maintenance'
+        self.Time_next_maint = None  
+        self.Time_previous_maintenance = None
+        self.Time_resume_operating = Time + self.maint_duration
 
-    def operate(self, time):
-        if (self.state == 'failed'): 
-            self.repair_check(time) 
-        if (self.state == 'operating'): 
-            self.failure_check(time)
-            self.maint_check(time)
-        if (self.state == 'maintenance'): 
-            self.maint_check(time)
-        dict = self.status(time)
-        self.events = self.events.append([dict], ignore_index=True)
+    def train_clf(self):
+        events_df = pd.DataFrame(m.events)
+        events_rtf = events_df[(events_df.state == 'operating') & 
+            (events_df.maint_type == 'run-to-fail')].sort(columns='fail_prob')
+#        x = events.fail_prob.values
+#        x = x.reshape((len(x),1))
+#        x_avg = x.mean()
+#        x_std = x.std() 
+#        x_train = (x - x_avg)/x_std
+#        y_train = events.Time_to_fail.values.astype(int)
+#        self.clf.fit(x_train, y_train)
+        
+        events_rtf=np.array([np.array(d.values()) for d in m.events])
+        events_rtf =  [dict  for dict in m.events if (dict['maint_type'] == 'run-to-fail') ]
+
+    def predict_ttf(self, Time):
+        if (self.train_clr == True):
+
+            
+
+
+#        x = self.fail_prob(Time)
+#        x_norm = (x - x_avg)/x_std
+        return self.clf.predict(x_norm)[0]
