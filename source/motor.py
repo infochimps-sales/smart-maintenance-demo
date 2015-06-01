@@ -17,6 +17,7 @@ class Motor:
         self.Time_previous_maint = Time
         self.Time_next_maint = Time - (self.maint_interval + 1) 
         self.Time_to_next_repair = None
+        self.fail_prob = None
         self.maintenance(Time)
         self.state = 'operating'
         self.clf = SVC(kernel='poly', degree=3)
@@ -26,17 +27,12 @@ class Motor:
         
     def status(self, Time):
         Time_to_previous_maint = None
-        failprob = None
         if (self.state == 'operating'):
             Time_to_previous_maint = Time - self.Time_previous_maint
-            failprob = self.fail_prob(Time)
         return { 'Time':Time, 'id':self.id, 'state':self.state, 'maint_type': self.maint_type,
-            'fail_prob':failprob, 'Time_previous_maint':self.Time_previous_maint, 
+            'fail_prob':self.fail_prob, 'Time_previous_maint':self.Time_previous_maint, 
             'Time_next_maint':self.Time_next_maint, 'Time_to_previous_maint':Time_to_previous_maint, 
             'Time_to_next_repair':self.Time_to_next_repair }
-
-    def fail_prob(self, Time):
-        return self.fail_prob_rate*(Time - self.Time_previous_maint)
 
     def operate(self, Time):
         if ((self.state == 'repair') or (self.state == 'maintenance')): 
@@ -67,9 +63,9 @@ class Motor:
                 self.maintenance(Time)
 
     def repair_check(self, Time):
-        failprob = self.fail_prob(Time)
+        self.fail_prob = self.fail_prob_rate*(Time - self.Time_previous_maint)
         rn = np.random.uniform(low=0.0, high=1.0, size=None)
-        if (rn < failprob):
+        if (rn < self.fail_prob):
             #the motor has just failed and goes to maintenance
             self.state = 'repair'
             self.Time_next_maint = None

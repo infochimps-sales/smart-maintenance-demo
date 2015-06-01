@@ -11,9 +11,9 @@ fail_prob_rate = 0.01
 maint_interval = 6
 maint_duration = 2
 smart_maint_threshold = 1
-repair_duration = 5
-N_motors = 5
-run_interval = 50
+repair_duration = 3
+N_motors = 100
+run_interval = 500
 ran_num_seed = 13
 
 #set random number seed
@@ -44,20 +44,26 @@ for t in np.arange(Time_init, Time_final):
         m.operate(t)
 
 #train
-events_df = pd.DataFrame()
-for m in motors: events_df = events_df.append(pd.DataFrame(m.events))
 pd.set_option('display.expand_frame_repr', False)
-events_op = events_df[(events_df.state == 'operating') & 
-    (events_df.maint_type == 'scheduled')]
-    
-        x = events_rtf.fail_prob.values
-        x = x.reshape((len(x),1))
-        self.x_avg = x.mean()
-        self.x_std = x.std() 
-        x_train = (x - self.x_avg)/self.x_std
-        y_train = events_rtf.Time_to_next_repair.values.astype(int)
-        clf = SVC(kernel='poly', degree=3)
-        self.clf.fit(x_train, y_train)
+events_df = pd.DataFrame()
+for m in motors:
+    events_df = events_df.append(pd.DataFrame(m.events))
+events_sched = events_df[(events_df.maint_type == 'scheduled')]
+events_sched.loc[events_sched.state == 'maintenance', 'state'] = 'operating'
+events_sub = events_sched[['id', 'fail_prob', 'state']]
+N = events_sub.groupby(['fail_prob', 'state']).count().unstack()['id'].reset_index()
+N[N.isnull()] = 0.5
+N['percent_failed'] = np.round(N.repair*100.0/(N.operating + N.repair))
+print N
+x = N.fail_prob.values
+x = x.reshape((len(x), 1))
+x_avg = x.mean()
+x_std = x.std() 
+x_train = (x - x_avg)/x_std
+y_train = N.percent_failed.values.astype(int)
+clf = SVC(kernel='poly', degree=3)
+clf.fit(x_train, y_train)
+
 
 
 #store events in this file
@@ -67,6 +73,14 @@ for m in motors:
         file.write(str(d) + '\n')
         print d
 file.close()
+
+
+
+#
+import sys
+sys.exit()
+
+
 
 #
 import sys
