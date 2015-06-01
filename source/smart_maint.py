@@ -4,16 +4,16 @@
 import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
-from motor import Motor
+from motor import *
 
 #parameters
-fail_prob_rate = 0.01
-maint_interval = 6
+fail_prob_rate = 0.020
+maint_interval = 8
 maint_duration = 2
-smart_maint_threshold = 1
+percent_failed_threshold = 22
 repair_duration = 3
 N_motors = 100
-run_interval = 250
+run_interval = 100
 ran_num_seed = 13
 
 #set random number seed
@@ -25,7 +25,7 @@ maint_type = 'run-to-fail'
 #create motors
 Time_init = 0
 motors = [ Motor(motor_id + 100, Time_init, maint_type, fail_prob_rate, maint_interval, 
-    maint_duration, smart_maint_threshold, repair_duration) for motor_id in np.arange(N_motors) ]
+    maint_duration, percent_failed_threshold, repair_duration) for motor_id in np.arange(N_motors) ]
 
 #run motor using run-to-fail maintenance 
 print motors[0].maint_type
@@ -43,57 +43,50 @@ for t in np.arange(Time_init, Time_final):
     for m in motors:
         m.operate(t)
 
-#train
+#train SVM classifier
+svm_plot = True
+x_train, x_train_norm, y_train, weight = train_svm(motors, svm_plot)
+
+#run motor using predictive maintenance
+for m in motors: m.maint_type = 'predictive'
+print motors[0].maint_type
+Time_init = Time_final
+Time_final += 2*run_interval
+for t in np.arange(Time_init, Time_final):
+    for m in motors:
+        m.operate(t)
+
+#get operating stats
 pd.set_option('display.expand_frame_repr', False)
-events_df = pd.DataFrame()
-for m in motors: events_df = events_df.append(pd.DataFrame(m.events))
-events_sched = events_df[(events_df.maint_type == 'scheduled')]
-events_sched = events_df[(events_df.maint_type == 'scheduled') &
-    (events_df.state != 'maintenance')]
-events_sub = events_sched[['id', 'fail_prob', 'state']]
-N = events_sub.groupby(['fail_prob', 'state']).count().unstack()['id'].reset_index()
-N[N.isnull()] = 0.0
-N['total'] = N.operating + N.repair
-N['percent_failed'] = np.round(N.repair*100.0/N.total)
-N['weight'] = N.total**(0.5)
+N = motor_stats(motors)
 print N
-x = N.fail_prob.values
-x_train = x.reshape((len(x), 1))
-x_train_avg = x_train.mean()
-x_train_std = x_train.std()
-x_train_norm = (x_train - x_train_avg)/x_train_std
-y_train = N.percent_failed.values.astype(int)
-weight = N.weight.values
-clf = SVC(kernel='rbf')
-clf.fit(x_train_norm, y_train, sample_weight=weight)
-print 'accuracy of SVM training = ', clf.score(x_train_norm, y_train)
 
-#plot time-to-fail vs fail-probability
-import matplotlib.pyplot as plt
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-ax.set_xlabel('fail_prob')
-ax.set_ylabel('% failures')
-ax.set_title('SVM prediction')
-#ax.plot(x_train, y_train, marker='o', linestyle='None', markersize=5)
-ax.scatter(x_train, y_train, s=weight)
-y_train_predicted = clf.predict(x_train_norm)
-ax.plot(x_train, y_train_predicted)
-plt.show(block=False)
-
-#store events in this file
+#store all events in this file, for debugging
 file = open('sm_events.json','w')
 for m in motors:
     for d in m.events:
         file.write(str(d) + '\n')
-        #print d
-        
 file.close()
 
-
-##repair stats
-#pd.set_option('display.expand_frame_repr', False)
-#events_df = pd.DataFrame(m.events)
-#r = events_df.groupby(['maint_type', 'state']).count().Time
-#print r
-
+#money
+events_df = get_events(motors)
+operating_earnings = 1000.0
+maintenance_cost = 0.25*operating_earnings
+repair_cost = 3.0*operating_earnings
+events_df['earnings'] = 0.0
+events_df.loc[events_df.state == 'operating', 'earnings'] = operating_earnings
+events_df['expenses'] = 0.0
+events_df.loc[events_df.state == 'maintenance', 'expenses'] = -maintenance_cost
+events_df.loc[events_df.state == 'repair', 'expenses'] = -repair_cost
+money = events_df.groupby('Time').sum()[['earnings', 'expenses']]
+money['revenue'] = money.earnings + money.expenses
+money['cumulative_earnings'] = money.earnings.cumsum()
+money['cumulative_expenses'] = money.expenses.cumsum()
+money['cumulative_revenue'] = money.revenue.cumsum()
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_xlabel('Time')
+ax.set_ylabel('$')
+ax.set_title('cumulative revenue')
+ax.plot(money.index, money.cumulative_revenue)
+plt.show(block=False)

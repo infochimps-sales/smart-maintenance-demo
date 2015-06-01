@@ -2,12 +2,73 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.svm import SVC
+
+#this helper function trains the SVM classifier that predicts the % likelihood that
+#a motor will fail
+def train_svm(motors, svm_plot):
+    events_df = get_events(motors)
+    events_sched = events_df[(events_df.maint_type == 'scheduled')]
+    events_sched = events_df[(events_df.maint_type == 'scheduled') &
+        (events_df.state != 'maintenance')]
+    events_sub = events_sched[['id', 'fail_prob', 'state']]
+    N = events_sub.groupby(['fail_prob', 'state']).count().unstack()['id'].reset_index()
+    N[N.isnull()] = 0.0
+    N['total'] = N.operating + N.repair
+    N['percent_failed'] = np.round(N.repair*100.0/N.total)
+    N['weight'] = N.total**(0.5)
+    x = N.fail_prob.values
+    x_train = x.reshape((len(x), 1))
+    x_train_avg = x_train.mean()
+    x_train_std = x_train.std()
+    x_train_norm = (x_train - x_train_avg)/x_train_std
+    y_train = N.percent_failed.values.astype(int)
+    weight = N.weight.values
+    weight = weight/weight.min()
+    clf = SVC(kernel='rbf')
+    clf.fit(x_train_norm, y_train, sample_weight=weight)
+    print 'accuracy of SVM training = ', clf.score(x_train_norm, y_train)
+    for m in motors:
+        #theres gotta be a better way than this...
+        m.clf = clf
+        m.x_avg = x_train_avg
+        m.x_std = x_train_std
+
+    #plot trained/predicted %failed versus fail_prob
+    if (svm_plot == True):
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlabel('fail_prob')
+        ax.set_ylabel('% failures')
+        ax.set_title('SVM prediction')
+        ax.scatter(x_train, y_train, s=weight)
+        y_train_predicted = clf.predict(x_train_norm)
+        ax.plot(x_train, y_train_predicted)
+        plt.show(block=False)
+        
+    return x_train, x_train_norm, y_train, weight
+
+def get_events(motors):
+    events_df = pd.DataFrame()
+    for m in motors:
+        events_df = events_df.append(pd.DataFrame(m.events))
+    return events_df
+    
+def motor_stats(motors):
+    events_df = get_events(motors)
+    N = events_df.groupby(['maint_type', 'state']).count().unstack()['id'].reset_index()
+    N.loc[N.maintenance.isnull(), 'maintenance'] = 0
+    N['total'] = N.maintenance + N.operating + N.repair
+    N['percent_maint'] = N.maintenance*1.0/N.total
+    N['percent_operating'] = N.operating*1.0/N.total
+    N['percent_repair'] = N.repair*1.0/N.total
+    return N.sort('percent_repair', ascending=False)
 
 class Motor:
 
     def __init__(self, idnum, Time, maint_type, fail_prob_rate, maint_interval, maint_duration, 
-            smart_maint_threshold, repair_duration):
+            percent_failed_threshold, repair_duration):
         self.id = idnum
         self.maint_type = maint_type
         self.fail_prob_rate = fail_prob_rate
@@ -20,9 +81,11 @@ class Motor:
         self.fail_prob = None
         self.maintenance(Time)
         self.state = 'operating'
-        self.clf = SVC(kernel='poly', degree=3)
+        self.clf = None
+        self.x_avg = None
+        self.x_std = None
         self.Time_to_fail = None
-        self.smart_maint_threshold = smart_maint_threshold
+        self.percent_failed_threshold = percent_failed_threshold
         self.events = []
         
     def status(self, Time):
@@ -59,11 +122,11 @@ class Motor:
                 self.maintenance(Time)
         if (self.maint_type == 'predictive'):
             #go to maintenance if the predicted Time-to-fail is soon enough
-            if (self.time_to_fail_predicted(Time) <= self.smart_maint_threshold):
+            if (self.percent_failed_predicted(Time) > self.percent_failed_threshold):
                 self.maintenance(Time)
 
     def repair_check(self, Time):
-        self.fail_prob = self.fail_prob_rate*(Time - self.Time_previous_maint)
+        self.fail_prob = self.get_fail_prob(Time)
         rn = np.random.uniform(low=0.0, high=1.0, size=None)
         if (rn < self.fail_prob):
             #the motor has just failed and goes to maintenance
@@ -77,27 +140,16 @@ class Motor:
                 else:
                     break
 
+    def get_fail_prob(self, Time):
+        return self.fail_prob_rate*(Time - self.Time_previous_maint)
+
     def maintenance(self, Time):
         self.state = 'maintenance'
         self.Time_next_maint = None  
         self.Time_previous_maintenance = None
         self.Time_resume_operating = Time + self.maint_duration
 
-    def train(self):
-        events_df = pd.DataFrame(self.events)
-        events_rtf = events_df[(events_df.state == 'operating') & 
-            (events_df.maint_type == 'run-to-fail') & 
-            (events_df.Time_to_next_repair > 0)].sort(columns='fail_prob')
-        x = events_rtf.fail_prob.values
-        x = x.reshape((len(x),1))
-        self.x_avg = x.mean()
-        self.x_std = x.std() 
-        x_train = (x - self.x_avg)/self.x_std
-        y_train = events_rtf.Time_to_next_repair.values.astype(int)
-        self.clf.fit(x_train, y_train)
-        return x, y_train
-
-    def time_to_fail_predicted(self, Time):
-        x = self.fail_prob(Time)
+    def percent_failed_predicted(self, Time):
+        x = self.get_fail_prob(Time)
         x_norm = (x - self.x_avg)/self.x_std
         return self.clf.predict(x_norm)[0]
