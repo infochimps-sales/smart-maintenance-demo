@@ -50,7 +50,7 @@ def train_svm(motors, svm_plot):
         ax.scatter(x_train, y_train, s=weight)
         y_train_predicted = clf.predict(x_train_norm)
         ax.plot(x_train, y_train_predicted)
-        plotfile = 'percent_fail.png'
+        plotfile = '../data/percent_fail.png'
         fig.savefig(plotfile)
         plt.close(fig) 
         print 'completed plot ' + plotfile

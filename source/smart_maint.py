@@ -6,6 +6,12 @@ import pandas as pd
 from sklearn.svm import SVC
 from motor import *
 
+#matplotlib imports, to export plots to png images
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from pylab import *
+
 #parameters
 fail_prob_rate = 0.020
 maint_interval = 8
@@ -68,7 +74,7 @@ for m in motors:
         file.write(str(d) + '\n')
 file.close()
 
-#money
+#plot revenue over time
 events_df = get_events(motors)
 operating_earnings = 1000.0
 maintenance_cost = 0.25*operating_earnings
@@ -89,4 +95,7 @@ ax.set_xlabel('Time')
 ax.set_ylabel('$')
 ax.set_title('cumulative revenue')
 ax.plot(money.index, money.cumulative_revenue)
-plt.show(block=False)
+plotfile = '../data/revenue.png'
+fig.savefig(plotfile)
+plt.close(fig) 
+print 'completed plot ' + plotfile
