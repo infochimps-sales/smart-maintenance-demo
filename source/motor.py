@@ -2,8 +2,13 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.svm import SVC
+
+#matplotlib imports, to export plots to png images
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from pylab import *
 
 #this helper function trains the SVM classifier that predicts the % likelihood that
 #a motor will fail
@@ -45,7 +50,10 @@ def train_svm(motors, svm_plot):
         ax.scatter(x_train, y_train, s=weight)
         y_train_predicted = clf.predict(x_train_norm)
         ax.plot(x_train, y_train_predicted)
-        plt.show(block=False)
+        plotfile = 'percent_fail.png'
+        fig.savefig(plotfile)
+        plt.close(fig) 
+        print 'completed plot ' + plotfile
         
     return x_train, x_train_norm, y_train, weight
 
