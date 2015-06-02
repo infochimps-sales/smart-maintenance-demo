@@ -89,8 +89,8 @@ money['revenue'] = money.earnings - money.expenses
 money['cumulative_earnings'] = money.earnings.cumsum()
 money['cumulative_expenses'] = money.expenses.cumsum()
 money['cumulative_revenue'] = money.revenue.cumsum()
-matplotlib.rcParams.update({'font.size': 16})
-fig = plt.figure(figsize=(16.0, 10.0))
+matplotlib.rcParams.update({'font.size': 14})
+fig = plt.figure(figsize=(12.0, 8.0))
 fig.subplots_adjust(hspace=0.35)
 
 ax = fig.add_subplot(2, 1, 1)
