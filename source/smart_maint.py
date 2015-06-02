@@ -19,7 +19,7 @@ maint_duration = 2
 percent_failed_threshold = 22
 repair_duration = 3
 N_motors = 100
-run_interval = 100
+run_interval = 150#100
 ran_num_seed = 13
 
 #set random number seed
@@ -78,23 +78,54 @@ file.close()
 events_df = get_events(motors)
 operating_earnings = 1000.0
 maintenance_cost = 0.25*operating_earnings
-repair_cost = 3.0*operating_earnings
+repair_cost = 3.2*operating_earnings
 events_df['earnings'] = 0.0
 events_df.loc[events_df.state == 'operating', 'earnings'] = operating_earnings
 events_df['expenses'] = 0.0
-events_df.loc[events_df.state == 'maintenance', 'expenses'] = -maintenance_cost
-events_df.loc[events_df.state == 'repair', 'expenses'] = -repair_cost
+events_df.loc[events_df.state == 'maintenance', 'expenses'] = maintenance_cost
+events_df.loc[events_df.state == 'repair', 'expenses'] = repair_cost
 money = events_df.groupby('Time').sum()[['earnings', 'expenses']]
-money['revenue'] = money.earnings + money.expenses
+money['revenue'] = money.earnings - money.expenses
 money['cumulative_earnings'] = money.earnings.cumsum()
 money['cumulative_expenses'] = money.expenses.cumsum()
 money['cumulative_revenue'] = money.revenue.cumsum()
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+matplotlib.rcParams.update({'font.size': 16})
+fig = plt.figure(figsize=(16.0, 10.0))
+fig.subplots_adjust(hspace=0.35)
+
+ax = fig.add_subplot(2, 1, 1)
 ax.set_xlabel('Time')
-ax.set_ylabel('$')
-ax.set_title('cumulative revenue')
-ax.plot(money.index, money.cumulative_revenue)
+ax.set_ylabel('Earnings    (M$)')
+ax.set_title('Cumulative Earnings & Expenses')
+ax.plot(money.index, money.cumulative_earnings/1.e6, color='blue', linewidth=4, alpha=0.7)
+ax.plot(money.index, money.cumulative_expenses/1.e6, color='red', linewidth=4, alpha=0.7)
+ax.add_patch(matplotlib.patches.Rectangle(
+    (0,0), run_interval, ax.get_ylim()[1], color='lightsalmon', alpha=0.35))
+ax.annotate('run-to-fail', xy=(12, 38), verticalalignment='top')                
+ax.add_patch(matplotlib.patches.Rectangle(
+    (run_interval, 0), run_interval, ax.get_ylim()[1], color='gold', alpha=0.35))
+ax.annotate('scheduled\nmaintenance', xy=(162, 38), verticalalignment='top')                
+ax.add_patch(matplotlib.patches.Rectangle(
+    (2*run_interval, 0), 2*run_interval, ax.get_ylim()[1], color='darkseagreen', alpha=0.35))
+ax.annotate('predictive\nmaintenance', xy=(312, 38), verticalalignment='top')                
+ax.grid(True, linestyle=':', alpha=0.3)
+
+ax = fig.add_subplot(2, 1, 2)
+ax.set_xlabel('Time')
+ax.set_ylabel('Revenue    (M$)')
+ax.set_title('Cumulative Revenue')
+ax.plot(money.index, money.cumulative_revenue/1.e6, color='green', linewidth=4)
+ax.add_patch(matplotlib.patches.Rectangle(
+    (0,ax.get_ylim()[0]), run_interval, ax.get_ylim()[1]- ax.get_ylim()[0], 
+    color='lightsalmon', alpha=0.35))
+ax.add_patch(matplotlib.patches.Rectangle(
+    (run_interval, ax.get_ylim()[0]), run_interval, ax.get_ylim()[1] - ax.get_ylim()[0], 
+    color='gold', alpha=0.35))
+ax.add_patch(matplotlib.patches.Rectangle(
+    (2*run_interval, ax.get_ylim()[0]), 2*run_interval, ax.get_ylim()[1] - ax.get_ylim()[0], 
+    color='darkseagreen', alpha=0.35))
+ax.grid(True, linestyle=':', alpha=0.3)
+
 plotfile = '../data/revenue.png'
 fig.savefig(plotfile)
 plt.close(fig) 

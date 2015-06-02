@@ -42,7 +42,7 @@ def train_svm(motors, svm_plot):
 
     #plot trained/predicted %failed versus fail_prob
     if (svm_plot == True):
-        fig = plt.figure()
+        fig = plt.figure(figsize=(8.0, 6.0))
         ax = fig.add_subplot(1, 1, 1)
         ax.set_xlabel('fail_prob')
         ax.set_ylabel('% failures')
@@ -50,6 +50,8 @@ def train_svm(motors, svm_plot):
         ax.scatter(x_train, y_train, s=weight)
         y_train_predicted = clf.predict(x_train_norm)
         ax.plot(x_train, y_train_predicted)
+        ax.patch.set_facecolor('lightyellow')
+        ax.grid(True, linestyle=':', alpha=0.3)
         plotfile = '../data/percent_fail.png'
         fig.savefig(plotfile)
         plt.close(fig) 
