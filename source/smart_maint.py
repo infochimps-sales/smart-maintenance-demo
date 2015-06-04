@@ -12,16 +12,38 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pylab import *
 
-#parameters
-fail_prob_rate = 0.020
-maint_interval = 8
-maint_duration = 2
-percent_failed_threshold = 22
-repair_duration = 3
+#motor parameters
 N_motors = 100
-run_interval = 150#100
 ran_num_seed = 13
 
+#maintenance/repair parameters
+maint_interval = 8
+maint_duration = 2
+repair_duration = 3
+percent_failed_threshold = 22
+
+#motor failure parameters
+fail_prob_rate = 0.020
+Temp_0 =115.0
+delta_Temp = 20.0
+Pressure_0 = 50.0
+delta_Pressure = 20.0
+
+#runtime parameters
+run_interval = 150
+Time_start_runtofail = 0
+Time_stop_runtofail = Time_start_runtofail + run_interval
+Time_start_sched_maint = Time_stop_runtofail
+Time_stop_sched_maint = Time_start_sched_maint + run_interval
+Time_start_pred_maint = Time_stop_sched_maint
+Time_stop_pred_maint = Time_start_pred_maint + 2*run_interval
+
+#economic parameters
+operating_earnings = 1000.0
+maintenance_cost = 0.25*operating_earnings
+repair_cost = 3.2*operating_earnings
+
+##########################################################################################
 #set random number seed
 np.random.seed(ran_num_seed)
 
@@ -29,56 +51,59 @@ np.random.seed(ran_num_seed)
 maint_type = 'run-to-fail'
 
 #create motors
-Time_init = 0
-motors = [ Motor(motor_id + 100, Time_init, maint_type, fail_prob_rate, maint_interval, 
-    maint_duration, percent_failed_threshold, repair_duration) for motor_id in np.arange(N_motors) ]
+motors = [ 
+    Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, Temp_0,
+        delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
+        percent_failed_threshold, repair_duration) 
+    for motor_id in np.arange(N_motors) ]
 
 #run motor using run-to-fail maintenance 
 print motors[0].maint_type
-Time_final = Time_init + run_interval
-for t in np.arange(Time_init, Time_final):
+for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors:
         m.operate(t)
 
 #run motor using scheduled maintenance
 for m in motors: m.maint_type = 'scheduled'
 print motors[0].maint_type
-Time_init = Time_final
-Time_final += run_interval
-for t in np.arange(Time_init, Time_final):
+for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     for m in motors:
         m.operate(t)
-
-#train SVM classifier
-svm_plot = True
-x_train, x_train_norm, y_train, weight = train_svm(motors, svm_plot)
 
 #run motor using predictive maintenance
 for m in motors: m.maint_type = 'predictive'
 print motors[0].maint_type
-Time_init = Time_final
-Time_final += 2*run_interval
-for t in np.arange(Time_init, Time_final):
+prediction_axes = ['Pressure', 'Temp', 'Time_to_previous_maint']
+
+#store all events in this file, for debugging
+file = open('../data/sm_events.json','w')
+for m in motors:
+    for d in m.events:
+        file.write(str(d) + '\n')
+file.close()
+#
+import sys
+sys.exit()
+#
+train_svm(motors, prediction_axes, repair_duration)
+for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors:
         m.operate(t)
+
+#store all events in this file, for debugging
+file = open('../data/sm_events.json','w')
+for m in motors:
+    for d in m.events:
+        file.write(str(d) + '\n')
+file.close()
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
 N = motor_stats(motors)
 print N
 
-#store all events in this file, for debugging
-file = open('sm_events.json','w')
-for m in motors:
-    for d in m.events:
-        file.write(str(d) + '\n')
-file.close()
-
 #plot revenue over time
 events_df = get_events(motors)
-operating_earnings = 1000.0
-maintenance_cost = 0.25*operating_earnings
-repair_cost = 3.2*operating_earnings
 events_df['earnings'] = 0.0
 events_df.loc[events_df.state == 'operating', 'earnings'] = operating_earnings
 events_df['expenses'] = 0.0
