@@ -3,8 +3,8 @@
 #imports
 import numpy as np
 import pandas as pd
-from sklearn.svm import SVC
 from motor import *
+from helper_functions import *
 
 #matplotlib imports, to export plots to png images
 import matplotlib
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #motor parameters
-N_motors = 100
+N_motors = 10#0
 ran_num_seed = 13
 
 #maintenance/repair parameters
@@ -73,19 +73,9 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
 #run motor using predictive maintenance
 for m in motors: m.maint_type = 'predictive'
 print motors[0].maint_type
-prediction_axes = ['Pressure', 'Temp', 'Time_to_previous_maint']
-
-#store all events in this file, for debugging
-file = open('../data/sm_events.json','w')
-for m in motors:
-    for d in m.events:
-        file.write(str(d) + '\n')
-file.close()
-#
-import sys
-sys.exit()
-#
-train_svm(motors, prediction_axes, repair_duration)
+training_axes = ['Pressure', 'Temp']
+prediction_axis = 'Time_since_repair'
+x_train, y_train = train_svm(motors, training_axes, prediction_axis)
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors:
         m.operate(t)
