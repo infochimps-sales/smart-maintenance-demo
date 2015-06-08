@@ -97,39 +97,55 @@ T_axis = np.arange(50.0, 151.0, 0.5)
 P_axis = np.arange(0.0, 101.0)
 x, y = np.meshgrid(T_axis, P_axis)
 z = np.zeros((len(P_axis), len(T_axis)))
-id = 0
-motor_plot = Motor(id, Time_start_runtofail, maint_type, fail_prob_rate, Temp_0,
-        delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
-        repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
+import copy
+m = copy.deepcopy(motors[0])
 for p_idx in np.arange(len(P_axis)):
     for t_idx in np.arange(len(T_axis)):
-        motor_plot.Temp = T_axis[t_idx]
-        motor_plot.Pressure = P_axis[p_idx]
-        z[p_idx, t_idx] = motor_plot.fail_factor()
+        m.Temp = T_axis[t_idx]
+        m.Pressure = P_axis[p_idx]
+        z[p_idx, t_idx] = m.fail_factor()
 fig = plt.figure(figsize=(7.5, 6.5))
 ax = fig.add_subplot(1, 1, 1)
 ax.set_title('Motor Failure Probability, Relative')
 ax.set_xlabel('Temperature')
 ax.set_ylabel('Pressure')
-cf = ax.contourf(x, y, z, 256, cmap='jet')
+Ncolors = 256
+cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
+ax.plot(xy_train.Temp, xy_train.Pressure, marker='o', markersize=3, color='white', 
+    linestyle='none', alpha=0.25)
 plt.colorbar(cf)
 plotfile = 'data/fail_factor.png'
 fig.savefig(plotfile)
 plt.close(fig) 
 print 'completed plot ' + plotfile
 
-
-
-#ax.set_xlim(x.min()-0.5, x.max()+0.5)
-#ax.scatter(x, y)
-#ax.patch.set_facecolor('lightyellow')
-#ax.grid(True, linestyle=':', alpha=0.3)
-#plotfile = 'data/time_to_fail.png'
-#fig.savefig(plotfile)
-#plt.close(fig) 
-#print 'completed plot ' + plotfile
-
-#plot decision surface
+#contour predicted_time_to_fail(Temp, Pressure):
+events = get_events(motors)
+T_axis = np.arange(50.0, 151.0, 0.5)
+P_axis = np.arange(0.0, 101.0)
+x, y = np.meshgrid(T_axis, P_axis)
+z = np.zeros((len(P_axis), len(T_axis)))
+id = 0
+import copy
+m = copy.deepcopy(motors[0])
+for p_idx in np.arange(len(P_axis)):
+    for t_idx in np.arange(len(T_axis)):
+        m.Temp = T_axis[t_idx]
+        m.Pressure = P_axis[p_idx]
+        z[p_idx, t_idx] = m.predicted_time_to_fail()
+fig = plt.figure(figsize=(7.5, 6.5))
+ax = fig.add_subplot(1, 1, 1)
+ax.set_title('Predicted Time to Fail')
+ax.set_xlabel('Temperature')
+ax.set_ylabel('Pressure')
+contour_vals = np.unique(z)
+contour_vals = np.append(contour_vals, contour_vals.max() + 1) - 0.5
+cf = ax.contourf(x, y, z, contour_vals, cmap='afmhot')
+plt.colorbar(cf, ticks=np.unique(z))
+plotfile = 'data/predicted_time_to_fail.png'
+fig.savefig(plotfile)
+plt.close(fig) 
+print 'completed plot ' + plotfile
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
