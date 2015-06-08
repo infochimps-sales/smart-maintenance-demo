@@ -4,7 +4,9 @@ by Joe Hahn,
 joe.hahn@infochimps.com,
 20 May 2015
 
-This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop.
+This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop,
+this demo uses python's scikit-learn machine-learning algorithm to perform predictive
+maintenance on 200 simulated motors
 
 ###To install:
 
@@ -43,6 +45,11 @@ This is the Github repository for the master branch of the Smart Maintenance Dem
 6 browse the *.png images stored in http://cdh-foyer.platform.infochimps:12321
     
 
+###To do:
+
+1 have the motor data land in Impala (rather than residing in memory), and then use
+  data from Impala query to train the SVM predictor
+  
 
 ###Notes (in-progress) on parallelizing this using spark
 
