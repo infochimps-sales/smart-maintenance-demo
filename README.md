@@ -32,10 +32,19 @@ This is the Github repository for the master branch of the Smart Maintenance Dem
     ~/anaconda/bin/python smart_maint.py
 
 
-5 view output
+5 install screen & restart webserver
+
+    sudo yum install screen
+    screen -S webserver -X quit
+    screen -S webserver -d -m sh -c "cd ~/smart-maintenance-demo/source/data;
+        ~/anaconda/bin/python -m SimpleHTTPServer 12321"
 
 
-###Notes (in-progress) on paralelizing this using spark
+6 browse the *.png images stored in ßhttp://cdh-foyer.platform.infochimps:12321
+    
+
+
+###Notes (in-progress) on parallelizing this using spark
 
 1 spark/ipython:
 
