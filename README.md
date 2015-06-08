@@ -40,7 +40,7 @@ This is the Github repository for the master branch of the Smart Maintenance Dem
         ~/anaconda/bin/python -m SimpleHTTPServer 12321"
 
 
-6 browse the *.png images stored in ßhttp://cdh-foyer.platform.infochimps:12321
+6 browse the *.png images stored in http://cdh-foyer.platform.infochimps:12321
     
 
 
