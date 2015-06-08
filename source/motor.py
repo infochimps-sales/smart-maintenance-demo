@@ -107,8 +107,8 @@ class Motor:
 
     def get_Temp_Pressure(self):
         #this should instead return a dict(training_axes)
-        self.Temp = np.round(np.random.uniform(low=50.0, high=150.0))
-        self.Pressure = np.round(np.random.uniform(low=0.0, high=100.0))
+        self.Temp = np.random.uniform(low=50.0, high=150.0)
+        self.Pressure = np.random.uniform(low=0.0, high=100.0)
 
     def maintenance(self, Time):
         self.state = 'maintenance'
