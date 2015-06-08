@@ -8,17 +8,37 @@ This is the Github repository for the master branch of the Smart Maintenance Dem
 
 ###To install:
 
+1 ssh into the platform's hadoop foyer node:
 
-1 to install:
+     ssh -A joehahn@52.8.44.194
+     ssh -A cdh-foyer
+     
 
-    ssh -D 12345 -A engineco@54.67.52.75 -q
-    ssh -A cdh-foyer
-    git pull 
-
-
-2 install Anaconda python, which also provides nearly all other python libraries used here:
+2 install Anaconda python, which provides a painless way to install nearly all of the python
+  libraries to be used here
 
     wget http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh 
     bash Anaconda-2.1.0-Linux-x86_64.sh (and accept all defaults)
-    
+
+
+3 clone the smart maintenance demo
+
+    git clone git@github.com:infochimps-sales/smart-maintenance-demo.git
+    cd smart-maintenance-demo/source
+
+
+4 execute the demo
+
+    ~/anaconda/bin/python smart_maint.py
+
+
+5 view output
+
+
+###Notes (in-progress) on paralelizing this using spark
+
+1 spark/ipython:
+
+	PYSPARK_DRIVER_PYTHON=~/anaconda/bin/ipython /usr/bin/pyspark
+	
 
