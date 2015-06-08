@@ -108,7 +108,7 @@ for p_idx in np.arange(len(P_axis)):
         z[p_idx, t_idx] = motor_plot.fail_factor()
 fig = plt.figure(figsize=(7.5, 6.5))
 ax = fig.add_subplot(1, 1, 1)
-ax.set_title('Fail Factor')
+ax.set_title('Motor Failure Probability, Relative')
 ax.set_xlabel('Temperature')
 ax.set_ylabel('Pressure')
 cf = ax.contourf(x, y, z, 256, cmap='jet')
@@ -155,8 +155,10 @@ ax = fig.add_subplot(2, 1, 1)
 ax.set_xlabel('Time')
 ax.set_ylabel('Earnings    (M$)')
 ax.set_title('Cumulative Earnings & Expenses')
-ax.plot(money.index, money.cumulative_earnings/1.e6, color='blue', linewidth=4, alpha=0.7)
-ax.plot(money.index, money.cumulative_expenses/1.e6, color='red', linewidth=4, alpha=0.7)
+ax.plot(money.index, money.cumulative_earnings/1.e6, color='blue', linewidth=4, 
+    alpha=0.7, label='earnings')
+ax.plot(money.index, money.cumulative_expenses/1.e6, color='red', linewidth=4, 
+    alpha=0.7, label='expenses')
 ax.add_patch(matplotlib.patches.Rectangle(
     (0,0), run_interval, ax.get_ylim()[1], color='lightsalmon', alpha=0.35))
 ax.annotate('run-to-fail', xy=(19, 52), verticalalignment='top')                
@@ -167,13 +169,14 @@ ax.add_patch(matplotlib.patches.Rectangle(
     (2*run_interval, 0), 4*run_interval, ax.get_ylim()[1], color='darkseagreen', alpha=0.35))
 ax.annotate('predictive\nmaintenance', xy=(419, 52), verticalalignment='top')                
 ax.grid(True, linestyle=':', alpha=0.3)
+ax.legend(loc='lower right', fontsize='small')
 
 ax = fig.add_subplot(2, 1, 2)
 ax.set_xlabel('Time')
 ax.set_ylabel('Revenue    (M$)')
 ax.set_title('Cumulative Revenue')
 ax.plot(money.index, money.cumulative_revenue/1.e6, color='green', linewidth=4)
-ax.plot(money.index, money.index*0, color='gray', linewidth=2, linestyle='.-')
+ax.plot(money.index, money.index*0, color='purple', linewidth=2, linestyle='--', alpha=0.5)
 ax.add_patch(matplotlib.patches.Rectangle(
     (0,ax.get_ylim()[0]), run_interval, ax.get_ylim()[1]- ax.get_ylim()[0], 
     color='lightsalmon', alpha=0.35))
