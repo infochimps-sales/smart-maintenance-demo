@@ -144,13 +144,13 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
         alpha=0.7, label='expenses')
     ax.add_patch(matplotlib.patches.Rectangle(
         (0,0), run_interval, ax.get_ylim()[1], color='lightsalmon', alpha=0.35))
-    ax.annotate('run-to-fail', xy=(19, 52), verticalalignment='top')                
+    ax.annotate('run-to-fail', xy=(19, 111), verticalalignment='top')                
     ax.add_patch(matplotlib.patches.Rectangle(
         (run_interval, 0), run_interval, ax.get_ylim()[1], color='gold', alpha=0.35))
-    ax.annotate('scheduled\nmaintenance', xy=(219, 52), verticalalignment='top')                
+    ax.annotate('scheduled\nmaintenance', xy=(219, 111), verticalalignment='top')                
     ax.add_patch(matplotlib.patches.Rectangle(
         (2*run_interval, 0), 4*run_interval, ax.get_ylim()[1], color='darkseagreen', alpha=0.35))
-    ax.annotate('predictive\nmaintenance', xy=(419, 52), verticalalignment='top')                
+    ax.annotate('predictive\nmaintenance', xy=(419, 111), verticalalignment='top')                
     ax.grid(True, linestyle=':', alpha=0.3)
     ax.legend(loc='lower right', fontsize='small')
     #
