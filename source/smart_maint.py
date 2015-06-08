@@ -91,43 +91,43 @@ for m in motors:
         file.write(str(d) + '\n')
 file.close()
 
-#plot fail_factor(Pressure, Temp):
+#contour fail_factor(Temp, Pressure):
 events = get_events(motors)
-x = events.Temp.values
-y = events.Pressure.values
-clr = events.fail_factor.values
+T_axis = np.arange(50.0, 151.0, 0.5)
+P_axis = np.arange(0.0, 101.0)
+x, y = np.meshgrid(T_axis, P_axis)
+z = np.zeros((len(P_axis), len(T_axis)))
+id = 0
+motor_plot = Motor(id, Time_start_runtofail, maint_type, fail_prob_rate, Temp_0,
+        delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
+        repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
+for p_idx in np.arange(len(P_axis)):
+    for t_idx in np.arange(len(T_axis)):
+        motor_plot.Temp = T_axis[t_idx]
+        motor_plot.Pressure = P_axis[p_idx]
+        z[p_idx, t_idx] = motor_plot.fail_factor()
 fig = plt.figure(figsize=(7.5, 6.5))
 ax = fig.add_subplot(1, 1, 1)
-ax.set_title('fail-factor')
+ax.set_title('Fail Factor')
 ax.set_xlabel('Temperature')
 ax.set_ylabel('Pressure')
-scat = ax.scatter(x, y, c=np.sqrt(clr), linewidths=0, s=30.0, cmap='jet')
-ax.patch.set_facecolor('lightyellow')
-ax.grid(True, linestyle=':', alpha=0.3)
-plt.colorbar(scat)
+cf = ax.contourf(x, y, z, 256, cmap='jet')
+plt.colorbar(cf)
 plotfile = 'data/fail_factor.png'
 fig.savefig(plotfile)
 plt.close(fig) 
 print 'completed plot ' + plotfile
 
-#plot predicted ttf vs fail_factor:
-df = events[events.predicted_ttf.notnull()]
-x = df.fail_factor.values
-y = df.predicted_ttf.values
-clr = events.fail_factor.values
-fig = plt.figure(figsize=(7.5, 6.5))
-ax = fig.add_subplot(1, 1, 1)
-ax.set_title('Predicted Time-to-Fail vs fail-factor')
-ax.set_xlabel('fail-factor')
-ax.set_ylabel('Predicted Time to Fail')
-ax.set_xlim(x.min()-0.5, x.max()+0.5)
-ax.scatter(x, y)
-ax.patch.set_facecolor('lightyellow')
-ax.grid(True, linestyle=':', alpha=0.3)
-plotfile = 'data/time_to_fail.png'
-fig.savefig(plotfile)
-plt.close(fig) 
-print 'completed plot ' + plotfile
+
+
+#ax.set_xlim(x.min()-0.5, x.max()+0.5)
+#ax.scatter(x, y)
+#ax.patch.set_facecolor('lightyellow')
+#ax.grid(True, linestyle=':', alpha=0.3)
+#plotfile = 'data/time_to_fail.png'
+#fig.savefig(plotfile)
+#plt.close(fig) 
+#print 'completed plot ' + plotfile
 
 #plot decision surface
 
@@ -159,13 +159,13 @@ ax.plot(money.index, money.cumulative_earnings/1.e6, color='blue', linewidth=4, 
 ax.plot(money.index, money.cumulative_expenses/1.e6, color='red', linewidth=4, alpha=0.7)
 ax.add_patch(matplotlib.patches.Rectangle(
     (0,0), run_interval, ax.get_ylim()[1], color='lightsalmon', alpha=0.35))
-ax.annotate('run-to-fail', xy=(17, 52), verticalalignment='top')                
+ax.annotate('run-to-fail', xy=(19, 52), verticalalignment='top')                
 ax.add_patch(matplotlib.patches.Rectangle(
     (run_interval, 0), run_interval, ax.get_ylim()[1], color='gold', alpha=0.35))
-ax.annotate('scheduled\nmaintenance', xy=(217, 52), verticalalignment='top')                
+ax.annotate('scheduled\nmaintenance', xy=(219, 52), verticalalignment='top')                
 ax.add_patch(matplotlib.patches.Rectangle(
     (2*run_interval, 0), 4*run_interval, ax.get_ylim()[1], color='darkseagreen', alpha=0.35))
-ax.annotate('predictive\nmaintenance', xy=(417, 52), verticalalignment='top')                
+ax.annotate('predictive\nmaintenance', xy=(419, 52), verticalalignment='top')                
 ax.grid(True, linestyle=':', alpha=0.3)
 
 ax = fig.add_subplot(2, 1, 2)
@@ -173,6 +173,7 @@ ax.set_xlabel('Time')
 ax.set_ylabel('Revenue    (M$)')
 ax.set_title('Cumulative Revenue')
 ax.plot(money.index, money.cumulative_revenue/1.e6, color='green', linewidth=4)
+ax.plot(money.index, money.index*0, color='gray', linewidth=2, linestyle='.-')
 ax.add_patch(matplotlib.patches.Rectangle(
     (0,ax.get_ylim()[0]), run_interval, ax.get_ylim()[1]- ax.get_ylim()[0], 
     color='lightsalmon', alpha=0.35))
