@@ -80,7 +80,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     for m in motors:
         m.operate(t)
 
-#run motor using predictive maintenance
+#run motor using predictive maintenance 
 xy_train = train_svm(motors, training_axes, prediction_axis)
 for m in motors: m.maint_type = 'predictive'
 print 'maintenance mode:', motors[0].maint_type
