@@ -1,4 +1,4 @@
-#smart_maint.py
+#sm_spark.py
 
 #imports
 import numpy as np
@@ -11,6 +11,10 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pylab import *
+
+#for spark
+from pyspark import SparkContext
+sc = SparkContext(appName='Smart Maintenance')
 
 #motor parameters
 N_motors = 200
@@ -73,37 +77,6 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors:
         m.operate(t)
 
-#run motor using scheduled maintenance
-for m in motors: m.maint_type = 'scheduled'
-print 'maintenance mode:', motors[0].maint_type
-for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
-    for m in motors:
-        m.operate(t)
-
-#run motor using predictive maintenance
-xy_train = train_svm(motors, training_axes, prediction_axis)
-for m in motors: m.maint_type = 'predictive'
-print 'maintenance mode:', motors[0].maint_type
-for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
-    for m in motors:
-        m.operate(t)
-
-#get operating stats
-pd.set_option('display.expand_frame_repr', False)
-N = motor_stats(motors)
-print N
-
-#store all events in this file, for debugging
-file = open('data/sm_events.json','w')
-for m in motors:
-    for d in m.events:
-        file.write(str(d) + '\n')
-file.close()
-
-#plot results
-plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+#
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
-
-
-
 
