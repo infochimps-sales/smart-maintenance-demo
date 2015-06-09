@@ -12,6 +12,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pylab import *
 
+#spark
+from pyspark import SparkContext
+sc = SparkContext(appName='Smart Maintenance')
+
 #motor parameters
 N_motors = 200
 ran_num_seed = 1
