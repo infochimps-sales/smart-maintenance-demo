@@ -4,10 +4,11 @@ by Joe Hahn,
 joe.hahn@infochimps.com,
 20 May 2015
 
-This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop,
+This is the Github repository for the v1.0 branch of the Smart Maintenance Demo for Hadoop,
 this demo uses python's scikit-learn machine-learning algorithm to perform predictive
-maintenance on 200 simulated motors. This executes in series on you laptop or a hadoop-foyer node,
-a followup effort will get this running in parallel on the hadoop datanodes using Spark.
+maintenance on 200 simulated motors. This non-parallelized code executes in 3.8 minutes on
+a hadoop-foyer node, a followup effort will get this running in parallel on the hadoop
+datanodes using Spark.
 
 ###To install:
 
