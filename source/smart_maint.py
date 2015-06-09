@@ -79,6 +79,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
 
 #
 import sys
+print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 sys.exit()
 #
 
