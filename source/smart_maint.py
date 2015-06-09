@@ -50,6 +50,10 @@ maintenance_cost = 0.22*operating_earnings
 repair_cost = 2.2*operating_earnings
 
 ##########################################################################################
+#monitor execution time
+import time
+start_time_sec = time.clock()
+
 #set random number seed
 np.random.seed(ran_num_seed)
 
@@ -98,6 +102,7 @@ file.close()
 
 #plot results
 plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
 
 

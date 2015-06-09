@@ -6,7 +6,8 @@ joe.hahn@infochimps.com,
 
 This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop,
 this demo uses python's scikit-learn machine-learning algorithm to perform predictive
-maintenance on 200 simulated motors
+maintenance on 200 simulated motors. This executes in series on you laptop or a hadoop-foyer node,
+a followup effort will get this running in parallel on the hadoop datanodes using Spark.
 
 ###To install:
 
@@ -20,7 +21,7 @@ maintenance on 200 simulated motors
   libraries to be used here
 
     wget http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh 
-    bash Anaconda-2.1.0-Linux-x86_64.sh (and accept all defaults)
+    sudo bash Anaconda-2.1.0-Linux-x86_64.sh (and install into /opt/anaconda)
 
 
 3 clone the smart maintenance demo
@@ -31,7 +32,7 @@ maintenance on 200 simulated motors
 
 4 execute the demo
 
-    ~/anaconda/bin/python smart_maint.py
+    /opt/anaconda/bin/python smart_maint.py
 
 
 5 install screen & restart webserver
@@ -39,7 +40,7 @@ maintenance on 200 simulated motors
     sudo yum install screen
     screen -S webserver -X quit
     screen -S webserver -d -m sh -c "cd ~/smart-maintenance-demo/source/data;
-        ~/anaconda/bin/python -m SimpleHTTPServer 12321"
+        /opt/anaconda/bin/python -m SimpleHTTPServer 12321"
 
 
 6 browse the *.png images stored in http://cdh-foyer.platform.infochimps:12321
@@ -56,8 +57,15 @@ or Spark or H2o.
 
 ###Notes (in-progress) on parallelizing this using spark
 
-1 spark/ipython:
 
-	PYSPARK_DRIVER_PYTHON=~/anaconda/bin/ipython /usr/bin/pyspark
-	
+execute demo using anaconda-python on spark:
 
+    PYSPARK_PYTHON=/opt/anaconda/bin/python spark-submit smart_maint.py 
+
+
+spark UI:
+
+    http://cdh-foyer.platform.infochimps:4040/jobs/
+
+
+    
