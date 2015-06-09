@@ -77,6 +77,12 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors:
         m.operate(t)
 
+#
+import sys
+sys.exit()
+#
+
+
 #run motor using scheduled maintenance
 for m in motors: m.maint_type = 'scheduled'
 print 'maintenance mode:', motors[0].maint_type
