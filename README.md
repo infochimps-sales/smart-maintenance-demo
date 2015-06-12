@@ -12,6 +12,21 @@ datanodes using Spark.
 
 ###To install:
 
+First clone this github repo to your home directory on the hadoop foyer node:
+
+    cd; git clone git@github.com:infochimps-sales/spark-airline-demo.git 
+    
+   
+Then execute the installer, this will download and install some python libraries to all 
+hadoop nodes, and is done in takes 5 minutes:
+
+    cd spark-airline-demo
+    ./install.sh
+
+
+
+
+
 1 ssh into the platform's hadoop foyer node:
 
      ssh -A joehahn@52.8.44.194
@@ -34,6 +49,7 @@ datanodes using Spark.
 4 execute the demo
 
     /opt/anaconda/bin/python smart_maint.py
+    /home/$USER/anaconda/bin/python smart_maint.py
 
 
 5 install screen & restart webserver
@@ -42,7 +58,7 @@ datanodes using Spark.
     screen -S webserver -X quit
     screen -S webserver -d -m sh -c "cd ~/smart-maintenance-demo/source/data;
         /opt/anaconda/bin/python -m SimpleHTTPServer 12321"
-
+    /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
 
 6 browse the *.png images stored in http://cdh-foyer.platform.infochimps:12321
     
@@ -64,9 +80,29 @@ execute demo using anaconda-python on spark:
     PYSPARK_PYTHON=/opt/anaconda/bin/python spark-submit smart_maint.py 
 
 
+starting an ipython session on spark:
+
+    PYSPARK_DRIVER_PYTHON=/opt/anaconda/bin/ipython pyspark
+    
+    
 spark UI:
 
     http://cdh-foyer.platform.infochimps:4040/jobs/
+
+
+### spark/yarn:
+ 
+on Yarn, monitor the tracking URL, will be similar to 
+http://cdh-rm.platform.infochimps:8088/proxy/application_1433888715374_0005/%20user:%20joehahn
+
+MASTER=yarn-client pyspark --num-executors 3
+browse http://cdh-foyer.platform.infochimps:4040/jobs/
+>>> textFile = sc.textFile("hdfs://cdh-nn:8020/tmp/shakespeare/shakespeare.txt")
+wordCounts = textFile.flatMap(lambda line: line.split()).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b).collect()
+wordCounts.saveAsTextFile("wc")
+wc_dict = dict(wordCounts)
+wc_dict['shalt']
+#sc.stop()
 
 
     
