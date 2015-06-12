@@ -14,7 +14,7 @@ from pylab import *
 
 #for spark
 from pyspark import SparkContext
-sc = SparkContext(appName='Smart Maintenance')
+sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'])
 
 #motor parameters
 N_motors = 200
