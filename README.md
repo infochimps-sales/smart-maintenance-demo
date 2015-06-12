@@ -68,3 +68,16 @@ hadoop datanodes.
 ---why dont these spark jobs show up in cloudera's spark UI?
 
     http://cdh-rm.platform.infochimps:18088/
+
+
+###ipython
+
+sudo rm -f /usr/bin/python /usr/bin/ipython
+sudo ln -s /home/$USER/anaconda/bin/python /usr/bin/python
+sudo ln -s /home/$USER/anaconda/bin/ipython /usr/bin/ipython
+
+and to undo the above: 
+    sudo rm /usr/bin/python /usr/bin/ipython
+    sudo ln -s /usr/bin/python2.6 /usr/bin/python
+
+IPYTHON=1 pyspark
