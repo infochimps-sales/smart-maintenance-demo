@@ -82,6 +82,7 @@ file = open('events.json','w')
 for m in motors:
     for d in m.events:
         file.write(str(d) + '\n')
+
 file.close()
 
 #
