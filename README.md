@@ -24,26 +24,15 @@ hadoop nodes, and is done in takes 5 minutes:
     ./install.sh
 
 
+To execute this demo line-by-line at the python command line (useful for debugging):
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+
+
+Then...
 
 
 
-1 ssh into the platform's hadoop foyer node:
-
-     ssh -A joehahn@52.8.44.194
-     ssh -A cdh-foyer
-     
-
-2 install Anaconda python, which provides a painless way to install nearly all of the python
-  libraries to be used here
-
-    wget http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh 
-    sudo bash Anaconda-2.1.0-Linux-x86_64.sh (and install into /opt/anaconda)
-
-
-3 clone the smart maintenance demo
-
-    git clone git@github.com:infochimps-sales/smart-maintenance-demo.git
-    cd smart-maintenance-demo/source
 
 
 4 execute the demo

@@ -77,6 +77,13 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors:
         m.operate(t)
 
+#store all events in this file, for debugging
+file = open('events.json','w')
+for m in motors:
+    for d in m.events:
+        file.write(str(d) + '\n')
+file.close()
+
 #
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
