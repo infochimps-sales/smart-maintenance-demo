@@ -73,12 +73,12 @@ motors = [
         delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ]
+motors_p = sc.parallelize(motors)
 
 #run motor using run-to-fail maintenance 
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
-    for m in motors:
-        m.operate(t)
+    motors_p1 = motors_p.map(lambda m: m.operate(t))#.persist()
 
 #store all events in this file, for debugging
 file = open('events.json','w')

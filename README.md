@@ -81,3 +81,4 @@ and to undo the above:
     sudo ln -s /usr/bin/python2.6 /usr/bin/python
 
 IPYTHON=1 pyspark
+or: PYSPARK_DRIVER_PYTHON=ipython pyspark
