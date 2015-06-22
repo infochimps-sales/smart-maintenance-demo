@@ -79,11 +79,15 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
 
+m = motors.collect()
+print m[N_motors/2].Time
+
 #run motor using scheduled maintenance
-motors = motors.collect()
-for m in motors: m.maint_type = 'scheduled'
-motors = sc.parallelize(motors)
+maint_type = 'scheduled'
+motors = motors.map(lambda m: m.update_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
 
+m = motors.collect()
+print m[N_motors/2].Time
