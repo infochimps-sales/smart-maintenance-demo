@@ -1,4 +1,12 @@
 #sm_spark.py
+#
+#the smart maintenance demo
+#by Joe Hahn, jhahn@infochimps.com, 22 June 2015
+#
+#to execute using pyspark
+#    IPYTHON=1 pyspark
+#    %run sm_spark.py
+
 
 #imports
 import numpy as np
