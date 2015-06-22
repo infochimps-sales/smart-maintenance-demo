@@ -26,8 +26,9 @@ class Motor:
         self.Pressure_0 = Pressure_0
         self.delta_Pressure = delta_Pressure
         self.get_Temp_Pressure()
-        self.Time_resume_operating = Time - self.maint_duration - 1
-        self.maintenance(Time)
+        self.Time = Time
+        self.Time_resume_operating = self.Time - self.maint_duration - 1
+        self.maintenance()
         self.clf = None
         self.Pressure_avg = None
         self.Pressure_std = None
@@ -38,52 +39,53 @@ class Motor:
         self.prediction_axis = prediction_axis
         self.events = []
         
-    def status(self, Time):
+    def status(self):
         predicted_ttf = None
         if (self.maint_type == 'predictive'):
             predicted_ttf = self.predicted_time_to_fail()
-        return { 'Time':Time, 'id':self.id, 'state':self.state, 'Temp':self.Temp,
+        return { 'Time':self.Time, 'id':self.id, 'state':self.state, 'Temp':self.Temp,
             'Pressure':self.Pressure, 'Time_since_repair':self.Time_since_repair, 
             'maint_type': self.maint_type, 'predicted_ttf':predicted_ttf,
             'fail_factor':self.fail_factor() }
 
-    def operate(self, Time):
+    def operate(self):
+        self.Time += 1
         if ((self.state == 'repair') or (self.state == 'maintenance')): 
             #check if motor repairs/maintenance is done
-            if (Time >= self.Time_resume_operating):
+            if (self.Time >= self.Time_resume_operating):
                 if (self.state == 'repair'):
                     self.get_Temp_Pressure()
                 self.state = 'operating'
-                self.Time_previous_maint = Time - 1
+                self.Time_previous_maint = self.Time - 1
                 self.Time_next_maint = None
                 self.Time_since_repair = 0
                 if (self.maint_type == 'scheduled'):
-                    self.Time_next_maint = Time + self.maint_interval
+                    self.Time_next_maint = self.Time + self.maint_interval
                 if (self.maint_type == 'predictive'):
                     self.get_Temp_Pressure()
         if (self.state == 'operating'): 
             self.time_operating = 1
             self.Time_since_repair += 1
-            self.maint_check(Time)
-            self.repair_check(Time)
-        self.events.append(self.status(Time))       
+            self.maint_check()
+            self.repair_check()
+        self.events.append(self.status())       
 
-    def maint_check(self, Time):
+    def maint_check(self):
         if (self.maint_type == 'run-to-fail'):
             #no maintenance
             pass
         if (self.maint_type == 'scheduled'):
-            if (Time >= self.Time_next_maint):
+            if (self.Time >= self.Time_next_maint):
                 #scheduled maintenance is triggered
-                self.maintenance(Time)
+                self.maintenance()
         if (self.maint_type == 'predictive'):
             #go to maintenance if the predicted Time-to-fail is soon enough
             predicted_time_to_fail = self.predicted_time_to_fail()
             if (self.Time_since_repair  > self.predicted_time_to_fail() - self.pred_maint_buffer_Time):
-                self.maintenance(Time)
+                self.maintenance()
 
-    def repair_check(self, Time):
-        self.fail_prob = self.get_fail_prob(Time)
+    def repair_check(self):
+        self.fail_prob = self.get_fail_prob()
         rn = np.random.uniform(low=0.0, high=1.0, size=None)
         if (rn < self.fail_prob):
             #the motor has just failed and goes to maintenance
@@ -92,8 +94,8 @@ class Motor:
             self.time_repaired = 1
             self.time_operating = 0
             self.Time_next_maint = None
-            self.Time_previous_maint = Time
-            self.Time_resume_operating = Time + self.repair_duration
+            self.Time_previous_maint = self.Time
+            self.Time_resume_operating = self.Time + self.repair_duration
             self.Time_since_repair = 0
 
     def fail_factor(self):
@@ -102,22 +104,22 @@ class Motor:
             factor += ((self.Temp - self.Temp_0)/self.delta_Temp)**(2.0)
         return factor
 
-    def get_fail_prob(self, Time):
-        return self.fail_prob_rate*(Time - self.Time_previous_maint)*self.fail_factor()
+    def get_fail_prob(self):
+        return self.fail_prob_rate*(self.Time - self.Time_previous_maint)*self.fail_factor()
 
     def get_Temp_Pressure(self):
         #this should instead return a dict(training_axes)
         self.Temp = np.random.uniform(low=50.0, high=150.0)
         self.Pressure = np.random.uniform(low=0.0, high=100.0)
 
-    def maintenance(self, Time):
+    def maintenance(self):
         self.state = 'maintenance'
         self.time_maintained = 1
         self.time_repaired = 0
         self.time_operating = 0
         self.Time_next_maint = None  
-        self.Time_previous_maint = Time
-        self.Time_resume_operating = Time + self.maint_duration
+        self.Time_previous_maint = self.Time
+        self.Time_resume_operating = self.Time + self.maint_duration
 
     def predicted_time_to_fail(self):
         x = {'Pressure':self.Pressure, 'Temp':self.Temp} # <= YUCK! eliminate references to Pressure & Temp
