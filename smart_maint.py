@@ -94,7 +94,7 @@ N = motor_stats(motors)
 print N
 
 #store all events in this file, for debugging
-file = open('data/sm_events.json','w')
+file = open('sm_events.json','w')
 for m in motors:
     for d in m.events:
         file.write(str(d) + '\n')
