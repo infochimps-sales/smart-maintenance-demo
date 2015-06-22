@@ -67,15 +67,16 @@ np.random.seed(ran_num_seed)
 #set maintenance type to: 'run-to-fail', 'scheduled', or 'predictive'
 maint_type = 'run-to-fail'
 
-#create motors
-motors = [ 
-    Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, Temp_0,
-        delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
+#create parallelized list of motors
+motors = sc.parallelize(
+    [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
+        Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
-    for motor_id in np.arange(N_motors) ]
-motors_p = sc.parallelize(motors)
-
+    for motor_id in np.arange(N_motors) ] )
 
 #run motor using run-to-fail maintenance 
-print 'maintenance mode:', motors_p.first().maint_type
-motors_p1 = motors_p.map(lambda m: m.operate())
+print 'maintenance mode:', motors.first().maint_type
+for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
+    motors = motors.map(lambda m: m.operate())
+
+
