@@ -21,7 +21,7 @@ def get_events(motors):
 
 def train_svm(motors, training_axes, prediction_axis):
     pd.set_option('display.expand_frame_repr', False)
-    print '...training...this portion of code is inefficient, needs work'
+    print '...training...this portion of code is inefficient, not parallelized, and needs work'
     xy_train = pd.DataFrame()
     for m in motors: 
         xy_train = xy_train.append(m.get_training_dataframe())
@@ -32,6 +32,7 @@ def train_svm(motors, training_axes, prediction_axis):
     training_axes_norm = [col + '_norm' for col in training_axes]
     x_train = xy_train[training_axes_norm].values
     y_train = xy_train['time_to_fail'].values.astype(int)
+    #The following notes results for when various SVM parameters are employed...
     #clf = SVC(kernel='rbf', C=10.0, gamma=10.0) #score=0.449 => very weird dec surface, $ is somewhat ok
     #clf = SVC(kernel='rbf', C=1.0, gamma=10.0) #score=0.337 => weird dec surface, $ ok otherwise
     #clf = SVC(kernel='rbf', C=0.1, gamma=10.0) #score=0.185  => not good
