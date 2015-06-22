@@ -80,25 +80,25 @@ def P(m):
     return m.Pressure 
 
 P3 = motors_p.flatMap(lambda m: P(m)).take(3)
+print P3
 
+##run motor using run-to-fail maintenance 
+#print 'maintenance mode:', motors[0].maint_type
+#for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
+#    motors_p1 = motors_p.map(lambda m: operate_motor(m, t)).persist()
 
-#run motor using run-to-fail maintenance 
-print 'maintenance mode:', motors[0].maint_type
-for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
-    motors_p1 = motors_p.map(lambda m: operate_motor(m, t)).persist()
+##run motor using run-to-fail maintenance 
+#print 'maintenance mode:', motors[0].maint_type
+#for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
+#    motors_p1 = motors_p.flatMap(lambda m: m)
 
-#run motor using run-to-fail maintenance 
-print 'maintenance mode:', motors[0].maint_type
-for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
-    motors_p1 = motors_p.flatMap(lambda m: m)
+##store all events in this file, for debugging
+#file = open('events.json','w')
+#for m in motors:
+#    for d in m.events:
+#        file.write(str(d) + '\n')
 
-#store all events in this file, for debugging
-file = open('events.json','w')
-for m in motors:
-    for d in m.events:
-        file.write(str(d) + '\n')
-
-file.close()
+#file.close()
 
 #
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
