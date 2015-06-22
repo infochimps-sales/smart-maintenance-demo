@@ -15,9 +15,9 @@ from pylab import *
 #for spark
 from pyspark import SparkConf, SparkContext
 #conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
-#conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
-#sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
-#    master='local[4]')
+conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
+sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
+    master='local[4]')
 
 #motor parameters
 N_motors = 200
@@ -75,10 +75,22 @@ motors = [
     for motor_id in np.arange(N_motors) ]
 motors_p = sc.parallelize(motors)
 
+
+def P(m):
+    return m.Pressure 
+
+P3 = motors_p.flatMap(lambda m: P(m)).take(3)
+
+
 #run motor using run-to-fail maintenance 
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
-    motors_p1 = motors_p.map(lambda m: m.operate(t))#.persist()
+    motors_p1 = motors_p.map(lambda m: operate_motor(m, t)).persist()
+
+#run motor using run-to-fail maintenance 
+print 'maintenance mode:', motors[0].maint_type
+for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
+    motors_p1 = motors_p.flatMap(lambda m: m)
 
 #store all events in this file, for debugging
 file = open('events.json','w')
