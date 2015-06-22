@@ -79,7 +79,7 @@ motors_p = sc.parallelize(motors)
 def P(m):
     return m.Pressure 
 
-print P(motors_p.first)
+print P(motors_p.first())
 P3 = motors_p.flatMap(lambda m: P(m)).take(3)
 print P3
 
