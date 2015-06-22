@@ -68,7 +68,8 @@ class Motor:
             self.Time_since_repair += 1
             self.maint_check()
             self.repair_check()
-        self.events.append(self.status())       
+        self.events.append(self.status())
+        return self    
 
     def maint_check(self):
         if (self.maint_type == 'run-to-fail'):
