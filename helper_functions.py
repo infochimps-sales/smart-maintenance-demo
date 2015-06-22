@@ -86,7 +86,7 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     ax.plot(xy_train.Temp, xy_train.Pressure, marker='o', markersize=3, color='white', 
         linestyle='none', alpha=0.4)
     plt.colorbar(cf)
-    plotfile = 'data/fail_factor.png'
+    plotfile = 'figs/fail_factor.png'
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
@@ -113,7 +113,7 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     contour_vals = np.append(contour_vals, contour_vals.max() + 1) - 0.5
     cf = ax.contourf(x, y, z, contour_vals, cmap='afmhot')
     plt.colorbar(cf, ticks=np.unique(z))
-    plotfile = 'data/predicted_time_to_fail.png'
+    plotfile = 'figs/predicted_time_to_fail.png'
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
@@ -171,7 +171,7 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
         color='darkseagreen', alpha=0.35))
     ax.grid(True, linestyle=':', alpha=0.3)
     #
-    plotfile = 'data/revenue.png'
+    plotfile = 'figs/revenue.png'
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
