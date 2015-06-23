@@ -41,6 +41,11 @@ the above will run sm_spark.py as a Spark job that is executed locally on the fo
 Later the above will be adapted so that the job is run in parallel acrosss all of the
 hadoop datanodes.
 
+Browse jobs in Hadoop resource manager UI:
+
+    http://ec2-52-8-143-244.us-west-1.compute.amazonaws.com:8088/cluster
+    
+    
     
 
 ###Still To do:
