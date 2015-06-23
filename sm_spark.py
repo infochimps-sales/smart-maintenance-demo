@@ -103,7 +103,7 @@ print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
-import sys, time
+import sys
 print sys.getsizeof(m)
 
 #run motors using scheduled maintenance
@@ -125,6 +125,8 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
+import time
+time.sleep(5)
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
@@ -133,6 +135,7 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 print clf
 print x_avg
 print x_std
+time.sleep(5)
 
 #tigger lazy execution
 motors_local = motors.collect()
@@ -144,11 +147,13 @@ print x_avg
 print x_std
 print m.maint_type
 print sys.getsizeof(m)
+time.sleep(5)
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
+time.sleep(5)
 sys.exit()
 
 m = motors.collect()[N_motors/2]
