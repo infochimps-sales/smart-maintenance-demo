@@ -151,9 +151,15 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
-sys.exit()
 
 motors = motors.map(lambda m: m.operate())
+m = motors.collect()[N_motors/2]
+print m.events[0:5]
+print m.Time
+print m.clf
+print m.maint_type
+print sys.getsizeof(m)
+sys.exit()
 
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
