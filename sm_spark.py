@@ -90,6 +90,15 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
+#tigger lazy execution...not sure this is needed
+m = motors.collect()[N_motors/2]
+print m.events
+print m.Time
+print m.clf
+print m.maint_type
+import sys
+print sys.getsizeof(m)
+
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
@@ -99,10 +108,26 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
+#tigger lazy execution...not sure this is needed
+m = motors.collect()[N_motors/2]
+print m.events
+print m.Time
+print m.clf
+print m.maint_type
+print sys.getsizeof(m)
+
 #train SVM to do predictive maintenance 
-motors_list = motors.collect()
-clf, x_avg, x_std = train_svm(motors_list, training_axes, prediction_axis)
+motors_local = motors.collect()
+clf, x_avg, x_std = train_svm(motors_local, training_axes, prediction_axis)
 motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
+
+#tigger lazy execution...not sure this is needed
+m = motors.collect()[N_motors/2]
+print m.events
+print m.Time
+print m.clf
+print m.maint_type
+print sys.getsizeof(m)
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
@@ -114,26 +139,29 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
     print 't = ', t
 
+#tigger lazy execution...not sure this is needed
+m = motors.collect()[N_motors/2]
+print m.events
+print m.Time
+print m.clf
+print m.maint_type
+print sys.getsizeof(m)
+
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
-N = motor_stats(motors)
+motors_local = motors.collect()
+N = motor_stats(motors_local)
 print N
 
 #store all events in this file, for debugging
 file = open('sm_events.json','w')
-for m in motors:
+for m in motors_local:
     for d in m.events:
         file.write(str(d) + '\n')
 file.close()
 
 
 
-m = motors.collect()[N_motors/2]
-print m.events
-print m.Time
-print m.clf
-print sys.getsizeof(m)
-sys.exit()
 
 
 
