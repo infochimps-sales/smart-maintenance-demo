@@ -143,8 +143,8 @@ m = motors_local[N_motors/2]
 print m.events[0:5]
 print m.Time
 print m.clf
-print x_avg
-print x_std
+print m.x_avg
+print m.x_std
 print m.maint_type
 print sys.getsizeof(m)
 time.sleep(5)
