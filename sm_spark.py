@@ -144,7 +144,6 @@ maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 
-motors = motors.map(lambda m: m.operate())
 m = motors.collect()[N_motors/2]
 print m.events
 print m.Time
@@ -153,6 +152,7 @@ print m.maint_type
 print sys.getsizeof(m)
 sys.exit()
 
+motors = motors.map(lambda m: m.operate())
 
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
