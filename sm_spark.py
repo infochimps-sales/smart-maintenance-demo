@@ -84,7 +84,9 @@ motors = sc.parallelize(
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ] )
 
-
+m = motors.collect()[100]
+print m.events
+print m.Time
 import sys
 sys.exit()
 
