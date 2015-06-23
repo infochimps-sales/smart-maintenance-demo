@@ -30,9 +30,9 @@ from pylab import *
 ###    master='local[4]')
 
 #setup for calling spark
-from pyspark import SparkContext
-sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
-    appName='Smart Maintenance')
+#from pyspark import SparkContext
+#sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
+#    appName='Smart Maintenance')
 
 
 #motor parameters
@@ -84,11 +84,12 @@ np.random.seed(ran_num_seed)
 maint_type = 'run-to-fail'
 
 #create parallelized list of motors
+num_partitions = 3*8*2    #3datanotes*8vcpu(m3.2xl)*2partitions_per_cpu 
 motors = sc.parallelize(
     [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
-    for motor_id in np.arange(N_motors) ] )
+    for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
 
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
@@ -111,23 +112,28 @@ motors_list = motors.collect()
 clf, x_avg, x_std = train_svm(motors_list, training_axes, prediction_axis)
 motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 
+#run motors using predictive maintenance
+maint_type = 'predictive'
+motors = motors.map(lambda m: m.set_maint_type(maint_type))
+print 'maintenance mode:', motors.first().maint_type
 
+
+
+motors = motors.map(lambda m: m.operate())
 m = motors.collect()[100]
 print m.events
 print m.Time
 import sys
 sys.exit()
 
-#run motors using predictive maintenance
-maint_type = 'predictive'
-motors = motors.map(lambda m: m.set_maint_type(maint_type))
-print 'maintenance mode:', motors.first().maint_type
+
+
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     print 't = ', t
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
-    motors = motors.sortBy(lambda m: m.id)
+    #motors = motors.sortBy(lambda m: m.id)
 
 
 
