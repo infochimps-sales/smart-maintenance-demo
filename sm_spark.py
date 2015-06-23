@@ -28,6 +28,8 @@ from pylab import *
 #conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
 #sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 #    master='local[4]')
+
+#setup for calling spark
 from pyspark import SparkContext
 sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
     appName='Smart Maintenance')
@@ -95,13 +97,6 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
-
-m = motors.collect()[100]
-print m.events
-print m.Time
-import sys
-sys.exit()
-
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
@@ -110,6 +105,13 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+
+
+m = motors.collect()[100]
+print m.events
+print m.Time
+import sys
+sys.exit()
 
 #train SVM to do predictive maintenance 
 motors_list = motors.collect()
