@@ -118,7 +118,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
         m = motors.first()
         print m.Time, m.maint_type
 
-#tigger lazy execution...not sure this is needed
+#tigger lazy execution...not sure this is needed 
 m = motors.collect()[N_motors/2]
 print m.events[0:5]
 print m.Time
