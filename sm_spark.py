@@ -135,8 +135,8 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     print 't = ', t
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
-    #motors = motors.sortBy(lambda m: m.id)
+    #if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+    motors = motors.sortBy(lambda m: m.id)
 
 m = motors.collect()[100]
 print m.events
