@@ -22,12 +22,16 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #for spark
-from pyspark import SparkConf, SparkContext
-conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
-sc = SparkContext(conf=conf)
+#from pyspark import SparkConf, SparkContext
+#conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
+#sc = SparkContext(conf=conf, pyFiles=['helper_functions.py'])
 #conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
 #sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 #    master='local[4]')
+from pyspark import SparkContext
+sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py'],
+    appName='Smart Maintenance')
+
 
 #motor parameters
 N_motors = 200
