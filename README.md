@@ -24,7 +24,7 @@ hadoop nodes, and is done in takes 5 minutes:
     ./install.sh
 
 
-Dial down spark's verbosity:
+Dial down spark's verbosity (ugh, this doesnt work):
 
     sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
         /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
