@@ -13,7 +13,6 @@ import numpy as np
 import pandas as pd
 from motor import *
 from helper_functions import *
-#from sklearn.svm import SVC
 
 #matplotlib imports, to export plots to png images
 import matplotlib
@@ -109,18 +108,30 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
-#pyspark error:
-#15/06/23 18:47:34 ERROR Executor: Exception in task 22.0 in stage 1825.0 (TID 5881)
-#    java.lang.OutOfMemoryError: Java heap space
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
     print 't = ', t
 
+#get operating stats
+pd.set_option('display.expand_frame_repr', False)
+N = motor_stats(motors)
+print N
+
+#store all events in this file, for debugging
+file = open('sm_events.json','w')
+for m in motors:
+    for d in m.events:
+        file.write(str(d) + '\n')
+file.close()
+
+
+
 m = motors.collect()[N_motors/2]
 print m.events
 print m.Time
+print m.clf
 print sys.getsizeof(m)
 sys.exit()
 
