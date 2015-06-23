@@ -84,18 +84,19 @@ motors = sc.parallelize(
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ] )
 
-m = motors.collect()[100]
-print m.events
-print m.Time
-import sys
-sys.exit()
-
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+
+
+m = motors.collect()[100]
+print m.events
+print m.Time
+import sys
+sys.exit()
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
