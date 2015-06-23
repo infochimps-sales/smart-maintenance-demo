@@ -30,9 +30,9 @@ from pylab import *
 ###    master='local[4]')
 
 #setup for calling spark
-#from pyspark import SparkContext
-#sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
-#    appName='Smart Maintenance')
+from pyspark import SparkContext
+sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
+    appName='Smart Maintenance')
 
 
 #motor parameters
@@ -124,8 +124,12 @@ m = motors.collect()[100]
 print m.events
 print m.Time
 import sys
+print sys.getsizeof(m)
 sys.exit()
 
+#pyspark error:
+#15/06/23 18:47:34 ERROR Executor: Exception in task 22.0 in stage 1825.0 (TID 5881)
+#    java.lang.OutOfMemoryError: Java heap space
 
 
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
