@@ -126,6 +126,7 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
+sys.exit()
 time.sleep(5)
 
 #train SVM to do predictive maintenance 
