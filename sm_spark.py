@@ -148,6 +148,7 @@ print m.x_std
 print m.maint_type
 print sys.getsizeof(m)
 time.sleep(5)
+sys.exit()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'

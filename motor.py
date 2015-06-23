@@ -30,6 +30,8 @@ class Motor:
         self.Time_resume_operating = self.Time - self.maint_duration - 1
         self.maintenance()
         self.clf = None
+        self.x_avg = None
+        self.x_std = None
         self.Pressure_avg = None
         self.Pressure_std = None
         self.Temp_avg = None
