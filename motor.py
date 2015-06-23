@@ -147,6 +147,12 @@ class Motor:
         xy_train = events_op[self.training_axes + ['time_to_fail'] ].drop_duplicates()
         return xy_train
 
-    def update_maint_type(self, new_maint_type):
+    def set_maint_type(self, new_maint_type):
         self.maint_type = new_maint_type
+        return self
+
+    def train_motors(self, clf, x_avg, x_std):
+        self.clf = clf
+        self.x_avg = x_avg
+        self.x_std = x_std
         return self

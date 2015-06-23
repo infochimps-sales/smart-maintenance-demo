@@ -86,26 +86,27 @@ motors = sc.parallelize(
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution and sidestep complaints of 'excessively deep recursion'
+    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
 #run motor using scheduled maintenance
 maint_type = 'scheduled'
-motors = motors.map(lambda m: m.update_maint_type(maint_type))
+motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution and sidestep complaints of 'excessively deep recursion'
+    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
 #run motor using predictive maintenance 
 clf, x_avg, x_std = train_svm(motors.collect(), training_axes, prediction_axis)
+motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 maint_type = 'predictive'
-motors = motors.map(lambda m: m.update_maint_type(maint_type))
+motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution and sidestep complaints of 'excessively deep recursion'
+    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
 
