@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from motor import *
 from helper_functions import *
+from sklearn.svm import SVC
 
 #matplotlib imports, to export plots to png images
 import matplotlib
@@ -23,6 +24,7 @@ from pylab import *
 #for spark
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
+sc = SparkContext(conf)
 #conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
 #sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 #    master='local[4]')
@@ -99,7 +101,8 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
 #train SVM to do predictive maintenance 
-clf, x_avg, x_std = train_svm(motors.collect(), training_axes, prediction_axis)
+motors_list = motors.collect()
+clf, x_avg, x_std = train_svm(motors_list, training_axes, prediction_axis)
 motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 
 #run motors using predictive maintenance

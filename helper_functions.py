@@ -4,8 +4,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
-from sklearn.cross_validation import StratifiedShuffleSplit
-from sklearn.grid_search import GridSearchCV
+#from sklearn.cross_validation import StratifiedShuffleSplit
+#from sklearn.grid_search import GridSearchCV
 
 #matplotlib imports, to export plots to png images
 import matplotlib
