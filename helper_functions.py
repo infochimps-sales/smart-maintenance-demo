@@ -21,7 +21,7 @@ def get_events(motors):
 
 def train_svm(motors, training_axes, prediction_axis):
     pd.set_option('display.expand_frame_repr', False)
-    print '...training...this portion of code is inefficient, not parallelized, and needs work'
+    print '...training...portions of this code can be parallelized...'
     xy_train = pd.DataFrame()
     for m in motors: 
         xy_train = xy_train.append(m.get_training_dataframe())
@@ -45,12 +45,7 @@ def train_svm(motors, training_axes, prediction_axis):
     clf = SVC(kernel='rbf', C=1.0, gamma=1.0)
     clf.fit(x_train, y_train)
     print '...accuracy of SVM training = ', clf.score(x_train, y_train)
-    for m in motors:
-        #theres gotta be a better way than this...
-        m.clf = clf
-        m.x_avg = x_avg
-        m.x_std = x_std
-    return xy_train
+    return clf, x_avg, x_std
 
 def motor_stats(motors):
     events_df = get_events(motors)
