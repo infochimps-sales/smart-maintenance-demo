@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from motor import *
 from helper_functions import *
-from sklearn.svm import SVC
+#from sklearn.svm import SVC
 
 #matplotlib imports, to export plots to png images
 import matplotlib
@@ -28,9 +28,6 @@ sc = SparkContext(conf=conf)
 #conf = SparkConf().setMaster("local[4]").setAppName("Smart Maintenance")
 #sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 #    master='local[4]')
-
-import sys
-sys.exit()
 
 #motor parameters
 N_motors = 200
@@ -86,6 +83,10 @@ motors = sc.parallelize(
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ] )
+
+
+import sys
+sys.exit()
 
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
