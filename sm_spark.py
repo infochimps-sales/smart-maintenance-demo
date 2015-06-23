@@ -125,7 +125,6 @@ print m.events
 print m.Time
 import sys
 print sys.getsizeof(m)
-sys.exit()
 
 #pyspark error:
 #15/06/23 18:47:34 ERROR Executor: Exception in task 22.0 in stage 1825.0 (TID 5881)
@@ -139,6 +138,11 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
     #motors = motors.sortBy(lambda m: m.id)
 
+m = motors.collect()[100]
+print m.events
+print m.Time
+print sys.getsizeof(m)
+sys.exit()
 
 
 
