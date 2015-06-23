@@ -30,13 +30,14 @@ from pylab import *
 ###    master='local[4]')
 
 #setup for calling spark
-from pyspark import SparkContext
-sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
-    appName='Smart Maintenance')
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
+
+sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -116,26 +117,14 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
-
-
-
-motors = motors.map(lambda m: m.operate())
-m = motors.collect()[100]
-print m.events
-print m.Time
-import sys
-print sys.getsizeof(m)
-
 #pyspark error:
 #15/06/23 18:47:34 ERROR Executor: Exception in task 22.0 in stage 1825.0 (TID 5881)
 #    java.lang.OutOfMemoryError: Java heap space
-
-
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
-    print 't = ', t
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%5 == 4): motors = motors.sortBy(lambda m: m.id)
+    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+    print 't = ', t
 
 m = motors.collect()[100]
 print m.events
