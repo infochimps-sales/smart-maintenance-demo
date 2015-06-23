@@ -52,7 +52,7 @@ Pressure_0 = 50.0
 delta_Pressure = 20.0
 
 #runtime parameters
-run_interval = 20#200
+run_interval = 200
 Time_start_runtofail = 0
 Time_stop_runtofail = Time_start_runtofail + run_interval
 Time_start_sched_maint = Time_stop_runtofail
@@ -89,7 +89,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -98,7 +98,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
 #train SVM to do predictive maintenance 
 motors_list = motors.collect()
@@ -115,7 +115,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
     print 't = ', t
 
 m = motors.collect()[N_motors/2]
