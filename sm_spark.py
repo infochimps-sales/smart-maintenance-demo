@@ -106,17 +106,17 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
     if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
 
+#train SVM to do predictive maintenance 
+motors_list = motors.collect()
+clf, x_avg, x_std = train_svm(motors_list, training_axes, prediction_axis)
+motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
+
 
 m = motors.collect()[100]
 print m.events
 print m.Time
 import sys
 sys.exit()
-
-#train SVM to do predictive maintenance 
-motors_list = motors.collect()
-clf, x_avg, x_std = train_svm(motors_list, training_axes, prediction_axis)
-motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
