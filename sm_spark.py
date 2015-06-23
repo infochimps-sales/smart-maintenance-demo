@@ -134,11 +134,14 @@ print clf
 print x_avg
 print x_std
 
-#tigger lazy execution...not sure this is needed
-m = motors.collect()[N_motors/2]
+#tigger lazy execution
+motors_local = motors.collect()
+m = motors_local[N_motors/2]
 print m.events[0:5]
 print m.Time
 print m.clf
+print x_avg
+print x_std
 print m.maint_type
 print sys.getsizeof(m)
 
