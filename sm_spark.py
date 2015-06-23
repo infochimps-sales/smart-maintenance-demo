@@ -66,7 +66,7 @@ repair_cost = 2.2*operating_earnings
 
 #advance this demo Nsteps before forcing spark's lazy execution trigger, but this number
 #downwards when spark complaint about 'excessively deep recursion'
-Nsteps = 1000
+Nsteps = 100
 
 ##########################################################################################
 #monitor execution time
