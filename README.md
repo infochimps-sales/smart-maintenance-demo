@@ -40,23 +40,6 @@ To submit this spark job to Yarn:
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
     
 
-To execute this demo line-by-line at the python command line (useful for debugging):
-
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
-
-
-Then copy-n-past each line from sm_spark.pro, EXCEPT for line 17: 
-sc = SparkContext(appName=... , into the python command line
-
-Alternatively, one can use spark-submit to submit this job to Spark
-
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
-
-
-the above will run sm_spark.py as a Spark job that is executed locally on the foyer node.
-Later the above will be adapted so that the job is run in parallel acrosss all of the
-hadoop datanodes.
-
 Browse jobs in Hadoop resource manager UI:
 
     http://ec2-52-8-143-244.us-west-1.compute.amazonaws.com:8088/cluster
@@ -89,6 +72,26 @@ Browse jobs in Hadoop resource manager UI:
 ---why dont these spark jobs show up in cloudera's spark UI?
 
     http://cdh-rm.platform.infochimps:18088/
+
+
+###Useful tips for when debugging:
+
+To execute this demo line-by-line at the python command line (useful for debugging):
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+
+
+Then copy-n-past each line from sm_spark.pro into the python command line, 
+EXCEPT for line 27: sc = SparkContext(conf=conf... 
+
+Alternatively, one can use spark-submit to submit this job to Spark
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
+
+
+the above will run sm_spark.py as a Spark job that is executed locally on the foyer node.
+Later the above will be adapted so that the job is run in parallel acrosss all of the
+hadoop datanodes.
 
 
 ###ipython

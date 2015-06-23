@@ -28,7 +28,7 @@ sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 
 #motor parameters
-N_motors = 20#0
+N_motors = 200
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -64,6 +64,10 @@ operating_earnings = 1000.0
 maintenance_cost = 0.22*operating_earnings
 repair_cost = 2.2*operating_earnings
 
+#advance this demo Nsteps before forcing spark's lazy execution trigger, but this number
+#downwards when spark complaint about 'excessively deep recursion'
+Nsteps = 10
+
 ##########################################################################################
 #monitor execution time
 import time
@@ -87,8 +91,8 @@ motors = sc.parallelize(
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
+    #trigger lazy execution
+    if (t%Nsteps == (Nsteps - 1)): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
@@ -105,8 +109,8 @@ motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
+    #trigger lazy execution
+    if (t%Nsteps == (Nsteps - 1)): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
@@ -135,8 +139,8 @@ motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
+    #trigger lazy execution
+    if (t%Nsteps == (Nsteps - 1)): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
