@@ -29,6 +29,9 @@ sc = SparkContext(conf=conf)
 #sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 #    master='local[4]')
 
+import sys
+sys.exit()
+
 #motor parameters
 N_motors = 200
 ran_num_seed = 1
