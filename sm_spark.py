@@ -29,10 +29,10 @@ from pylab import *
 ###sc = SparkContext(appName='Smart Maintenance', pyFiles=['helper_functions.py'],
 ###    master='local[4]')
 
-##setup for calling spark
-#from pyspark import SparkContext
-#sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
-#    appName='Smart Maintenance')
+#setup for calling spark
+from pyspark import SparkContext
+sc = SparkContext(master='yarn-client', pyFiles=['helper_functions.py', 'motor.py'],
+    appName='Smart Maintenance')
 
 
 #motor parameters
