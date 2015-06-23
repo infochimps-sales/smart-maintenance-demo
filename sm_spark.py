@@ -148,13 +148,13 @@ print x_std
 print m.maint_type
 print sys.getsizeof(m)
 time.sleep(5)
-sys.exit()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 time.sleep(5)
+sys.exit()
 
 m = motors.collect()[N_motors/2]
 print m.events[0:5]
