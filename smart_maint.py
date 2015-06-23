@@ -93,8 +93,8 @@ pd.set_option('display.expand_frame_repr', False)
 N = motor_stats(motors)
 print N
 
-#store all events in this file, for debugging
-file = open('sm_events.json','w')
+#store all events in file, for debugging
+file = open('events.json','w')
 for m in motors:
     for d in m.events:
         file.write(str(d) + '\n')

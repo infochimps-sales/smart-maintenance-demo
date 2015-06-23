@@ -130,6 +130,9 @@ print sys.getsizeof(m)
 motors_local = motors.collect()
 clf, x_avg, x_std, xy_train = train_svm(motors_local, training_axes, prediction_axis)
 motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
+print clf
+print x_avg
+print x_std
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
