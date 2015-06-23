@@ -139,6 +139,8 @@ print m.clf
 print m.maint_type
 print sys.getsizeof(m)
 
+sys.exit()
+
 #run motors using predictive maintenance
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
