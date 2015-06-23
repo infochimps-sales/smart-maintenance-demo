@@ -99,7 +99,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
-print m.events
+print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
@@ -120,7 +120,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
-print m.events
+print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
@@ -133,7 +133,7 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
-print m.events
+print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
@@ -145,8 +145,8 @@ maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 
-#m = motors.collect()[N_motors/2]
-print m.events
+m = motors.collect()[N_motors/2]
+print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
@@ -165,7 +165,7 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
         
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
-print m.events
+print m.events[0:5]
 print m.Time
 print m.clf
 print m.maint_type
