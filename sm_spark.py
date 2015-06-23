@@ -144,7 +144,7 @@ maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 
-m = motors.collect()[N_motors/2]
+#m = motors.collect()[N_motors/2]
 print m.events
 print m.Time
 print m.clf
