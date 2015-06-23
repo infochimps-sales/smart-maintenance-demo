@@ -103,8 +103,9 @@ print m.events
 print m.Time
 print m.clf
 print m.maint_type
-import sys
+import sys, time
 print sys.getsizeof(m)
+time.sleep(5)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -125,6 +126,7 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
+time.sleep(5)
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
@@ -138,6 +140,7 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
+time.sleep(5)
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
