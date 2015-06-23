@@ -88,7 +88,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    #if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
@@ -106,7 +106,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    #if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
@@ -136,8 +136,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution to avoid complaints of 'excessively deep recursion'
-    #if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
-    #print 't = ', t
+    if (t%50 == 49): motors = motors.sortBy(lambda m: m.id)
 
 #tigger lazy execution...not sure this is needed
 m = motors.collect()[N_motors/2]
