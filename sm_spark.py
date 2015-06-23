@@ -28,7 +28,7 @@ sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -51,7 +51,7 @@ Pressure_0 = 50.0
 delta_Pressure = 20.0
 
 #runtime parameters
-run_interval = 200
+run_interval = 20#0
 Time_start_runtofail = 0
 Time_stop_runtofail = Time_start_runtofail + run_interval
 Time_start_sched_maint = Time_stop_runtofail
