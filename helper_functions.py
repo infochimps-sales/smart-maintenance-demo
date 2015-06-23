@@ -45,7 +45,7 @@ def train_svm(motors, training_axes, prediction_axis):
     clf = SVC(kernel='rbf', C=1.0, gamma=1.0)
     clf.fit(x_train, y_train)
     print '...accuracy of SVM training = ', clf.score(x_train, y_train)
-    return clf, x_avg, x_std
+    return clf, x_avg, x_std, xy_train
 
 def motor_stats(motors):
     events_df = get_events(motors)
