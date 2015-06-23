@@ -24,6 +24,21 @@ hadoop nodes, and is done in takes 5 minutes:
     ./install.sh
 
 
+Dial down spark's verbosity:
+
+    sudo bash
+    locate log4j.properties.template
+    logprops=/opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
+    touch $logprops
+    echo 'log4j.rootCategory=WARN, console'>>$logprops
+    exit
+
+
+To submit this spark job to Yarn:
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
+    
+
 To execute this demo line-by-line at the python command line (useful for debugging):
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark

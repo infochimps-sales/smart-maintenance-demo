@@ -153,12 +153,15 @@ N = motor_stats(motors_local)
 print N
 
 #store all events in this file, for debugging
-file = open('sm_events.json','w')
+file = open('events.json','w')
 for m in motors_local:
     for d in m.events:
         file.write(str(d) + '\n')
 file.close()
 
+#plot results
+plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
 
 
