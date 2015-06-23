@@ -31,8 +31,8 @@ from pylab import *
 
 #setup for calling spark
 from pyspark import SparkConf, SparkContext
-conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")
-
+conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set(
+    "spark.executor.memory", "1g")
 sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 
