@@ -78,6 +78,7 @@ However switching to a _predictive-maintenance_ strategy results in earnings exc
 the owners of these motors recover all lost earnings by time t=830, and have earned $9M and the end
 of the simulation.
 
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
 ###Known Issues:
 
