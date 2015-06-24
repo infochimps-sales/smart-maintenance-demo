@@ -35,7 +35,7 @@ and in log4j.properties set
     log4j.rootCategory=WARN, console
 
 
-To submit this spark job to Yarn:
+To submit this spark job to Yarn for execution:
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
     
