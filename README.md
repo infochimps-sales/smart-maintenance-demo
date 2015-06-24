@@ -76,7 +76,8 @@ resulting in cumulative earnings of -$13M by time t=200. This plot also shows th
 engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
 But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
 exceeds expenses, so the owners of these motors recover all lost earnings by time t=830, 
-and have earned $9M at the end of this simulation.
+and have earned $9M at the end of this simulation. So this simulation's main punchline is: use
+Smart Maintenance on the BDPaas to reduce expenses and grow your earnings.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
