@@ -42,7 +42,7 @@ The output of this spark job is 3 png images that can be viewed by browsing
 
 ###The demo's storyline:
 
-The demo calculates the maintenance history of 200 simulated motors over time. Initially the
+This demo calculates the maintenance history of 200 simulated motors over time. Initially the
 motors are evolved using a _run-to-fail_ maintenance strategy. Each motor has two knobs,
 Pressure (P) and Temperature (T), and the size of the dots in the following scatterplot
 shows that the longest-lived motors have (P,T) settings in these intervals: 40 < P < 60 and T < 100,
@@ -51,19 +51,25 @@ sweet spot at P~50 and T<100:
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/fail_factor.png)
 
-The SVM algorithm is then trained on these date, namely, the observed engine lifetime versus
-engine (P,T). The now-trained SVM algorithm is now able to use an engine's (P,T) settings to
-predict that engine's lifetime ie its estimated time-to-fail. Thereafter (a times t > 600) the
-engines are run in predictive-maintenance mode, which simply sends an engine into maintenance
-when its estimated time-to-fail is one day hence. The following contour map shows the SVM's
-so-called prediction surface map's the engine's predicted time-to-fail versus the engine's (P,T)
-settings; see http://cdh-foyer.platform.infochimps:12321/figs/predicted_time_to_fail.png. Note
-that SVM's predicted time-to-fail does indeed recover the engine's 'finger of stability'
-shown above at 40 < P < 60 and T < 100.
+The demo evolves these motors in _run-to-fail_ mode until time t=200, and then (just for kicks)
+it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400.
+The SVM algorithm is then trained on the run-to-fail data, which is comprised of the observed
+engine lifetimes versus their engine (P,T) settings. The now-trained SVM algorithm is now 
+able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
+estimated time-to-fail. Thereafter (a times t > 600) the engines are evolved in 
+_predictive-maintenance_ mode, which simply sends an engine into maintenance
+when its predicted time-to-fail is one day hence. The following contour map shows the SVM's
+so-called _prediction surface_, which map's the engine's predicted time-to-fail across the
+engines (P,T) parameter space. Note that SVM's predicted time-to-fail does indeed recover
+the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
+zone is rather ragged.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/predicted_time_to_fail.png)
 
 This diagram shows...
+
+and then switches
+to _scheduled-maintenance_ mode during times 200 < t < 600.
 
 Motors generate earning while
 running, and they accrue some expenses when being maintained and greater expenses while
