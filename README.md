@@ -18,11 +18,13 @@ First clone this github repo to your home directory on the hadoop foyer node:
     
    
 Then execute the installer, this will download and install some python libraries to all 
-hadoop nodes, and is done in takes 5 minutes:
+hadoop nodes, and is done in 5 minutes:
 
     cd spark-airline-demo
     ./install.sh
 
+
+###To execute:
 
 To submit this spark job to Yarn for execution:
 
