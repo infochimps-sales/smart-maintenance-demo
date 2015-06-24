@@ -26,7 +26,6 @@ conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set(
     "spark.executor.memory", "1g")
 sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
-
 #motor parameters
 N_motors = 20#0
 ran_num_seed = 1
@@ -125,8 +124,6 @@ print m.Time
 print m.clf
 print m.maint_type
 print sys.getsizeof(m)
-import time
-time.sleep(5)
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
@@ -135,7 +132,6 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 print clf
 print x_avg
 print x_std
-time.sleep(5)
 
 #tigger lazy execution
 motors_local = motors.collect()
@@ -147,7 +143,17 @@ print m.x_avg
 print m.x_std
 print m.maint_type
 print sys.getsizeof(m)
-time.sleep(5)
+
+for m in motors_local:
+    print m.x_std
+
+maint_type = 'run-to-fail'
+motors = motors.map(lambda m: m.set_maint_type(maint_type))
+motors = motors.map(lambda m: m.operate())
+print motors.first().events[-5:]
+print motors.first().maint_type
+print motors.first().x_avg
+sys.exit()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
