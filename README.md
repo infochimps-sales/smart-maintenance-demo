@@ -43,7 +43,7 @@ The output of this spark job is 3 png images that can be viewed by browsing
 ###The demo's storyline:
 
 The demo calculates the maintenance history of 200 simulated motors over time. Initially the
-motors are evolved using a 'run-to-fail' maintenance strategy. Each motor has two knobs,
+motors are evolved using a _'run-to-fail'_ maintenance strategy. Each motor has two knobs,
 Pressure (P) and Temperature (T), and the size of the dots in the following scatterplot
 shows that the longest-lived motors have (P,T) settings in this interval: 40 < P < 60 and T < 100,
 with motors being progressively shorter-lived the further away their P,T setting are from this
