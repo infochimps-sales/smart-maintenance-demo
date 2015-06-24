@@ -74,15 +74,14 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
             z[p_idx, t_idx] = m.fail_factor()
     fig = plt.figure(figsize=(8.0, 6.5))
     ax = fig.add_subplot(1, 1, 1)
-    ax.set_title('Motor Failure Probability, Relative')
+    ax.set_title('Observed Motor Lifetime')
     ax.set_xlabel('Temperature')
     ax.set_ylabel('Pressure')
     Ncolors = 256
     cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
-    #ax.plot(xy_train.Temp.values, xy_train.Pressure.values, marker='o', markersize=xy_train.time_to_fail.values, 
-    #    color='white', linestyle='none', alpha=0.4)
-    ax.scatter(xy_train.Temp.values, xy_train.Pressure.values, s=xy_train.time_to_fail.values)
-    #plt.colorbar(cf)
+    for idx, row in xy_train.iterrows():
+        ax.scatter(row['Temp'], row['Pressure'], marker='o', color='white', alpha=0.6, 
+            s=2*row['time_to_fail'])
     plotfile = 'figs/fail_factor.png'
     fig.savefig(plotfile)
     plt.close(fig) 
