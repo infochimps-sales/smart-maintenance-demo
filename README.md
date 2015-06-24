@@ -53,7 +53,7 @@ The output of this spark job is 3 png images that can be viewed by browsing
 
 
 2 Close inspection of Spark's Application Master UI will show that this job is being executed
-on only 2 of the 3 available datanodes, I have no idea why 1 datanode is not participating,
+on only 2 of the 3 available datanodes, I have no idea why one datanode is not participating,
 this needs to be debugged.
 
 3 Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
@@ -67,14 +67,14 @@ and in log4j.properties set
     log4j.rootCategory=WARN, console
 
 
-but the above didn't help any...maybe to this on all datanodes?
+but the above didn't help any...perhaps one must do this on all datanodes?
 
 
 ###Debugging Notes:
         
     
-One can execute this demo line-by-line at the python command line, using pyspark
-(this is useful for debugging):
+One can execute this demo line-by-line at the python command line using pyspark,
+this is useful when debugging code:
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
 
