@@ -42,7 +42,24 @@ The output of this spark job is 3 png images that can be viewed by browsing
 
 ###The demo's storyline:
 
+This demo calculates the repair history of 200 simulated motors over time. Initially the
+motors are evolved using a 'run-to-fail' maintenance strategy. Motors generate earning while
+running, and they accrue some expenses when being maintained and greater expenses while
+they are being repaired after a failure.  Each motor has two knobs, a Pressure (P) knob and
+a Temperature (T) knob, and the size of the dots in the following scatterplot
+shows that the longest-lived motors have settings in these intervals: 40 < P < 60 and T < 100,
+with motors being progressively shorter-lived the further away their P,T setting are from this
+sweet spot; see http://cdh-foyer.platform.infochimps:12321/figs/fail_factor.png
 
+The SVM algorithm is then trained on these date, namely, the observed engine lifetime versus
+engine (P,T). The now-trained SVM algorithm is now able to use an engine's (P,T) settings to
+predict that engine's lifetime ie its estimated time-to-fail. Thereafter (a times t > 600) the
+engines are run in predictive-maintenance mode, which simply sends an engine into maintenance
+when its estimated time-to-fail is one day hence. The following contour map shows the SVM's
+so-called prediction surface map's the engine's predicted time-to-fail versus the engine's (P,T)
+settings; see http://cdh-foyer.platform.infochimps:12321/figs/predicted_time_to_fail.png. Note
+that SVM's predicted time-to-fail does indeed recover the engine's 'finger of stability'
+shown above at 40 < P < 60 and T < 100.
 
 ###Known Issues:
 
