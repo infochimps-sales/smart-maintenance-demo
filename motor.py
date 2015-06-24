@@ -151,7 +151,6 @@ class Motor:
 
     def set_maint_type(self, maint_type):
         self.maint_type = maint_type
-        print self.id, self.maint_type
         return self
 
     def train_motors(self, clf, x_avg, x_std):
