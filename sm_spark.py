@@ -150,10 +150,20 @@ for m in motors_local:
 maint_type = 'run-to-fail'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 motors = motors.map(lambda m: m.operate())
-print motors.first().events[-5:]
-print motors.first().maint_type
-print motors.first().x_avg
+m = motors.first()
+print m.events[-5:]
+print m.maint_type, m.x_avg, m.Time
+
+maint_type = 'predictive'
+motors = motors.map(lambda m: m.set_maint_type(maint_type))
+motors = motors.map(lambda m: m.operate())
+m = motors.first()
+print m.events[-5:]
+print m.maint_type, m.x_avg, m.Time
 sys.exit()
+
+
+
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
