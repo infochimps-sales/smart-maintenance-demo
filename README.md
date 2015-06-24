@@ -29,12 +29,49 @@ To submit this spark job to Yarn for execution:
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
     
 
-Browse jobs in Hadoop resource manager UI:
+Monitor this job's progress using the Spark UI by browsing:
 
-    http://ec2-52-8-143-244.us-west-1.compute.amazonaws.com:8088/cluster
+    Cloudera Manager -> Home -> Yarn -> Resource Manager UI -> application_ID# -> Application Master
+
+
+The output of this spark job is 3 png images that can be viewed by browsing
+
+    http://cdh-foyer.platform.infochimps:12321/figs
     
+
+###Debugging Tips:
+        
     
-    
+One can execute this demo line-by-line at the python command line, useful for debugging:
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+
+
+Then copy-n-past each line from smart_maint_spark.py into the python command line, 
+EXCEPT for line 25: sc = SparkContext(conf=conf... 
+
+
+###Known Issues
+
+
+---If the png images are not browse-able, restart the webserver on the hadoop foyer node:
+
+
+
+---Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
+
+    sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
+        /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
+
+
+and in log4j.properties set
+
+    log4j.rootCategory=WARN, console
+
+
+but the above didn't help any...maybe to this on all datanodes?
+
+
 
 ###Still To do:
 
@@ -96,11 +133,3 @@ and to undo the above:
 IPYTHON=1 pyspark
 or: PYSPARK_DRIVER_PYTHON=ipython pyspark
 
-Dial down spark's verbosity (ugh, this doesnt work):
-
-    sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
-        /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
-
-and in log4j.properties set
-
-    log4j.rootCategory=WARN, console

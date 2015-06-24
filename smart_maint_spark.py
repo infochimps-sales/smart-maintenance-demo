@@ -1,12 +1,10 @@
-#sm_spark.py
+#smart_maint_spark.py
 #
 #the smart maintenance demo
 #by Joe Hahn, jhahn@infochimps.com, 22 June 2015
 #
-#to execute using pyspark
-#    IPYTHON=1 pyspark
-#    %run sm_spark.py
-
+#submit this job to Yarn using spark-submit:
+#    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
 
 #imports
 import numpy as np
@@ -142,6 +140,13 @@ for m in motors_local:
         file.write(str(d) + '\n')
 file.close()
 
-#plot results
-plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+#plot & report results
+money = plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+print 'cumulative revenue at completion of run-to-fail              (M$) = ', \
+    money[money.index  <= Time_stop_runtofail].cumulative_revenue.values[-1]/1.0e6
+print 'cumulative revenue at completion of scheduled-maintenance    (M$) = ', \
+    money[money.index  <= Time_stop_sched_maint].cumulative_revenue.values[-1]/1.0e6
+print 'cumulative revenue at completion of scheduled-maintenance    (M$) = ', \
+    money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
+
