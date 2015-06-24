@@ -79,14 +79,14 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     ax.set_ylabel('Pressure')
     Ncolors = 256
     cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
-    ax.plot(xy_train.Temp, xy_train.Pressure, marker='o', markersize=3, color='white', 
-        linestyle='none', alpha=0.4)
+    ax.plot(xy_train.Temp, xy_train.Pressure, marker='o', markersize=xy_train.time_to_fail, 
+        color='white', linestyle='none', alpha=0.4)
     plt.colorbar(cf)
     plotfile = 'figs/fail_factor.png'
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
-    
+
     #contour predicted_time_to_fail(Temp, Pressure):
     T_axis = np.arange(50.0, 151.0, 0.5)
     P_axis = np.arange(0.0, 101.0)

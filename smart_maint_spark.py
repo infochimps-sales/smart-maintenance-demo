@@ -141,7 +141,7 @@ for m in motors_local:
 file.close()
 
 #plot & report results
-money = plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+money = plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
 print 'cumulative revenue at completion of run-to-fail              (M$) = ', \
     money[money.index  <= Time_stop_runtofail].cumulative_revenue.values[-1]/1.0e6
 print 'cumulative revenue at completion of scheduled-maintenance    (M$) = ', \
