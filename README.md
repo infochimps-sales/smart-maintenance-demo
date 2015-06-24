@@ -42,7 +42,7 @@ The output of this spark job is 3 png images that can be viewed by browsing
 
 ###The demo's storyline:
 
-This demo calculates the maintenance history of 200 simulated motors over time. Initially the
+This demo calculates the operational history of 200 simulated motors over time. Initially these
 motors are evolved using a _run-to-fail_ maintenance strategy. Each motor has two knobs,
 Pressure (P) and Temperature (T), and the size of the dots in the following scatterplot
 shows that the longest-lived motors have (P,T) settings in these intervals: 40 < P < 60 and T < 100,
@@ -53,13 +53,13 @@ sweet spot at P~50 and T<100:
 
 The demo evolves these motors in run-to-fail mode until time t=200, and then (just for kicks)
 it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400.
-During scheduled-maintenance operation, every engine is sent to the shop for maintenance,
-which simply removes some cruft and temporarily reduces the likelihood of motor failure.
+During scheduled-maintenance operation, every engine is sent to maintenance every 5 days,
+this simply removes some cruft and temporarily reduces the likelihood of motor failure.
 Meanwhile the SVM algorithm is trained on the run-to-fail data, which is simply the observed
-engine lifetimes versus their (P,T) settings. After training, the SVM algorithm is now 
+engine lifetimes versus their (P,T) settings. Once trained, the SVM algorithm is now 
 able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
-estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved in 
-_predictive-maintenance_ mode, which simply sends an engine into maintenance
+estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved using
+_predictive-maintenance_, which simply sends an engine into maintenance
 when its predicted time-to-fail is one day hence. The following diagram shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
 engines' (P,T) parameter space. Note that SVM's predicted time-to-fail does indeed recover
