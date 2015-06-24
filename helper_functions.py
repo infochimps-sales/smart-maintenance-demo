@@ -21,7 +21,7 @@ def get_events(motors):
 
 def train_svm(motors, training_axes, prediction_axis):
     pd.set_option('display.expand_frame_repr', False)
-    print '...training...portions of this code can be parallelized...'
+    print '...training SVM...this bit is computed serially on foyer node...'
     xy_train = pd.DataFrame()
     for m in motors: 
         xy_train = xy_train.append(m.get_training_dataframe())

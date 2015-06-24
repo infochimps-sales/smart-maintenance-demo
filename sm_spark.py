@@ -24,7 +24,7 @@ from pylab import *
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set(
     "spark.executor.memory", "1g")
-sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
+#sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 #motor parameters
 N_motors = 200
@@ -115,7 +115,8 @@ motors.persist()
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
 clf, x_avg, x_std, xy_train = train_svm(motors_local, training_axes, prediction_axis)
-motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std)).persist()
+motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
+motors.persist()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
@@ -123,8 +124,8 @@ motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
-    #trigger lazy execution
-    if (t%Nsteps == (Nsteps - 1)):
+    #trigger lazy execution to avoid 'excessively deep recursion' error
+    if (t%50 == 49): #motors = motors.persist()
         motors = motors.sortBy(lambda m: m.id)
         m = motors.first()
         print m.Time, m.maint_type
