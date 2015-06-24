@@ -42,14 +42,13 @@ The output of this spark job is 3 png images that can be viewed by browsing
 
 ###The demo's storyline:
 
-This demo calculates the repair history of 200 simulated motors over time. Initially the
-motors are evolved using a 'run-to-fail' maintenance strategy. Motors generate earning while
-running, and they accrue some expenses when being maintained and greater expenses while
-they are being repaired after a failure.  Each motor has two knobs, a Pressure (P) knob and
-a Temperature (T) knob, and the size of the dots in the following scatterplot
-shows that the longest-lived motors have settings in these intervals: 40 < P < 60 and T < 100,
+This demo simulations the repair history of 200 simulated motors over time. Initially the
+motors are evolved using a 'run-to-fail' maintenance strategy.  
+Each motor has two knobs, Pressure (P) and Temperature (T),
+and the size of the dots in the following scatterplot
+shows that the longest-lived motors have (P,T) settings in this interval: 40 < P < 60 and T < 100,
 with motors being progressively shorter-lived the further away their P,T setting are from this
-sweet spot:
+sweet spot at P~50 and T<100: 
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/fail_factor.png)
 
@@ -67,6 +66,9 @@ shown above at 40 < P < 60 and T < 100.
 
 This diagram shows...
 
+Motors generate earning while
+running, and they accrue some expenses when being maintained and greater expenses while
+they are being repaired after a failure. 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
 
