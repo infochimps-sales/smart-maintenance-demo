@@ -62,21 +62,21 @@ estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved us
 _predictive-maintenance_, which simply sends an engine into maintenance
 when its predicted time-to-fail is one day hence. The following diagram shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
-engines' (P,T) parameter space. Note that SVM's predicted time-to-fail does indeed recover
+(P,T) parameter space. Note that SVM's predicted time-to-fail does indeed recover
 the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
-zone is rather ragged.
+zone is somewhat ragged.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/predicted_time_to_fail.png)
 
-Engines that are operating generate earnings at a rate of $1000/day, while engines that are
-being maintained instead generate some costs (-$200/day) with failed engines generating even greater
-costs (-$2000/day) while being repaired.
-The following shows that the cumulative cost of operating these engines in _run-to-fail_ mode
-is very expensive, resulting in cumulative earnings of -$13M by time t=200. Operating these
-engines using the _scheduled-maintenance_ strategy is a wash, with earnings balancing expenses.
-However switching to a _predictive-maintenance_ strategy results in earnings exceeding expenses,
-the owners of these motors recover all lost earnings by time t=830, and have earned $9M and the end
-of the simulation.
+Engines that are operating also generate earnings at a rate of $1000/day, while engines that are
+being maintained instead generate modest expenses (-$200/day), with failed engines generating even greater
+expenses (-$2000/day) while being repaired.
+The following shows that operating these engines in _run-to-fail_ mode is very expensive, 
+resulting in cumulative earnings of -$13M by time t=200. This plot also shows that operating these
+engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
+But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
+exceeds expenses, so the owners of these motors recover all lost earnings by time t=830, 
+and have earned $9M at the end of this simulation.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
