@@ -24,17 +24,6 @@ hadoop nodes, and is done in takes 5 minutes:
     ./install.sh
 
 
-Dial down spark's verbosity (ugh, this doesnt work):
-
-    sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
-        /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
-
-
-and in log4j.properties set
-
-    log4j.rootCategory=WARN, console
-
-
 To submit this spark job to Yarn for execution:
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
@@ -106,3 +95,12 @@ and to undo the above:
 
 IPYTHON=1 pyspark
 or: PYSPARK_DRIVER_PYTHON=ipython pyspark
+
+Dial down spark's verbosity (ugh, this doesnt work):
+
+    sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
+        /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
+
+and in log4j.properties set
+
+    log4j.rootCategory=WARN, console
