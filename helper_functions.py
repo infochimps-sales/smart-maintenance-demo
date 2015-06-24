@@ -60,6 +60,7 @@ def motor_stats(motors):
 def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
 
     #contour fail_factor vs Temp & Pressure
+    print '...generating output plots...'
     events = get_events(motors)
     T_axis = np.arange(50.0, 151.0, 0.5)
     P_axis = np.arange(0.0, 101.0)
