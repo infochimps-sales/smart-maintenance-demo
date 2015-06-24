@@ -83,7 +83,7 @@ and have earned $9M at the end of this simulation.
 So this demo's main punchline is: _implement Smart Maintenance on the BDPaas to 
 dramatically reduce expenses and to grow earnings._
 
-###Known Issues:
+###Known issues:
 
 
 1 If the png images are not browse-able, restart the webserver on the hadoop foyer node:
@@ -109,7 +109,7 @@ and in log4j.properties set
 but the above didn't help any...perhaps one must do this on all datanodes?
 
 
-###Debugging Notes:
+###Debugging notes:
         
     
 One can execute this demo line-by-line at the python command line using pyspark,
