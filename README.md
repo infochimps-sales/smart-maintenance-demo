@@ -49,7 +49,9 @@ they are being repaired after a failure.  Each motor has two knobs, a Pressure (
 a Temperature (T) knob, and the size of the dots in the following scatterplot
 shows that the longest-lived motors have settings in these intervals: 40 < P < 60 and T < 100,
 with motors being progressively shorter-lived the further away their P,T setting are from this
-sweet spot; see http://cdh-foyer.platform.infochimps:12321/figs/fail_factor.png
+sweet spot:
+
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/fail_factor.png)
 
 The SVM algorithm is then trained on these date, namely, the observed engine lifetime versus
 engine (P,T). The now-trained SVM algorithm is now able to use an engine's (P,T) settings to
@@ -60,6 +62,13 @@ so-called prediction surface map's the engine's predicted time-to-fail versus th
 settings; see http://cdh-foyer.platform.infochimps:12321/figs/predicted_time_to_fail.png. Note
 that SVM's predicted time-to-fail does indeed recover the engine's 'finger of stability'
 shown above at 40 < P < 60 and T < 100.
+
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/predicted_time_to_fail.png)
+
+This diagram shows...
+
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
+
 
 ###Known Issues:
 
