@@ -1,8 +1,8 @@
-#smart_maint.py
+#smart_maint_serial.py
 #
 #    this is the serial (ie non-parallelized) version of the smart maintenance demo.
 #
-#    execute on a hadoop foyer node via:     python smart_maint.py
+#    execute on a hadoop foyer node via:     python smart_maint_serial.py
 
 #imports
 import numpy as np
