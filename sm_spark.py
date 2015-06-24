@@ -24,10 +24,10 @@ from pylab import *
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set(
     "spark.executor.memory", "1g")
-sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
+#sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 #motor parameters
-N_motors = 20#0
+N_motors = 200
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -50,7 +50,7 @@ Pressure_0 = 50.0
 delta_Pressure = 20.0
 
 #runtime parameters
-run_interval = 20#0
+run_interval = 200
 Time_start_runtofail = 0
 Time_stop_runtofail = Time_start_runtofail + run_interval
 Time_start_sched_maint = Time_stop_runtofail
@@ -91,19 +91,12 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution
-    if (t%Nsteps == (Nsteps - 1)):
-        motors = motors.sortBy(lambda m: m.id)
-        m = motors.first()
-        print m.Time, m.maint_type
+    #if (t%Nsteps == (Nsteps - 1)):
+    #    motors = motors.sortBy(lambda m: m.id)
+    #    m = motors.first()
+    #    print m.Time, m.maint_type
 
-#tigger lazy execution...not sure this is needed
-m = motors.collect()[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.maint_type
-import sys
-print sys.getsizeof(m)
+motors.persist()
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -112,81 +105,22 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution
-    if (t%Nsteps == (Nsteps - 1)):
-        motors = motors.sortBy(lambda m: m.id)
-        m = motors.first()
-        print m.Time, m.maint_type
+    #if (t%Nsteps == (Nsteps - 1)):
+    #    motors = motors.sortBy(lambda m: m.id)
+    #    m = motors.first()
+    #    print m.Time, m.maint_type
 
-#tigger lazy execution...not sure this is needed 
-m = motors.collect()[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.maint_type
-print sys.getsizeof(m)
+motors.persist()
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
 clf, x_avg, x_std, xy_train = train_svm(motors_local, training_axes, prediction_axis)
-motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
-print clf
-print x_avg
-print x_std
-
-#tigger lazy execution
-motors_local = motors.collect()
-m = motors_local[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.x_avg
-print m.x_std
-print m.maint_type
-print sys.getsizeof(m)
-
-for m in motors_local:
-    print m.x_std
-
-maint_type = 'run-to-fail'
-motors = motors.map(lambda m: m.set_maint_type(maint_type))
-motors = motors.map(lambda m: m.operate())
-m = motors.first()
-print m.events[-5:]
-print m.maint_type, m.x_avg, m.Time
-
-maint_type = 'predictive'
-motors = motors.map(lambda m: m.set_maint_type(maint_type))
-motors = motors.map(lambda m: m.operate())
-m = motors.first()
-print m.events[-5:]
-print m.maint_type, m.x_avg, m.Time
-sys.exit()
-
-
-
+motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std)).persist()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
-time.sleep(5)
-sys.exit()
-
-m = motors.collect()[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.maint_type
-print sys.getsizeof(m)
-
-motors = motors.map(lambda m: m.operate())
-m = motors.collect()[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.maint_type
-print sys.getsizeof(m)
-
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #trigger lazy execution
@@ -194,14 +128,8 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
         motors = motors.sortBy(lambda m: m.id)
         m = motors.first()
         print m.Time, m.maint_type
-        
-#tigger lazy execution...not sure this is needed
-m = motors.collect()[N_motors/2]
-print m.events[0:5]
-print m.Time
-print m.clf
-print m.maint_type
-print sys.getsizeof(m)
+
+motors.persist()
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
@@ -219,8 +147,3 @@ file.close()
 #plot results
 plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
-
-
-
-
-
