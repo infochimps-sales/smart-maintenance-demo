@@ -1,4 +1,6 @@
 #smart_maint.py
+#
+#to execute: python smart_maint.py
 
 #imports
 import numpy as np
@@ -80,9 +82,15 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     for m in motors:
         m.operate()
 
-#run motor using predictive maintenance 
-xy_train = train_svm(motors, training_axes, prediction_axis)
-for m in motors: m.maint_type = 'predictive'
+#train motor for predictive maintenance 
+clf, x_avg, x_std, xy_train = train_svm(motors, training_axes, prediction_axis)
+for m in motors: 
+    m.maint_type = 'predictive'
+    m.x_avg = x_avg
+    m.x_std = x_std
+    m.clf = clf
+
+#run motors using predictive maintenance
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors:
