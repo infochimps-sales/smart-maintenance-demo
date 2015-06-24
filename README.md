@@ -4,10 +4,10 @@ by Joe Hahn,
 joe.hahn@infochimps.com,
 20 May 2015
 
-This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop,
-this demo uses python's scikit-learn machine-learning algorithm to perform predictive
-maintenance on 200 simulated motors, with much (but not all) of the work being done in
-parallell across the Hadoop cluster's datanodes.
+This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop.
+This demo uses python's scikit-learn machine-learning algorithm to perform predictive
+maintenance on 200 simulated motors, with much (but not all) of the computation being done in
+parallell across the Hadoop cluster's datanodes using Spark.
 
 ###To install:
 
@@ -40,7 +40,7 @@ The output of this spark job is 3 png images that can be viewed by browsing
     http://cdh-foyer.platform.infochimps:12321/figs
     
 
-###The Demo Storyline:
+###The demo's storyline:
 
 
 
