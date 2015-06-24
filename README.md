@@ -80,7 +80,7 @@ and have earned $9M at the end of this simulation.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
-So this demo's main punchline is: _implement Smart Maintenance on the BDPaas to 
+So this demo's main punchline is: _get Smart Maintenance on the BDPaas to 
 dramatically reduce expenses and to grow earnings._
 
 ###Known issues:
