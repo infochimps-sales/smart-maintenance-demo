@@ -171,3 +171,5 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
+    return events
+    

@@ -111,7 +111,7 @@ for m in motors:
 file.close()
 
 #plot results
-plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+events = plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
 print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
 
