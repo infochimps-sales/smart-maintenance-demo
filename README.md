@@ -39,24 +39,17 @@ The output of this spark job is 3 png images that can be viewed by browsing
     http://cdh-foyer.platform.infochimps:12321/figs
     
 
-###Debugging Tips:
-        
-    
-One can execute this demo line-by-line at the python command line, useful for debugging:
-
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+###The Demo Storyline:
 
 
-Then copy-n-past each line from smart_maint_spark.py into the python command line, 
-EXCEPT for line 25: sc = SparkContext(conf=conf... 
 
-
-###Known Issues
+###Known Issues:
 
 
 ---If the png images are not browse-able, restart the webserver on the hadoop foyer node:
 
-
+    /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
+    
 
 ---Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
 
@@ -70,6 +63,19 @@ and in log4j.properties set
 
 
 but the above didn't help any...maybe to this on all datanodes?
+
+
+###Debugging Tips:
+        
+    
+One can execute this demo line-by-line at the python command line, useful for debugging:
+
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+
+
+Then copy-n-past each line from smart_maint_spark.py into the python command line, 
+EXCEPT for line 25: sc = SparkContext(conf=conf... 
+
 
 
 
