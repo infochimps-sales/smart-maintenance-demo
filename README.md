@@ -67,10 +67,11 @@ and in log4j.properties set
 but the above didn't help any...maybe to this on all datanodes?
 
 
-###Debugging Tips:
+###Debugging Notes:
         
     
-One can execute this demo line-by-line at the python command line, useful for debugging:
+One can execute this demo line-by-line at the python command line, using pyspark
+(this is useful for debugging):
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
 
@@ -78,7 +79,7 @@ One can execute this demo line-by-line at the python command line, useful for de
 Then copy-n-past each line from smart_maint_spark.py into the python command line, 
 EXCEPT for line 25: sc = SparkContext(conf=conf... 
 
-To get pyspark to use ipython instead of python:
+To get pyspark to use ipython (rather than python):
 
     sudo rm -f /usr/bin/python /usr/bin/ipython
     sudo ln -s /home/$USER/anaconda/bin/python /usr/bin/python
@@ -86,7 +87,7 @@ To get pyspark to use ipython instead of python:
     IPYTHON=1 pyspark
 
 
-To undo the above:
+And to undo the above changes:
  
     sudo rm /usr/bin/python /usr/bin/ipython
     sudo ln -s /usr/bin/python2.6 /usr/bin/python
