@@ -37,7 +37,7 @@ and in log4j.properties set
 
 To submit this spark job to Yarn for execution:
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
     
 
 Browse jobs in Hadoop resource manager UI:
@@ -86,7 +86,7 @@ EXCEPT for line 27: sc = SparkContext(conf=conf...
 
 Alternatively, one can use spark-submit to submit this job to Spark
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit sm_spark.py
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
 
 
 the above will run sm_spark.py as a Spark job that is executed locally on the foyer node.
