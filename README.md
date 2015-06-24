@@ -6,9 +6,8 @@ joe.hahn@infochimps.com,
 
 This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop,
 this demo uses python's scikit-learn machine-learning algorithm to perform predictive
-maintenance on 200 simulated motors. This non-parallelized code executes in 3.8 minutes on
-a hadoop-foyer node, a followup effort will get this running in parallel on the hadoop
-datanodes using Spark.
+maintenance on 200 simulated motors, with much (but not all) of the work being done in
+parallell across the Hadoop cluster's datanodes.
 
 ###To install:
 
@@ -48,12 +47,16 @@ The output of this spark job is 3 png images that can be viewed by browsing
 ###Known Issues:
 
 
-If the png images are not browse-able, restart the webserver on the hadoop foyer node:
+1 If the png images are not browse-able, restart the webserver on the hadoop foyer node:
 
     /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
-    
 
-Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
+
+2 Close inspection of Spark's Application Master UI will show that this job is being executed
+on only 2 of the 3 available datanodes, I have no idea why 1 datanode is not participating,
+this needs to be debugged.
+
+3 Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
 
     sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
         /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
