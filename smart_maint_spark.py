@@ -103,6 +103,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
 
 motors.persist()
+print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
