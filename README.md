@@ -13,13 +13,13 @@ parallell on the Hadoop cluster's datanodes via Spark.
 
 First clone this github repo to your home directory on the hadoop foyer node:
 
-    cd; git clone git@github.com:infochimps-sales/spark-airline-demo.git 
+    cd; git clone git@github.com:infochimps-sales/smart-maintenance-demo.git 
     
    
 Then execute the installer, this will download and install some python libraries to all 
 hadoop nodes, and is done in 5 minutes:
 
-    cd spark-airline-demo
+    cd smart-maintenance-demo
     ./install.sh
 
 
