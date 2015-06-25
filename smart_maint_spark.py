@@ -23,8 +23,8 @@ from pylab import *
 #sc = SparkContext()
 
 #setup to submit spark job to YARN
-conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").
-    set("spark.executor.memory", "1g")
+conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")\
+    .set("spark.executor.memory", "1g")
 sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 #motor parameters
