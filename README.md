@@ -68,15 +68,15 @@ zone is somewhat ragged.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/predicted_time_to_fail.png)
 
-Engines that are operating also generate earnings at a rate of $1000/day, while engines that are
-being maintained instead generate modest expenses (-$200/day), with failed engines generating even greater
-expenses (-$2000/day) while being repaired.
-The following shows that operating these engines in _run-to-fail_ mode is very expensive, 
-resulting in cumulative earnings of -$13M by time t=200. This plot also shows that operating these
+Each operating engine also generate earnings at a rate of $1000/day, while engines that are
+being maintained instead generate modest expenses (-$200/day), with failed engines generating
+larger expenses (-$2000/day) while they are in the shop for repairs. The following shows
+that operating these engines in _run-to-fail_ mode is very expensive, resulting in
+cumulative earnings of -$13M by time t=200. This plot also shows that operating these
 engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
 But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
-exceeds expenses, so the owners of these motors recover all lost earnings by time t=830, 
-and have earned $7M at the end of this simulation.
+exceeds expenses, so much so that the operators of these engines recover all lost earnings
+by time t=850, and have earned $7M at the end of this simulation.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
