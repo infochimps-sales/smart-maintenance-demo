@@ -23,6 +23,12 @@ hadoop nodes, and is done in 5 minutes:
     ./install.sh
 
 
+Next, use Cloudera Manager to reduce Spark's otherwise overwhelming verbosity. Select
+Cloudera Manager -> spark_on_yarn -> Configuration -> 
+"Spark Client Advanced Configuration Snippet (Safety Valve) for spark-conf/log4j.properties"
+and enter "log4j.rootCategory=INFO, console" into the box there, then click Deploy
+
+
 ###To execute:
 
 To submit this spark job to Yarn for execution:
@@ -94,19 +100,6 @@ dramatically reduce expenses and to grow earnings._
 2 Close inspection of Spark's Application Master UI will show that this job is being executed
 on only 2 of the 3 available datanodes, I have no idea why one datanode is not participating,
 this needs to be debugged.
-
-3 Spark's console output is *way* too verbose, I attempted to dial that down on foyer node via:
-
-    sudo cp /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties.template \
-        /opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/etc/spark/conf.dist/log4j.properties
-
-
-and in log4j.properties set
-
-    log4j.rootCategory=WARN, console
-
-
-but the above didn't help any...perhaps one must do this on all datanodes?
 
 
 ###Debugging notes:
