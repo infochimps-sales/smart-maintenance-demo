@@ -29,7 +29,7 @@ sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -127,6 +127,9 @@ pd.set_option('display.expand_frame_repr', False)
 motors_local = motors.collect()
 N = motor_stats(motors_local)
 print N
+
+import sys
+sys.exit()
 
 #store all events in this file, for debugging
 file = open('events.json','w')

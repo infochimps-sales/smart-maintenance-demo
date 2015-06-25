@@ -23,18 +23,14 @@ hadoop nodes, and is done in 5 minutes:
     ./install.sh
 
 
-Next, use Cloudera Manager to reduce Spark's otherwise overwhelming verbosity. Select
-Cloudera Manager -> spark_on_yarn -> Configuration -> 
-"Spark Client Advanced Configuration Snippet (Safety Valve) for spark-conf/log4j.properties"
-and enter "log4j.rootCategory=INFO, console" into the box there, then click Deploy
-
-
 ###To execute:
 
 To submit this spark job to Yarn for execution:
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
-    
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py \
+        --driver-java-options \
+        "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties"
+
 
 Monitor this job's progress using the Spark UI by browsing:
 
