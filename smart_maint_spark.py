@@ -1,7 +1,7 @@
 #smart_maint_spark.py
 #
 #the smart maintenance demo
-#by Joe Hahn, jhahn@infochimps.com, 22 June 2015
+#by Joe Hahn, jhahn@infochimps.com, 22 June 2015 
 #
 #submit this job to Yarn using spark-submit:
 #    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
