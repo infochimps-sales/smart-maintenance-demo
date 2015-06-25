@@ -80,9 +80,10 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     ax.set_ylabel('Pressure')
     Ncolors = 256
     cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
-    for idx, row in xy_train.iterrows():
-        ax.scatter(row['Temp'], row['Pressure'], marker='o', color='white', alpha=0.6, 
-            s=row['time_to_fail']**1.5)
+    #for idx, row in xy_train.iterrows():
+    #    ax.scatter(row['Temp'], row['Pressure'], marker='o', color='white', alpha=0.6, 
+    #        s=row['time_to_fail']**1.5)
+    ax.scatter(xy_train.Temp, xy_train.Pressure, marker='o', color='white', alpha=0.6 #), s=xy_train.time_to_fail**1.5)
     plotfile = 'figs/fail_factor.png'
     fig.savefig(plotfile)
     plt.close(fig) 
