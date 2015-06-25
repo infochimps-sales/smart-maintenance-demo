@@ -18,12 +18,14 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pylab import *
 
-#setup for spark
-from pyspark import SparkConf, SparkContext
-#conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set("spark.executor.memory", "1g")
-conf = SparkConf().setMaster("local").setAppName("Smart Maintenance")
-#sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
-sc = SparkContext()
+##uncomment the following to setup to execute in local mode on the hadoop foyer node
+#from pyspark import SparkConf, SparkContext
+#sc = SparkContext()
+
+#setup to submit spark job to YARN
+conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").
+    set("spark.executor.memory", "1g")
+sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 #motor parameters
 N_motors = 20#0
