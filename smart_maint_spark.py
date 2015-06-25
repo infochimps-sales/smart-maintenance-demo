@@ -25,7 +25,7 @@ conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance").set(
 sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 #motor parameters
-N_motors = 20#0
+N_motors = 200
 ran_num_seed = 1
 
 #maintenance & repair parameters
