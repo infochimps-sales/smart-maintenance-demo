@@ -80,8 +80,9 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     ax.set_ylabel('Pressure')
     Ncolors = 256
     cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
+    dot_size = xy_train.time_to_fail**1.5
     ax.scatter(xy_train.Temp, xy_train.Pressure, marker='o', color='white', alpha=0.6, 
-        s=xy_train.time_to_fail.tolist())
+        s=dot_size.tolist())
     plotfile = 'figs/fail_factor.png'
     fig.savefig(plotfile)
     plt.close(fig) 
