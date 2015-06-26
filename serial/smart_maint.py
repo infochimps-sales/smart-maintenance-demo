@@ -127,4 +127,4 @@ print 'total number of motor events = ', len(get_events(motors))
 cnts = events.groupby(['Time', 'id'])['Pressure', 'Temp'].count()
 cnts['PT'] = cnts.Pressure + cnts.Temp
 print cnts[cnts.PT > 2]
-
+print np.unique(xy_train.isnull())
