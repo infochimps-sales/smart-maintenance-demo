@@ -145,5 +145,3 @@ print
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors_local))
 
-
-
