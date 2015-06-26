@@ -90,6 +90,8 @@ motors = sc.parallelize(
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
+    #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
+    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
 motors.persist()
 
@@ -99,6 +101,8 @@ motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
+    #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
+    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
 motors.persist()
 
