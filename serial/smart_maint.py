@@ -1,8 +1,8 @@
 #smart_maint_serial.py
 #
-#    this is the serial (ie non-parallelized) version of the smart maintenance demo.
+#    this is the serial (non-sparkified) version of the smart maintenance demo.
 #
-#    execute on a hadoop foyer node via:     python smart_maint_serial.py
+#    execute on a hadoop foyer node via:     python smart_maint.py
 
 #imports
 import numpy as np
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 1
 
 #maintenance & repair parameters
