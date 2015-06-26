@@ -1,4 +1,4 @@
-#smart_maint_serial.py
+#smart_maint.py
 #
 #    this is the serial (non-sparkified) version of the smart maintenance demo.
 #
