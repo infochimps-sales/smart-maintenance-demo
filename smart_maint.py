@@ -1,10 +1,10 @@
-#smart_maint_spark.py
+#smart_maint.py
 #
 #the smart maintenance demo
 #by Joe Hahn, jhahn@infochimps.com, 22 June 2015 
 #
 #submit this job to Yarn using spark-submit:
-#    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py
+#    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint.py
 
 #imports
 import numpy as np
@@ -27,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 2
 
 #maintenance & repair parameters
