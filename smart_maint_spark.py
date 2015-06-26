@@ -19,10 +19,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #setup to submit spark job to YARN
-from pyspark import SparkConf, SparkContext
-#conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")#\
-#    .set("spark.executor.memory", "4g")
-#sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
+from pyspark import SparkContext
 sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 
 ##uncomment the following to setup to execute in local mode on the hadoop foyer node
@@ -30,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 20#0
+N_motors = 200
 ran_num_seed = 1
 
 #maintenance & repair parameters
