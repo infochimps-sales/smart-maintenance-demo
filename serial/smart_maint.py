@@ -82,6 +82,7 @@ for m in motors: m.maint_type = 'scheduled'
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     for m in motors: m.operate()
+    print t, len(motors[N_motors/2].events)
 
 #train motor for predictive maintenance 
 clf, x_avg, x_std, xy_train = train_svm(motors, training_axes, prediction_axis)
@@ -95,6 +96,7 @@ for m in motors:
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors: m.operate()
+    print t, len(motors[N_motors/2].events)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
