@@ -21,7 +21,7 @@ from pylab import *
 #setup to submit spark job to YARN
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("yarn-client").setAppName("Smart Maintenance")\
-    .set("spark.executor.memory", "7g")
+    .set("spark.executor.memory", "4g")
 sc = SparkContext(conf=conf, pyFiles=['helper_functions.py', 'motor.py'])
 
 ##uncomment the following to setup to execute in local mode on the hadoop foyer node
