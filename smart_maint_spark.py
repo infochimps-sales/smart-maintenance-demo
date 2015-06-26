@@ -140,5 +140,5 @@ print 'cumulative revenue at completion of scheduled-maintenance     (M$) = ', \
     money[money.index  <= Time_stop_sched_maint].cumulative_revenue.values[-1]/1.0e6
 print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
     money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
-print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
+#print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
