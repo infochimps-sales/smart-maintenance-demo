@@ -30,7 +30,7 @@ To submit this spark job to Yarn for execution:
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
         --master yarn-client --num-executors 3 --executor-cores 6 --executor-memory 4G \
         --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
-        smart_maint_spark.py
+        smart_maint.py
 
 
 Monitor this job's progress using the Spark UI by browsing:
@@ -108,7 +108,7 @@ To benchmark spark's commandline settings:
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
         --master yarn-client --num-executors 3 --executor-cores 6 --executor-memory 4G \
         --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
-        smart_maint_spark.py; \
+        smart_maint.py; \
     echo "execution time (seconds) = "$(( $(date +%s) - $START ))
 
 
