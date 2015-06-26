@@ -28,8 +28,8 @@ hadoop nodes, and is done in 5 minutes:
 To submit this spark job to Yarn for execution:
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py \
-        --driver-java-options \
-        "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties"
+        --num-executors 9 --executor-cores 7 --executor-memory 10G \
+        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties"
 
 
 Monitor this job's progress using the Spark UI by browsing:
