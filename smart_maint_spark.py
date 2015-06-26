@@ -125,9 +125,6 @@ motors_local = motors.collect()
 N = motor_stats(motors_local)
 print N
 
-import sys
-sys.exit()
-
 #store all events in this file, for debugging
 file = open('events.json','w')
 for m in motors_local:
