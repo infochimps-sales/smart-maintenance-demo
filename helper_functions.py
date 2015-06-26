@@ -17,7 +17,7 @@ def get_events(motors):
     events_df = pd.DataFrame()
     for m in motors:
         events_df = events_df.append(pd.DataFrame(m.events))
-    return events_df.reset_index(drop=True)
+    return events_df.sort(['Time', 'id']).reset_index(drop=True)
 
 def train_svm(motors, training_axes, prediction_axis):
     pd.set_option('display.expand_frame_repr', False)
@@ -176,5 +176,5 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     fig.savefig(plotfile)
     plt.close(fig) 
     print 'completed plot ' + plotfile
-    return money
+    return money, events
     
