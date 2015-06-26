@@ -124,3 +124,7 @@ print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors))
 
+cnts = events.groupby(['Time', 'id'])['Pressure', 'Temp'].count()
+cnts['PT'] = cnts.Pressure + cnts.Temp
+print cnts[cnts.PT > 2]
+

@@ -130,6 +130,7 @@ file = open('events.json','w')
 for m in motors_local:
     for d in m.events:
         file.write(str(d) + '\n')
+
 file.close()
 
 #plot & report results
@@ -146,3 +147,6 @@ print
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors_local))
 
+cnts = events.groupby(['Time', 'id'])['Pressure', 'Temp'].count()
+cnts['PT'] = cnts.Pressure + cnts.Temp
+print cnts[cnts.PT > 2]
