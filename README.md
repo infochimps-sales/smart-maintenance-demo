@@ -27,9 +27,10 @@ hadoop nodes, and is done in 5 minutes:
 
 To submit this spark job to Yarn for execution:
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint_spark.py \
-        --num-executors 9 --executor-cores 7 --executor-memory 10G \
-        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties"
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
+        --master yarn-client --num-executors 9 --executor-cores 7 --executor-memory 7G
+        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
+        smart_maint_spark.py
 
 
 Monitor this job's progress using the Spark UI by browsing:
@@ -100,8 +101,18 @@ this needs to be debugged.
 
 ###Debugging notes:
         
-    
-One can execute this demo line-by-line at the python command line using pyspark,
+
+To benchmark spark's commandline settings:
+
+    START=$(date +%s); \
+    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
+        --master yarn-client --num-executors 9 --executor-cores 7 --executor-memory 7G \
+        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
+        smart_maint_spark.py; \
+    echo "execution time (seconds) = "$(( $(date +%s) - $START ))
+
+
+One can also execute this demo line-by-line at the python command line using pyspark,
 this is useful when debugging code:
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
