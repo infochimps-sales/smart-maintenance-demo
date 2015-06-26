@@ -20,7 +20,7 @@ from pylab import *
 
 #setup to submit spark job to YARN
 from pyspark import SparkContext
-#sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
+sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 
 ##uncomment the following to setup to execute in local mode on the hadoop foyer node
 #from pyspark import SparkConf, SparkContext
