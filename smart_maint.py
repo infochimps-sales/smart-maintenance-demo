@@ -20,7 +20,7 @@ from pylab import *
 
 #setup to submit spark job to YARN
 from pyspark import SparkContext
-sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
+#sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 
 ##uncomment the following to setup to execute in local mode on the hadoop foyer node
 #from pyspark import SparkConf, SparkContext
@@ -113,9 +113,9 @@ maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
-    motors = motors.map(lambda m: m.operate())
+    motors = motors.map(lambda m: m.operate()).persist()
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
+    #if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
 motors.persist()
 
