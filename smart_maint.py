@@ -91,7 +91,10 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    motors = motors.sortBy(lambda m: m.id)
+    motors_local = motors.collect()
+
+import sys
+sys.exit()
 
 motors.persist()
 
