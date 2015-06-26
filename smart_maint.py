@@ -92,7 +92,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     motors_local = motors.collect()
-    print t, len(motors_local[Nmotors/2].events())
+    print t, len(motors_local[N_motors/2].events())
 
 import sys
 sys.exit()
