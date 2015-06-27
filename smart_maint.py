@@ -73,7 +73,7 @@ import time
 start_time_sec = time.clock()
 
 #set random number seed
-np.random.seed(ran_num_seed)
+#np.random.seed(ran_num_seed)
 
 #set maintenance type to: 'run-to-fail', 'scheduled', or 'predictive'
 maint_type = 'run-to-fail'
