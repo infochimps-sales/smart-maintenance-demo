@@ -19,8 +19,7 @@ class Motor:
         self.Time_since_repair = 0
         self.Time_next_maint = None
         self.fail_prob = 0.0
-        self.ran_num_gen = np.random
-        self.ran_num_gen.seed(self.id)
+        self.ran_num_gen = np.random.RandomState.seed(self.id)
         self.Temp = None
         self.Temp_0 = Temp_0
         self.delta_Temp = delta_Temp
