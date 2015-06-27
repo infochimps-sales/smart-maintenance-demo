@@ -86,6 +86,8 @@ motors = sc.parallelize(
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
 
+import sys
+
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
@@ -93,7 +95,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        #print t, len(motors.first().events)
+        print t, sys.getsizeof(motors.first())
 
 motors.persist()
 
@@ -106,7 +108,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        #print t, len(motors.first().events)
+        print t, sys.getsizeof(motors.first())
     
 motors.persist()
 
@@ -125,7 +127,7 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        #print t, len(motors.first().events)
+        print t, sys.getsizeof(motors.first())
     
 motors.persist()
 
