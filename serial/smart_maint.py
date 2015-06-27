@@ -122,7 +122,7 @@ print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
 print
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors))
-print 'execution time (seconds) = ', time.clock() - start_time_sec)
+print 'execution time (seconds) = ', time.clock() - start_time_sec
 
 cnts = events.groupby(['Time', 'id'])['Pressure', 'Temp'].count()
 cnts['PT'] = cnts.Pressure + cnts.Temp
