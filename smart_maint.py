@@ -79,7 +79,7 @@ np.random.seed(ran_num_seed)
 maint_type = 'run-to-fail'
 
 #create parallelized list of motors
-num_partitions = 3*7*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu 
+num_partitions = 3*2*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu 
 motors = sc.parallelize(
     [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
@@ -93,7 +93,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, len(motors.first().events)
+        #print t, len(motors.first().events)
 
 motors.persist()
 
@@ -106,7 +106,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, len(motors.first().events)
+        #print t, len(motors.first().events)
     
 motors.persist()
 
@@ -125,7 +125,7 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, len(motors.first().events)
+        #print t, len(motors.first().events)
     
 motors.persist()
 
