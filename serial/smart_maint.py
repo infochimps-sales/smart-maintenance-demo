@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #motor parameters
-N_motors = 1#200
+N_motors = 5#200
 ran_num_seed = 1
 
 #maintenance & repair parameters
