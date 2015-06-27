@@ -117,7 +117,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    if (t%400 == 399): motors = motors.sortBy(lambda m: m.id)
+    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
