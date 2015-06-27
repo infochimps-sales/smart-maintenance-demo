@@ -79,7 +79,7 @@ cumulative earnings of -$13M by time t=200. This plot also shows that operating 
 engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
 But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
 exceeds expenses, so much so that the operators of these engines recover all lost earnings
-by time t=850, and have earned $7M at the end of this simulation.
+by time t=870, and have earned $6M at the end of this simulation.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
 
