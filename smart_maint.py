@@ -5,6 +5,8 @@
 #
 #submit this job to Yarn using spark-submit:
 #    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint.py
+#
+#execution time = 2.7 minutes
 
 #imports
 import numpy as np
@@ -80,7 +82,7 @@ maint_type = 'run-to-fail'
 
 #create parallelized list of motors
 #num_partitions = 3*7*1    #3datanotes*(7 of 8 vcpus on m3.2xl)*1partitions_per_cpu exec_time=166sec
-num_partitions = 3*7*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu exec_time=163sec
+num_partitions = 3*7*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu exec_time=150sec
 #num_partitions = 3*7*3    #3datanotes*(7 of 8 vcpus on m3.2xl)*3partitions_per_cpu exec_time=164sec
 #num_partitions = 3*7*5    #3datanotes*(7 of 8 vcpus on m3.2xl)*5partitions_per_cpu exec_time=177sec
 motors = sc.parallelize(
@@ -93,9 +95,6 @@ motors = sc.parallelize(
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
-    ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    #if (t%50 == 49): 
-    #    motors = motors.sortBy(lambda m: m.id)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -118,7 +117,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    if (t%200 == 199): motors = motors.sortBy(lambda m: m.id)
+    if (t%400 == 399): motors = motors.sortBy(lambda m: m.id)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
