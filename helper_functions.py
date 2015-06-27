@@ -25,6 +25,7 @@ def train_svm(motors, training_axes, prediction_axis):
     xy_train = pd.DataFrame()
     for m in motors: 
         xy_train = xy_train.append(m.get_training_dataframe())
+        print len(m.events)
     x_avg = {col:xy_train[col].mean() for col in training_axes}
     x_std = {col:xy_train[col].std()  for col in training_axes}
     for col in training_axes:
