@@ -84,14 +84,14 @@ motors = sc.parallelize(
     [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
-    for motor_id in np.arange(N_motors) ], numSlices=num_partitions ).persist()
+    for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
 
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
-    motors = motors.map(lambda m: m.operate()).persist()
+    motors = motors.map(lambda m: m.operate())
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%100 == 99): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, len(motors.first().events)
 
@@ -102,9 +102,9 @@ maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
-    motors = motors.map(lambda m: m.operate()).persist()
+    motors = motors.map(lambda m: m.operate())
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%100 == 99): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, len(motors.first().events)
     
@@ -123,7 +123,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate()).persist()
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%100 == 99): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, len(motors.first().events)
     
