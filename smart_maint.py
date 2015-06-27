@@ -91,7 +91,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    motors = motors.sortBy(lambda m: m.id)
+    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
     print t, len(motors.first().events)
 
 motors.persist()
@@ -103,7 +103,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    motors = motors.sortBy(lambda m: m.id)
+    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
     print t, len(motors.first().events)
     
 motors.persist()
@@ -121,7 +121,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    motors = motors.sortBy(lambda m: m.id)
+    if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
     print t, len(motors.first().events)
     
 motors.persist()
