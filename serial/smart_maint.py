@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 1
 
 #maintenance & repair parameters
@@ -59,7 +59,7 @@ import time
 start_time_sec = time.clock()
 
 #set random number seed
-np.random.seed(ran_num_seed)
+#np.random.seed(ran_num_seed)
 
 #set maintenance type to: 'run-to-fail', 'scheduled', or 'predictive'
 maint_type = 'run-to-fail'
@@ -75,14 +75,12 @@ motors = [
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors: m.operate()
-    print t, sys.getsizeof(motors[0]), len(motors[0].events)
 
 #run motor using scheduled maintenance
 for m in motors: m.maint_type = 'scheduled'
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     for m in motors: m.operate()
-    print t, sys.getsizeof(motors[0]), len(motors[0].events)
 
 #train motor for predictive maintenance 
 clf, x_avg, x_std, xy_train = train_svm(motors, training_axes, prediction_axis)
@@ -96,7 +94,6 @@ for m in motors:
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors: m.operate()
-    print t, sys.getsizeof(motors[0]), len(motors[0].events)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
@@ -123,3 +120,5 @@ print
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors))
 print 'execution time (seconds) = ', time.clock() - start_time_sec
+
+print 'no. of distinct P is xy_train = ', len((xy_train.Pressure*1.0e6).astype(int).unique())

@@ -27,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 200
+N_motors = 20#0
 ran_num_seed = 2
 
 #maintenance & repair parameters
@@ -93,7 +93,6 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, sys.getsizeof(motors.first()), len(motors.first().events)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -104,7 +103,6 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, sys.getsizeof(motors.first()), len(motors.first().events)
     
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
@@ -120,7 +118,6 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
-        print t, sys.getsizeof(motors.first()), len(motors.first().events)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
@@ -149,3 +146,5 @@ print
 #print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors_local))
+
+print 'no. of distinct P is xy_train = ', len((xy_train.Pressure*1.0e6).astype(int).unique())
