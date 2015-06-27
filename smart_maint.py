@@ -27,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 5#200
+N_motors = 200
 ran_num_seed = 2
 
 #maintenance & repair parameters
