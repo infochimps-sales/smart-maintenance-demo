@@ -21,6 +21,7 @@ class Motor:
         self.fail_prob = 0.0
         self.ran_num_gen = np.random
         self.ran_num_gen.seed(self.id)
+        print self.ran_num_gen.uniform(low=-1.0, high=1.0)
         self.Temp = None
         self.Temp_0 = Temp_0
         self.delta_Temp = delta_Temp
