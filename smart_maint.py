@@ -95,14 +95,6 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
 
-clf, x_avg, x_std, xy_train = train_svm(motors.collect(), training_axes, prediction_axis)
-print xy_train.describe()
-P = xy_train.Pressure*1.0e6
-print P.astype(int).unique().shape, len(P)
-
-import sys
-sys.exit()
-
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
@@ -114,13 +106,10 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
     
-#motors.persist()
-
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
 clf, x_avg, x_std, xy_train = train_svm(motors_local, training_axes, prediction_axis)
 motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
-#motors.persist()
 
 #run motors using predictive maintenance
 maint_type = 'predictive'
