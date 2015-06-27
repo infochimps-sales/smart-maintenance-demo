@@ -27,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 20#0
+N_motors = 200
 ran_num_seed = 2
 
 #maintenance & repair parameters
@@ -79,7 +79,7 @@ start_time_sec = time.clock()
 maint_type = 'run-to-fail'
 
 #create parallelized list of motors
-num_partitions = 3*2*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu 
+num_partitions = 3*7*2    #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu 
 motors = sc.parallelize(
     [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
