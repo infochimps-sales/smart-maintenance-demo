@@ -19,6 +19,7 @@ class Motor:
         self.Time_since_repair = 0
         self.Time_next_maint = None
         self.fail_prob = 0.0
+        self.ran_num_gen = np.random.seed(self.id)
         self.Temp = None
         self.Temp_0 = Temp_0
         self.delta_Temp = delta_Temp
@@ -40,7 +41,6 @@ class Motor:
         self.training_axes = training_axes
         self.prediction_axis = prediction_axis
         self.events = []
-        self.ran_num_gen = np.random.seed(self.id)
         
     def status(self):
         predicted_ttf = None
