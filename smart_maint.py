@@ -95,6 +95,7 @@ motors = sc.parallelize(
 print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate()).persist()
+    print t, len(motors.first().events)
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
     #if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
     #print t, len(motors.first().events)
