@@ -50,7 +50,7 @@ Pressure_0 = 50.0
 delta_Pressure = 20.0
 
 #runtime parameters
-run_interval = 200
+run_interval = 50#200
 Time_start_runtofail = 0
 Time_stop_runtofail = Time_start_runtofail + run_interval
 Time_start_sched_maint = Time_stop_runtofail
