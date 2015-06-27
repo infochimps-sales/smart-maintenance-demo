@@ -27,7 +27,7 @@ sc = SparkContext(pyFiles=['helper_functions.py', 'motor.py'])
 #sc = SparkContext()
 
 #motor parameters
-N_motors = 5#200
+N_motors = 1#200
 ran_num_seed = 2
 
 #maintenance & repair parameters
@@ -50,7 +50,7 @@ Pressure_0 = 50.0
 delta_Pressure = 20.0
 
 #runtime parameters
-run_interval = 100#200
+run_interval = 200
 Time_start_runtofail = 0
 Time_stop_runtofail = Time_start_runtofail + run_interval
 Time_start_sched_maint = Time_stop_runtofail
@@ -93,7 +93,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%20 == 19): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
 
@@ -106,7 +106,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%20 == 19): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
     
@@ -125,7 +125,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     ##this inelegant step triggers lazy execution and avoids 'excessively deep recursion' error
-    if (t%20 == 19): 
+    if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
     
