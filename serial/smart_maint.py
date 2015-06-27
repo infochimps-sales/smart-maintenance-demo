@@ -1,8 +1,9 @@
 #smart_maint.py
 #
-#    this is the serial (non-sparkified) version of the smart maintenance demo.
+#    this is the serial (non-sparkified) version of the smart maintenance demo,
+#    execution time = 3.8 minutes on hadoop foyer node.
 #
-#    execute on a hadoop foyer node via:     python smart_maint.py
+#    to execute:     python smart_maint.py
 
 #imports
 import numpy as np
@@ -116,9 +117,4 @@ print 'cumulative revenue at completion of scheduled-maintenance     (M$) = ', \
     money[money.index  <= Time_stop_sched_maint].cumulative_revenue.values[-1]/1.0e6
 print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
     money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
-print
-print 'number of failures during run-to-fail', len(xy_train)
-print 'total number of motor events = ', len(get_events(motors))
-print 'execution time (seconds) = ', time.clock() - start_time_sec
-
-print 'no. of distinct P is xy_train = ', len((xy_train.Pressure*1.0e6).astype(int).unique())
+print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0

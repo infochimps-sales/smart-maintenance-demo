@@ -94,11 +94,6 @@ equipment maintenance schedules and to  dramatically reduce expenses and grow ea
     /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
 
 
-2 Close inspection of Spark's Application Master UI will show that this job is being executed
-on only 2 of the 3 available datanodes, I have no idea why one datanode is not participating,
-this needs to be debugged.
-
-
 ###Debugging notes:
         
 
