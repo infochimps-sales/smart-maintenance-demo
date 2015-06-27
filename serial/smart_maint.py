@@ -96,7 +96,6 @@ for m in motors:
 print 'maintenance mode:', motors[0].maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     for m in motors: m.operate()
-    print t, len(motors[N_motors/2].events)
     print t, sys.getsizeof(motors[0]), len(motors[0].events)
 
 #get operating stats
