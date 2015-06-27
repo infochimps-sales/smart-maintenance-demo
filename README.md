@@ -6,8 +6,8 @@ joe.hahn@infochimps.com,
 
 This is the Github repository for the master branch of the Smart Maintenance Demo for Hadoop.
 This demo uses the Support Vector Machines (SVM) algorithm to perform predictive
-maintenance on 200 simulated motors, with most (but not all) of the computation being done in
-parallell on the Hadoop cluster's datanodes via Spark.
+maintenance on 200 simulated motors, with most of the computations being done in
+parallell across the Hadoop cluster's datanodes using Spark.
 
 ###To install:
 
@@ -89,7 +89,7 @@ equipment maintenance schedules and to  dramatically reduce expenses and grow ea
 ###Known issues:
 
 
-1 If the png images are not browse-able, restart the webserver on the hadoop foyer node:
+If the png images are not browse-able, restart the webserver on the hadoop foyer node:
 
     /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
 
