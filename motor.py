@@ -89,6 +89,7 @@ class Motor:
 
     def repair_check(self):
         self.fail_prob = self.get_fail_prob()
+        np.random.seed(self.id)
         rn = np.random.uniform(low=0.0, high=1.0, size=None)
         if (rn < self.fail_prob):
             #the motor has just failed and goes to maintenance
@@ -112,6 +113,7 @@ class Motor:
 
     def get_Temp_Pressure(self):
         #this should instead return a dict(training_axes)
+        np.random.seed(self.id)
         self.Temp = np.random.uniform(low=50.0, high=150.0)
         self.Pressure = np.random.uniform(low=0.0, high=100.0)
 
