@@ -59,10 +59,6 @@ def motor_stats(motors):
 
 def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
 
-    print xy_train.describe()
-    P1000 = xy_train.Pressure*1000
-    print P1000.astype(int).unique().shape, len(P1000)
-
     #contour fail_factor vs Temp & Pressure
     print '...generating output plots...'
     events = get_events(motors)

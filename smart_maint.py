@@ -97,7 +97,13 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
 
-#motors.persist()
+clf, x_avg, x_std, xy_train = train_svm(motors.collect(), training_axes, prediction_axis)
+print xy_train.describe()
+P = xy_train.Pressure*1.0e6
+print P.astype(int).unique().shape, len(P)
+
+import sys
+sys.exit()
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -128,8 +134,6 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     if (t%50 == 49): 
         motors = motors.sortBy(lambda m: m.id)
         print t, sys.getsizeof(motors.first()), len(motors.first().events)
-    
-motors.persist()
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)

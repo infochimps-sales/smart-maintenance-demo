@@ -77,6 +77,14 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     for m in motors: m.operate()
     print t, sys.getsizeof(motors[0]), len(motors[0].events)
 
+clf, x_avg, x_std, xy_train = train_svm(motors, training_axes, prediction_axis)
+print xy_train.describe()
+P = xy_train.Pressure*1.0e6
+print P.astype(int).unique().shape, len(P)
+
+import sys
+sys.exit()
+
 #run motor using scheduled maintenance
 for m in motors: m.maint_type = 'scheduled'
 print 'maintenance mode:', motors[0].maint_type
