@@ -6,7 +6,7 @@
 #submit this job to Yarn using spark-submit:
 #    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint.py
 #
-#execution time = 2.7 minutes
+#execution time = 2.5 minutes
 
 #imports
 import numpy as np
