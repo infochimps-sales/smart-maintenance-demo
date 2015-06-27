@@ -75,7 +75,7 @@ Each operating engine also generate earnings at a rate of $1000/day, while engin
 being maintained instead generate modest expenses (-$200/day), with failed engines generating
 larger expenses (-$2000/day) while in the shop for repairs. The following shows
 that operating these engines in _run-to-fail_ mode is very expensive, resulting in
-cumulative earnings of -$13M by time t=200. This plot also shows that operating these
+cumulative losses of -$13M by time t=200. This plot also shows that operating these
 engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
 But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
 exceeds expenses, so much so that the operators of these engines recover all lost earnings
