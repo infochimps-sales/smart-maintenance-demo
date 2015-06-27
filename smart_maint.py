@@ -84,7 +84,8 @@ motors = sc.parallelize(
     [ Motor(motor_id + 100, Time_start_runtofail, maint_type, fail_prob_rate, 
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
-    for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
+    #for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
+    for motor_id in np.arange(N_motors) ], numSlices=1 )
 
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
