@@ -149,9 +149,3 @@ print
 #print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 print 'number of failures during run-to-fail', len(xy_train)
 print 'total number of motor events = ', len(get_events(motors_local))
-
-cnts = events.groupby(['Time', 'id'])['Pressure', 'Temp'].count()
-cnts['PT'] = cnts.Pressure + cnts.Temp
-print cnts[cnts.PT > 2]
-print np.unique(xy_train.isnull())
-print xy_train
