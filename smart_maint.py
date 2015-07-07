@@ -103,7 +103,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
     if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
-    
+
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
 clf, x_avg, x_std, xy_train = train_svm(motors_local, training_axes, prediction_axis)
