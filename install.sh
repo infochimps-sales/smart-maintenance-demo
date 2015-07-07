@@ -17,7 +17,7 @@ for host in "${hosts[@]}"; do
         ./Anaconda-2.1.0-Linux-x86_64.sh -b;
         rm -rf Anaconda-2.1.0-Linux-x86_64.sh;
         #upgrade bokeh
-        /home/joehahn/anaconda/bin/conda install --quiet bokeh;'
+        echo y | /home/$USER/anaconda/bin/conda install bokeh;'
 done
 
 #start webserver in background, to browse output
