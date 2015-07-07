@@ -124,13 +124,16 @@ motors_local = motors.collect()
 N = motor_stats(motors_local)
 print N
 
-#store all events in this file, for debugging
+#store all events in this file and write to HDFS
 file = open('events.json','w')
 for m in motors_local:
     for d in m.events:
         file.write(str(d) + '\n')
 
 file.close()
+import os
+os.system('hdfs dfs -mkdir smart_maint')
+os.system('hdfs dfs -put events.json smart_maint/.')
 
 #plot & report results
 money, events = plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, 
