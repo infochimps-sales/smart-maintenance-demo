@@ -91,7 +91,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
 
     #plot decision surface
     from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-    from bokeh.models import HoverTool
+    from bokeh.models import HoverTool, Callback
     from bokeh.io import vform
     output_file('dashboard.html', title='Smart Maintenance Dashboard')
     source = ColumnDataSource(
@@ -183,7 +183,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
     N.fillna(value=0, inplace=True)
     N['total'] = N.maintenance + N.operating + N.repair
-    source = ColumnDataSource(
+    s1 = ColumnDataSource(
         data=dict(
             Time = N.Time,
             operating = N.operating,
@@ -198,11 +198,11 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     motor_fig.title_text_font_size = '15pt'
     motor_fig.xaxis.axis_label_text_font_size = '11pt'
     motor_fig.yaxis.axis_label_text_font_size = '11pt'
-    motor_fig.line('Time', 'total', color='blue', source=source, line_width=3, legend='total')
-    motor_fig.line('Time', 'operating', color='green', source=source, line_width=3, legend='operating')
-    motor_fig.line('Time', 'maintenance', color='orange', source=source, line_width=3, legend='maintenance')
-    motor_fig.line('Time', 'repair', color='red', source=source, line_width=3, legend='repair')
-    motor_fig.legend.orientation = "bottom_right"
+    motor_fig.line('Time', 'total', color='blue', source=s1, line_width=3, legend='total')
+    motor_fig.line('Time', 'operating', color='green', source=s1, line_width=3, legend='operating')
+    motor_fig.line('Time', 'maintenance', color='orange', source=s1, line_width=3, legend='maintenance')
+    motor_fig.line('Time', 'repair', color='red', source=s1, line_width=3, legend='repair')
+    motor_fig.legend.orientation = "top_right"
     motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
         line_width=0)
     motor_fig.patch([200, 400, 400, 200], [-10, -10, 210, 210], color='gold', alpha=0.35, 
@@ -220,7 +220,26 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         TableColumn(field='repair', title='repair'),
         TableColumn(field='total', title='total'),
     ]
-    N_table = DataTable(source=source, columns=columns, width=600, height=300)
+    s2 = s1.clone()
+    N_table = DataTable(source=s2, columns=columns, width=600, height=300)
+    s1.callback = Callback(args=dict(s2=s2), code="""
+        var inds = cb_obj.get('selected')['1d'].indices;
+        var d1 = cb_obj.get('data');
+        var d2 = s2.get('data');
+        d2['Time'] = []
+        d2['operating'] = []
+        d2['maintenance'] = []
+        d2['repair'] = []
+        d2['total'] = []
+        for (i = 0; i < inds.length; i++) {
+            d2['Time'].push(d1['Time'][inds[i]])
+            d2['operating'].push(d1['operating'][inds[i]])
+            d2['maintenance'].push(d1['maintenance'][inds[i]])
+            d2['repair'].push(d1['repair'][inds[i]])
+            d2['total'].push(d1['total'][inds[i]])
+        }
+        s2.trigger('change');
+    """)
 
     #export plot to html and return
     plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
