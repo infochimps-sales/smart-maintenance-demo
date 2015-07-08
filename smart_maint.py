@@ -131,9 +131,6 @@ for m in motors_local:
         file.write(str(d) + '\n')
 
 file.close()
-import os
-os.system('hdfs dfs -mkdir smart_maint')
-os.system('hdfs dfs -put events.json smart_maint/.')
 
 #plot & report results
 money, events = plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, 
@@ -145,3 +142,6 @@ print 'cumulative revenue at completion of scheduled-maintenance     (M$) = ', \
 print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
     money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
 #print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
+
+#dashboard
+make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)

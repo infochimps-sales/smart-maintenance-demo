@@ -174,3 +174,38 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     print 'completed plot ' + plotfile
     return money, events
     
+def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
+
+	print '...generating output plots...'
+	events = get_events(motors)
+
+	#map the (P,T) decision surface
+	T_min = 50
+	T_max = 150
+	P_min = 0
+	P_max = 100
+	T_axis = np.arange(T_min, T_max, 0.5)
+	P_axis = np.arange(P_min, P_max, 0.5)
+	x, y = np.meshgrid(T_axis, P_axis)
+	ttf = np.zeros((len(P_axis), len(T_axis)))
+	import copy
+	m = copy.deepcopy(motors[0])
+	for p_idx in np.arange(len(P_axis)):
+		for t_idx in np.arange(len(T_axis)):
+			m.Temp = T_axis[t_idx]
+			m.Pressure = P_axis[p_idx]
+			ttf[p_idx, t_idx] = m.predicted_time_to_fail()
+
+    #plot decision surface
+	from bokeh.plotting import figure, show, output_file
+	output_file('dashboard.html', title='Smart Maintenance Dashboard')
+	fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='Decision Surface',
+		tools='pan,box_zoom,reset,hover')
+	fig.xaxis.axis_label = 'Temperature'
+	fig.yaxis.axis_label = 'Pressure'
+	fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
+		palette='RdYlGn8')
+	fig.x(xy_train.Temp, xy_train.Pressure, size=0.6*xy_train.time_to_fail, fill_alpha=0.5,
+		fill_color='navy', line_color='navy', line_width=1, line_alpha=0.5)
+	show(fig, new='tab')
+	
