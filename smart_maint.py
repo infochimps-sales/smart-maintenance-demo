@@ -135,7 +135,7 @@ file.close()
 #generate dashboard and report results
 #money, events = plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, 
 #    repair_cost, run_interval)
-money, events = make_dashboard(motors_local, xy_train, operating_earnings, maintenance_cost, 
+money, events, N = make_dashboard(motors_local, xy_train, operating_earnings, maintenance_cost, 
     repair_cost, run_interval)
 print 'cumulative revenue at completion of run-to-fail               (M$) = ', \
     money[money.index  <= Time_stop_runtofail].cumulative_revenue.values[-1]/1.0e6
