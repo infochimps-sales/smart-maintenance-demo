@@ -206,15 +206,15 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
             ttf[p_idx, t_idx] = m.predicted_time_to_fail()
 
     #plot decision surface
-    from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
+    from bokeh.plotting import figure, show, output_file, ColumnDataSource, gridplot
     from bokeh.models import HoverTool
     output_file('dashboard.html', title='Smart Maintenance Dashboard')
-    dec_source = ColumnDataSource(
+    source = ColumnDataSource(
         data=dict(
             x = xy_train.Temp,
             y = xy_train.Pressure,
             ttf = xy_train.time_to_fail,
-            size = 0.6*xy_train.time_to_fail
+            size = 0.6*xy_train.time_to_fail,
         )
     )    
     dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
@@ -222,7 +222,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         width=550, plot_height=550)
     dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
         palette='RdYlGn8')
-    dec_fig.x('x', 'y', size='size', source=dec_source, fill_alpha=0.5, fill_color='navy', 
+    dec_fig.x('x', 'y', size='size', source=source, fill_alpha=0.5, fill_color='navy', 
         line_color='navy', line_width=1, line_alpha=0.5)
     hover = dec_fig.select(dict(type=HoverTool))
     hover.tooltips = [
@@ -230,26 +230,42 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         ("Pressure", "@y"),
         ("measured lifetime", "@ttf"),
     ]
-    show(dec_fig, new='tab')
 
-    #plot revenue vs time
-    from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
-    from bokeh.models import HoverTool
-    output_file('dashboard.html', title='Smart Maintenance Dashboard')
-    rev_source = ColumnDataSource(
+    #plot earnings vs time
+    source = ColumnDataSource(
         data=dict(
             t = money.index,
             earnings = money.cumulative_earnings/1.e6,
-            expenses = money.cumulative_expenses/1.e6
+            expenses = money.cumulative_expenses/1.e6,
+            revenue  = money.cumulative_revenue/1.e6,
         )
     )
-    rev_fig = figure(title='Cumulative Earnings & Expenses',
+    earn_fig = figure(title='Cumulative Earnings & Expenses',
         x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)',
         tools='box_zoom,reset,hover', width=550, plot_height=550)
-    rev_fig.line('y', 'earnings', color='blue', source=rev_source, line_width=4)
+    earn_fig.line('t', 'earnings', color='blue', source=source, line_width=4)
+    earn_fig.line('t', 'expenses', color='red', source=source, line_width=4)
+    hover = earn_fig.select(dict(type=HoverTool))
+    hover.tooltips = [
+        ("         Time", "@t"),
+        (" earning (M$)", "@earnings"),
+        ("expenses (M$)", "@expenses"),
+        (" revenue (M$)", "@revenue"),
+    ]
 
-    plots = hplot(dec_fig, rev_fig)
-    #show(plots, new='tab')
-    show(rev_fig, new='tab')
-
+    #plot revenue vs time
+    rev_fig = figure(title='Cumulative Revenue',
+        x_axis_label='Time', y_axis_label='Revenue    (M$)',
+        tools='box_zoom,reset,hover', width=550, plot_height=550)
+    rev_fig.line('t', 'revenue', color='green', source=source, line_width=4)
+    hover = rev_fig.select(dict(type=HoverTool))
+    hover.tooltips = [
+        ("         Time", "@t"),
+        (" earning (M$)", "@earnings"),
+        ("expenses (M$)", "@expenses"),
+        (" revenue (M$)", "@revenue"),
+    ]
     
+    #export plot to html
+    plot_grid = gridplot([[dec_fig, earn_fig], [None, rev_fig]])
+    show(plot_grid, new='tab')
