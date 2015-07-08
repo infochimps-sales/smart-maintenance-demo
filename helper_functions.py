@@ -251,8 +251,8 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     earn_fig.title_text_font_size = '15pt'
     earn_fig.xaxis.axis_label_text_font_size = '11pt'
     earn_fig.yaxis.axis_label_text_font_size = '11pt'
-    earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5)
-    earn_fig.line('t', 'expenses', color='red', source=source, line_width=5)
+    earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
+    earn_fig.line('t', 'expenses', color='red', source=source, line_width=5, legend='expenses')
     earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
         line_width=0)
     earn_fig.patch([200, 400, 400, 200], [0, 0, 120, 120], color='gold', alpha=0.35, 
@@ -278,7 +278,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     rev_fig.title_text_font_size = '15pt'
     rev_fig.xaxis.axis_label_text_font_size = '11pt'
     rev_fig.yaxis.axis_label_text_font_size = '11pt'
-    rev_fig.line('t', 'revenue', color='green', source=source, line_width=5)
+    rev_fig.line('t', 'revenue', color='green', source=source, line_width=5, legend='revenue')
     rev_fig.line('t', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
         line_dash=[10, 5])
     rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
