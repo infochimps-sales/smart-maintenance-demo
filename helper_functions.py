@@ -175,7 +175,7 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     return money, events
 
 def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
-    print '...generating output plots...'
+    print '...generating dashboard...'
     #calculate revenue vs time dataframe 
     events = get_events(motors)
     events['earnings'] = 0.0
