@@ -41,7 +41,7 @@ Monitor this job's progress using the Spark UI by browsing:
 The output of this spark job is three png images that can be viewed by browsing
 
     http://cdh-foyer.platform.infochimps:12321/figs
-    
+    http://cdh-foyer.platform.infochimps:12321/dashboard.html    
 
 ###The demo's storyline:
 

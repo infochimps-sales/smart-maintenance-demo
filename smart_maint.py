@@ -144,4 +144,4 @@ print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
 #print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
 
 #dashboard
-make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
+make_dashboard(motors_local, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval)
