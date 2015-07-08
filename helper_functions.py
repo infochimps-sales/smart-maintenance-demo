@@ -188,44 +188,43 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     money['cumulative_earnings'] = money.earnings.cumsum()
     money['cumulative_expenses'] = money.expenses.cumsum()
     money['cumulative_revenue'] = money.revenue.cumsum()
-
     #map the (P,T) decision surface
-	T_min = 50
-	T_max = 150
-	P_min = 0
-	P_max = 100
-	T_axis = np.arange(T_min, T_max, 0.5)
-	P_axis = np.arange(P_min, P_max, 0.5)
-	x, y = np.meshgrid(T_axis, P_axis)
-	ttf = np.zeros((len(P_axis), len(T_axis)))
-	import copy
-	m = copy.deepcopy(motors[0])
-	for p_idx in np.arange(len(P_axis)):
-		for t_idx in np.arange(len(T_axis)):
-			m.Temp = T_axis[t_idx]
-			m.Pressure = P_axis[p_idx]
-			ttf[p_idx, t_idx] = m.predicted_time_to_fail()
+    T_min = 50
+    T_max = 150
+    P_min = 0
+    P_max = 100
+    T_axis = np.arange(T_min, T_max, 0.5)
+    P_axis = np.arange(P_min, P_max, 0.5)
+    x, y = np.meshgrid(T_axis, P_axis)
+    ttf = np.zeros((len(P_axis), len(T_axis)))
+    import copy
+    m = copy.deepcopy(motors[0])
+    for p_idx in np.arange(len(P_axis)):
+        for t_idx in np.arange(len(T_axis)):
+            m.Temp = T_axis[t_idx]
+            m.Pressure = P_axis[p_idx]
+            ttf[p_idx, t_idx] = m.predicted_time_to_fail()
 
     #plot decision surface
-	from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
+    from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
     from bokeh.models import HoverTool
-	output_file('dashboard.html', title='Smart Maintenance Dashboard')
-	dec_source = ColumnDataSource(
-	    data=dict(
+    output_file('dashboard.html', title='Smart Maintenance Dashboard')
+    dec_source = ColumnDataSource(
+        data=dict(
             x = xy_train.Temp,
             y = xy_train.Pressure,
             ttf = xy_train.time_to_fail,
             size = 0.6*xy_train.time_to_fail
         )
     )    
-	dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
-	    x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover',
-	    width=550, plot_height=550)
-	dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
-		palette='RdYlGn8')
-	dec_fig.x('x', 'y', size='size', source=dec_source, fill_alpha=0.5, fill_color='navy', 
-	    line_color='navy', line_width=1, line_alpha=0.5)
-	hover = dec_fig.select(dict(type=HoverTool))
+    dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
+        x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover',
+        width=550, plot_height=550)
+    dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
+        palette='RdYlGn8')
+    dec_fig.x('x', 'y', size='size', source=dec_source, fill_alpha=0.5, fill_color='navy', 
+        line_color='navy', line_width=1, line_alpha=0.5)
+    hover = dec_fig.select(dict(type=HoverTool))
     hover.tooltips = [
         ("Temperature", "@x"),
         ("Pressure", "@y"),
@@ -234,23 +233,23 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     show(dec_fig, new='tab')
 
     #plot revenue vs time
-	from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
+    from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
     from bokeh.models import HoverTool
-	output_file('dashboard.html', title='Smart Maintenance Dashboard')
-	rev_source = ColumnDataSource(
-	    data=dict(
+    output_file('dashboard.html', title='Smart Maintenance Dashboard')
+    rev_source = ColumnDataSource(
+        data=dict(
             t = money.index,
             earnings = money.cumulative_earnings/1.e6,
             expenses = money.cumulative_expenses/1.e6
         )
     )
-	rev_fig = figure(title='Cumulative Earnings & Expenses',
-	    x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)',
-	    tools='box_zoom,reset,hover', width=550, plot_height=550)
-	rev_fig.line('y', 'earnings', color='blue', source=rev_source, line_width=4)
+    rev_fig = figure(title='Cumulative Earnings & Expenses',
+        x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)',
+        tools='box_zoom,reset,hover', width=550, plot_height=550)
+    rev_fig.line('y', 'earnings', color='blue', source=rev_source, line_width=4)
 
     plots = hplot(dec_fig, rev_fig)
-	#show(plots, new='tab')
+    #show(plots, new='tab')
     show(rev_fig, new='tab')
 
     
