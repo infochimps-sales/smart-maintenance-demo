@@ -42,8 +42,8 @@ Monitor this job's progress using the Spark UI by browsing:
 
 The output of this spark job is three png images that can be viewed by browsing
 
-    http://cdh-foyer.platform.infochimps:12321/figs
     http://cdh-foyer.platform.infochimps:12321/dashboard.html    
+
 
 ###The demo's storyline:
 
@@ -87,13 +87,6 @@ by time t=870, and have earned $6M at the end of this simulation.
 
 So this demo's main punchline is: _get Smart Maintenance on the BDPaas to optimize
 equipment maintenance schedules and to  dramatically reduce expenses and grow earnings._
-
-###Known issues:
-
-
-If the png images are not browse-able, restart the webserver on the hadoop foyer node:
-
-    /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
 
 
 ###Debugging notes:

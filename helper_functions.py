@@ -57,123 +57,6 @@ def motor_stats(motors):
     N['percent_repair'] = N.repair*1.0/N.total
     return N.sort('percent_repair', ascending=False)
 
-def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
-
-    #contour fail_factor vs Temp & Pressure
-    print '...generating output plots...'
-    events = get_events(motors)
-    T_axis = np.arange(50.0, 151.0, 0.5)
-    P_axis = np.arange(0.0, 101.0)
-    x, y = np.meshgrid(T_axis, P_axis)
-    z = np.zeros((len(P_axis), len(T_axis)))
-    import copy
-    m = copy.deepcopy(motors[0])
-    for p_idx in np.arange(len(P_axis)):
-        for t_idx in np.arange(len(T_axis)):
-            m.Temp = T_axis[t_idx]
-            m.Pressure = P_axis[p_idx]
-            z[p_idx, t_idx] = m.fail_factor()
-    fig = plt.figure(figsize=(7.0, 7.0))
-    ax = fig.add_subplot(1, 1, 1)
-    ax.set_title('Observed Motor Lifetime')
-    ax.set_xlabel('Temperature')
-    ax.set_ylabel('Pressure')
-    Ncolors = 256
-    cf = ax.contourf(x, y, z, Ncolors, cmap='jet')
-    dot_size = xy_train.time_to_fail**1.5
-    ax.scatter(xy_train.Temp, xy_train.Pressure, marker='o', color='white', alpha=0.6, 
-        s=dot_size.tolist())
-    plotfile = 'figs/fail_factor.png'
-    fig.savefig(plotfile)
-    plt.close(fig) 
-    print 'completed plot ' + plotfile
-
-    #contour predicted_time_to_fail(Temp, Pressure):
-    T_axis = np.arange(50.0, 151.0, 0.5)
-    P_axis = np.arange(0.0, 101.0)
-    x, y = np.meshgrid(T_axis, P_axis)
-    z = np.zeros((len(P_axis), len(T_axis)))
-    id = 0
-    import copy
-    m = copy.deepcopy(motors[0])
-    for p_idx in np.arange(len(P_axis)):
-        for t_idx in np.arange(len(T_axis)):
-            m.Temp = T_axis[t_idx]
-            m.Pressure = P_axis[p_idx]
-            z[p_idx, t_idx] = m.predicted_time_to_fail()
-    fig = plt.figure(figsize=(8.0, 6.5))
-    ax = fig.add_subplot(1, 1, 1)
-    ax.set_title('Predicted Time to Fail')
-    ax.set_xlabel('Temperature')
-    ax.set_ylabel('Pressure')
-    contour_vals = np.unique(z)
-    contour_vals = np.append(contour_vals, contour_vals.max() + 1) - 0.5
-    cf = ax.contourf(x, y, z, contour_vals, cmap='afmhot')
-    plt.colorbar(cf, ticks=np.unique(z))
-    plotfile = 'figs/predicted_time_to_fail.png'
-    fig.savefig(plotfile)
-    plt.close(fig) 
-    print 'completed plot ' + plotfile
-
-    #plot revenue over time
-    events = get_events(motors)
-    events['earnings'] = 0.0
-    events.loc[events.state == 'operating', 'earnings'] = operating_earnings
-    events['expenses'] = 0.0
-    events.loc[events.state == 'maintenance', 'expenses'] = maintenance_cost
-    events.loc[events.state == 'repair', 'expenses'] = repair_cost
-    money = events.groupby('Time').sum()[['earnings', 'expenses']]
-    money['revenue'] = money.earnings - money.expenses
-    money['cumulative_earnings'] = money.earnings.cumsum()
-    money['cumulative_expenses'] = money.expenses.cumsum()
-    money['cumulative_revenue'] = money.revenue.cumsum()
-    matplotlib.rcParams.update({'font.size': 14})
-    fig = plt.figure(figsize=(12.0, 8.0))
-    fig.subplots_adjust(hspace=0.35)
-    #
-    ax = fig.add_subplot(2, 1, 1)
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Earnings    (M$)')
-    ax.set_title('Cumulative Earnings & Expenses')
-    ax.plot(money.index, money.cumulative_earnings/1.e6, color='blue', linewidth=4, 
-        alpha=0.7, label='earnings')
-    ax.plot(money.index, money.cumulative_expenses/1.e6, color='red', linewidth=4, 
-        alpha=0.7, label='expenses')
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (0,0), run_interval, ax.get_ylim()[1], color='lightsalmon', alpha=0.35))
-    ax.annotate('run-to-fail', xy=(19, 111), verticalalignment='top')                
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (run_interval, 0), run_interval, ax.get_ylim()[1], color='gold', alpha=0.35))
-    ax.annotate('scheduled\nmaintenance', xy=(219, 111), verticalalignment='top')                
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (2*run_interval, 0), 4*run_interval, ax.get_ylim()[1], color='darkseagreen', alpha=0.35))
-    ax.annotate('predictive\nmaintenance', xy=(419, 111), verticalalignment='top')                
-    ax.grid(True, linestyle=':', alpha=0.3)
-    ax.legend(loc='lower right', fontsize='small')
-    #
-    ax = fig.add_subplot(2, 1, 2)
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Revenue    (M$)')
-    ax.set_title('Cumulative Revenue')
-    ax.plot(money.index, money.cumulative_revenue/1.e6, color='green', linewidth=4)
-    ax.plot(money.index, money.index*0, color='purple', linewidth=2, linestyle='--', alpha=0.5)
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (0,ax.get_ylim()[0]), run_interval, ax.get_ylim()[1]- ax.get_ylim()[0], 
-        color='lightsalmon', alpha=0.35))
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (run_interval, ax.get_ylim()[0]), run_interval, ax.get_ylim()[1] - ax.get_ylim()[0], 
-        color='gold', alpha=0.35))
-    ax.add_patch(matplotlib.patches.Rectangle(
-        (2*run_interval, ax.get_ylim()[0]), 4*run_interval, ax.get_ylim()[1] - ax.get_ylim()[0], 
-        color='darkseagreen', alpha=0.35))
-    ax.grid(True, linestyle=':', alpha=0.3)
-    #
-    plotfile = 'figs/revenue.png'
-    fig.savefig(plotfile)
-    plt.close(fig) 
-    print 'completed plot ' + plotfile
-    return money, events
-
 def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
 
     #calculate revenue vs time dataframe 
@@ -219,7 +102,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         )
     )    
     dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
-        x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover', 
+        x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover,crosshair', 
         width=600, plot_height=600)
     dec_fig.title_text_font_size = '18pt'
     dec_fig.xaxis.axis_label_text_font_size = '14pt'
@@ -246,13 +129,14 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         )
     )
     earn_fig = figure(title='Cumulative Earnings & Expenses', x_axis_label='Time', 
-        y_axis_label='Earnings & Expenses    (M$)', tools='box_zoom,reset,hover', 
+        y_axis_label='Earnings & Expenses    (M$)', tools='box_zoom,reset,hover,crosshair', 
         width=1000, plot_height=300, x_range=[0, 1200], y_range=[0, 120])
     earn_fig.title_text_font_size = '15pt'
     earn_fig.xaxis.axis_label_text_font_size = '11pt'
     earn_fig.yaxis.axis_label_text_font_size = '11pt'
     earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
     earn_fig.line('t', 'expenses', color='red', source=source, line_width=5, legend='expenses')
+    earn_fig.legend.orientation = "bottom_right"
     earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
         line_width=0)
     earn_fig.patch([200, 400, 400, 200], [0, 0, 120, 120], color='gold', alpha=0.35, 
@@ -261,9 +145,9 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         alpha=0.35, line_width=0) 
     earn_fig.text([45], [101], ['run-to-fail'])
     earn_fig.text([245], [101], ['scheduled'])
-    earn_fig.text([245], [91], ['maintenance'])
+    earn_fig.text([245], [90], ['maintenance'])
     earn_fig.text([445], [101], ['predictive'])
-    earn_fig.text([445], [91], ['maintenance'])
+    earn_fig.text([445], [90], ['maintenance'])
     hover = earn_fig.select(dict(type=HoverTool))
     hover.tooltips = [
         ("         Time", "@t"),
@@ -273,7 +157,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
 
     #plot revenue vs time
     rev_fig = figure(title='Cumulative Revenue', x_axis_label='Time', 
-        y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover', 
+        y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover,crosshair', 
         width=1000, plot_height=300, x_range=[0, 1200], y_range=[-15, 10])
     rev_fig.title_text_font_size = '15pt'
     rev_fig.xaxis.axis_label_text_font_size = '11pt'
@@ -281,6 +165,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     rev_fig.line('t', 'revenue', color='green', source=source, line_width=5, legend='revenue')
     rev_fig.line('t', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
         line_dash=[10, 5])
+    ref_fig.legend.orientation = "bottom_right"
     rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
         line_width=0)
     rev_fig.patch([200, 400, 400, 200], [-15, -15, 10, 10], color='gold', alpha=0.35, 
