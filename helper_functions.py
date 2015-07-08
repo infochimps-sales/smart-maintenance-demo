@@ -206,7 +206,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
             ttf[p_idx, t_idx] = m.predicted_time_to_fail()
 
     #plot decision surface
-    from bokeh.plotting import figure, show, output_file, ColumnDataSource, gridplot
+    from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
     from bokeh.models import HoverTool
     output_file('dashboard.html', title='Smart Maintenance Dashboard')
     source = ColumnDataSource(
@@ -218,8 +218,11 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         )
     )    
     dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
-        x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover',
-        width=550, plot_height=550)
+        x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover', 
+        width=600, plot_height=600)
+    dec_fig.title_text_font_size = '18pt'
+    dec_fig.xaxis.axis_label_text_font_size = '14pt'
+    dec_fig.yaxis.axis_label_text_font_size = '14pt'
     dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
         palette='RdYlGn8')
     dec_fig.x('x', 'y', size='size', source=source, fill_alpha=0.5, fill_color='navy', 
@@ -240,32 +243,47 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
             revenue  = money.cumulative_revenue/1.e6,
         )
     )
-    earn_fig = figure(title='Cumulative Earnings & Expenses',
-        x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)',
-        tools='box_zoom,reset,hover', width=550, plot_height=550)
+    earn_fig = figure(title='Cumulative Earnings & Expenses', x_axis_label='Time', 
+        y_axis_label='Earnings & Expenses    (M$)', tools='box_zoom,reset,hover', 
+        width=1000, plot_height=300, x_range=[0, 1200], y_range=[0, 120])
+    earn_fig.title_text_font_size = '16pt'
+    earn_fig.xaxis.axis_label_text_font_size = '12pt'
+    earn_fig.yaxis.axis_label_text_font_size = '12pt'
     earn_fig.line('t', 'earnings', color='blue', source=source, line_width=4)
     earn_fig.line('t', 'expenses', color='red', source=source, line_width=4)
+    earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
+        line_width=0)
+    earn_fig.patch([200, 400, 400, 200], [0, 0, 120, 120], color='gold', alpha=0.35, 
+        line_width=0)
+    earn_fig.patch([400, 1200, 1200, 400], [0, 0, 120, 120], color='darkseagreen', 
+        alpha=0.35, line_width=0)        
     hover = earn_fig.select(dict(type=HoverTool))
     hover.tooltips = [
         ("         Time", "@t"),
         (" earning (M$)", "@earnings"),
         ("expenses (M$)", "@expenses"),
-        (" revenue (M$)", "@revenue"),
     ]
 
     #plot revenue vs time
-    rev_fig = figure(title='Cumulative Revenue',
-        x_axis_label='Time', y_axis_label='Revenue    (M$)',
-        tools='box_zoom,reset,hover', width=550, plot_height=550)
+    rev_fig = figure(title='Cumulative Revenue', x_axis_label='Time', 
+        y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover', 
+        width=1000, plot_height=300, x_range=[0, 1200], y_range=[-15, 10])
+    rev_fig.title_text_font_size = '16pt'
+    rev_fig.xaxis.axis_label_text_font_size = '12pt'
+    rev_fig.yaxis.axis_label_text_font_size = '12pt'
     rev_fig.line('t', 'revenue', color='green', source=source, line_width=4)
+    rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
+        line_width=0)
+    rev_fig.patch([200, 400, 400, 200], [-15, -15, 10, 10], color='gold', alpha=0.35, 
+        line_width=0)
+    rev_fig.patch([400, 1200, 1200, 400], [-15, -15, 10, 10], color='darkseagreen', 
+        alpha=0.35, line_width=0)        
     hover = rev_fig.select(dict(type=HoverTool))
     hover.tooltips = [
         ("         Time", "@t"),
-        (" earning (M$)", "@earnings"),
-        ("expenses (M$)", "@expenses"),
         (" revenue (M$)", "@revenue"),
     ]
     
     #export plot to html
-    plot_grid = gridplot([[dec_fig, earn_fig], [None, rev_fig]])
+    plot_grid = vplot(dec_fig, earn_fig, rev_fig)
     show(plot_grid, new='tab')
