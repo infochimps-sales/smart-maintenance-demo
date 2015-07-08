@@ -165,7 +165,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     rev_fig.line('t', 'revenue', color='green', source=source, line_width=5, legend='revenue')
     rev_fig.line('t', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
         line_dash=[10, 5])
-    ref_fig.legend.orientation = "bottom_right"
+    rev_fig.legend.orientation = "bottom_right"
     rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
         line_width=0)
     rev_fig.patch([200, 400, 400, 200], [-15, -15, 10, 10], color='gold', alpha=0.35, 
