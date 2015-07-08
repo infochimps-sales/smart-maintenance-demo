@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-#This bash script installs the smart-maintenance-demo on the hadoop foyer of the BDPaaS.
+#This bash script installs the smart-maintenance-demo on the hadoop foyer of the BDPaaS. 
 #
 #To execute:    ./install
 
