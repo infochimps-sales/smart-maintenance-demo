@@ -177,7 +177,19 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
 def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
 
 	print '...generating output plots...'
-	events = get_events(motors)
+
+    #calculate revenue vs time dataframe
+    events = get_events(motors)
+    events['earnings'] = 0.0
+    events.loc[events.state == 'operating', 'earnings'] = operating_earnings
+    events['expenses'] = 0.0
+    events.loc[events.state == 'maintenance', 'expenses'] = maintenance_cost
+    events.loc[events.state == 'repair', 'expenses'] = repair_cost
+    money = events.groupby('Time').sum()[['earnings', 'expenses']]
+    money['revenue'] = money.earnings - money.expenses
+    money['cumulative_earnings'] = money.earnings.cumsum()
+    money['cumulative_expenses'] = money.expenses.cumsum()
+    money['cumulative_revenue'] = money.revenue.cumsum()
 
 	#map the (P,T) decision surface
 	T_min = 50
@@ -197,15 +209,50 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
 			ttf[p_idx, t_idx] = m.predicted_time_to_fail()
 
     #plot decision surface
-	from bokeh.plotting import figure, show, output_file
+	from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
+    from bokeh.models import HoverTool
 	output_file('dashboard.html', title='Smart Maintenance Dashboard')
-	fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='Decision Surface',
-		tools='pan,box_zoom,reset,hover')
-	fig.xaxis.axis_label = 'Temperature'
-	fig.yaxis.axis_label = 'Pressure'
-	fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
+	dec_source = ColumnDataSource(
+	    data=dict(
+            x = xy_train.Temp,
+            y = xy_train.Pressure,
+            ttf = xy_train.time_to_fail,
+            size = 0.6*xy_train.time_to_fail
+        )
+    )    
+	dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
+	    x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover',
+	    width=550, plot_height=550)
+	dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max - P_min], 
 		palette='RdYlGn8')
-	fig.x(xy_train.Temp, xy_train.Pressure, size=0.6*xy_train.time_to_fail, fill_alpha=0.5,
-		fill_color='navy', line_color='navy', line_width=1, line_alpha=0.5)
-	show(fig, new='tab')
-	
+	dec_fig.x('x', 'y', size='size', source=dec_source, fill_alpha=0.5, fill_color='navy', 
+	    line_color='navy', line_width=1, line_alpha=0.5)
+	hover = dec_fig.select(dict(type=HoverTool))
+    hover.tooltips = [
+        ("Temperature", "@x"),
+        ("Pressure", "@y"),
+        ("measured lifetime", "@ttf"),
+    ]
+    show(dec_fig, new='tab')
+
+    #plot revenue vs time
+	from bokeh.plotting import figure, show, output_file, ColumnDataSource, hplot
+    from bokeh.models import HoverTool
+	output_file('dashboard.html', title='Smart Maintenance Dashboard')
+	rev_source = ColumnDataSource(
+	    data=dict(
+            t = money.index,
+            earnings = money.cumulative_earnings/1.e6,
+            expenses = money.cumulative_expenses/1.e6
+        )
+    )
+	rev_fig = figure(title='Cumulative Earnings & Expenses',
+	    x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)',
+	    tools='box_zoom,reset,hover', width=550, plot_height=550)
+	rev_fig.line('y', 'earnings', color='blue', source=rev_source, line_width=4)
+
+    plots = hplot(dec_fig, rev_fig)
+	#show(plots, new='tab')
+    show(rev_fig, new='tab')
+
+    
