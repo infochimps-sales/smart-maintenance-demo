@@ -178,7 +178,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
 
 	print '...generating output plots...'
 
-    #calculate revenue vs time dataframe
+    #calculate revenue vs time dataframe 
     events = get_events(motors)
     events['earnings'] = 0.0
     events.loc[events.state == 'operating', 'earnings'] = operating_earnings
