@@ -191,7 +191,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     money['cumulative_expenses'] = money.expenses.cumsum()
     money['cumulative_revenue'] = money.revenue.cumsum()
 
-	#map the (P,T) decision surface
+    #map the (P,T) decision surface
 	T_min = 50
 	T_max = 150
 	P_min = 0
