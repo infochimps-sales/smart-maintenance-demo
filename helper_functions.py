@@ -175,8 +175,9 @@ def plot_results(motors, xy_train, operating_earnings, maintenance_cost, repair_
     return money, events
 
 def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
-    print '...generating dashboard...'
+
     #calculate revenue vs time dataframe 
+    print '...generating dashboard...'
     events = get_events(motors)
     events['earnings'] = 0.0
     events.loc[events.state == 'operating', 'earnings'] = operating_earnings
@@ -241,22 +242,28 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
             earnings = money.cumulative_earnings/1.e6,
             expenses = money.cumulative_expenses/1.e6,
             revenue  = money.cumulative_revenue/1.e6,
+            zero = money.cumulative_revenue*0,
         )
     )
     earn_fig = figure(title='Cumulative Earnings & Expenses', x_axis_label='Time', 
         y_axis_label='Earnings & Expenses    (M$)', tools='box_zoom,reset,hover', 
         width=1000, plot_height=300, x_range=[0, 1200], y_range=[0, 120])
-    earn_fig.title_text_font_size = '16pt'
-    earn_fig.xaxis.axis_label_text_font_size = '12pt'
-    earn_fig.yaxis.axis_label_text_font_size = '12pt'
-    earn_fig.line('t', 'earnings', color='blue', source=source, line_width=4)
-    earn_fig.line('t', 'expenses', color='red', source=source, line_width=4)
+    earn_fig.title_text_font_size = '15pt'
+    earn_fig.xaxis.axis_label_text_font_size = '11pt'
+    earn_fig.yaxis.axis_label_text_font_size = '11pt'
+    earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5)
+    earn_fig.line('t', 'expenses', color='red', source=source, line_width=5)
     earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
         line_width=0)
     earn_fig.patch([200, 400, 400, 200], [0, 0, 120, 120], color='gold', alpha=0.35, 
         line_width=0)
     earn_fig.patch([400, 1200, 1200, 400], [0, 0, 120, 120], color='darkseagreen', 
-        alpha=0.35, line_width=0)        
+        alpha=0.35, line_width=0) 
+    earn_fig.text([45], [101], ['run-to-fail'])
+    earn_fig.text([245], [101], ['scheduled'])
+    earn_fig.text([245], [91], ['maintenance'])
+    earn_fig.text([445], [101], ['predictive'])
+    earn_fig.text([445], [91], ['maintenance'])
     hover = earn_fig.select(dict(type=HoverTool))
     hover.tooltips = [
         ("         Time", "@t"),
@@ -268,10 +275,12 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
     rev_fig = figure(title='Cumulative Revenue', x_axis_label='Time', 
         y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover', 
         width=1000, plot_height=300, x_range=[0, 1200], y_range=[-15, 10])
-    rev_fig.title_text_font_size = '16pt'
-    rev_fig.xaxis.axis_label_text_font_size = '12pt'
-    rev_fig.yaxis.axis_label_text_font_size = '12pt'
-    rev_fig.line('t', 'revenue', color='green', source=source, line_width=4)
+    rev_fig.title_text_font_size = '15pt'
+    rev_fig.xaxis.axis_label_text_font_size = '11pt'
+    rev_fig.yaxis.axis_label_text_font_size = '11pt'
+    rev_fig.line('t', 'revenue', color='green', source=source, line_width=5)
+    rev_fig.line('t', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
+        line_dash=[10, 5])
     rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
         line_width=0)
     rev_fig.patch([200, 400, 400, 200], [-15, -15, 10, 10], color='gold', alpha=0.35, 
@@ -284,6 +293,7 @@ def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repai
         (" revenue (M$)", "@revenue"),
     ]
     
-    #export plot to html
+    #export plot to html and return
     plot_grid = vplot(dec_fig, earn_fig, rev_fig)
     show(plot_grid, new='tab')
+    return money, events
