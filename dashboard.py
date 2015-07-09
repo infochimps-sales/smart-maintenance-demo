@@ -152,18 +152,18 @@ source_motor = ColumnDataSource(
 	data=dict(
 		Time = N.Time.tolist(),
 		operating = N.operating.tolist(),
-		maintenance = N.maintenance.tolist(),
-		repair = N.repair.tolist(),
-		total = N.total.tolist(),
+		#maintenance = N.maintenance.tolist(),
+		#repair = N.repair.tolist(),
+		#total = N.total.tolist(),
 	)
 )
 source_box = ColumnDataSource(
 	data=dict(
 		Time = [],
 		operating = [],
-		maintenance = [],
-		repair = [],
-		total = [],
+		#maintenance = [],
+		#repair = [],
+		#total = [],
 	)
 )
 callback = Callback(args=dict(source=source_box), code="""
@@ -172,15 +172,15 @@ callback = Callback(args=dict(source=source_box), code="""
     var d2 = source.get('data');
     d2['Time'] = []
     d2['operating'] = []
-    d2['maintenance'] = []
-    d2['repair'] = []
-    d2['total'] = []
+    #d2['maintenance'] = []
+    #d2['repair'] = []
+    #d2['total'] = []
     for (i = 0; i < inds.length; i++) {
         d2['Time'].push(d1['Time'][inds[i]])
         d2['operating'].push(d1['operating'][inds[i]])
-        d2['maintenance'].push(d1['maintenance'][inds[i]])
-        d2['repair'].push(d1['repair'][inds[i]])
-        d2['total'].push(d1['total'][inds[i]])
+        #d2['maintenance'].push(d1['maintenance'][inds[i]])
+        #d2['repair'].push(d1['repair'][inds[i]])
+        #d2['total'].push(d1['total'][inds[i]])
     }
     source.trigger('change');
 """)
@@ -211,7 +211,7 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-line = Line(x='Time', y='repair', line_color='black', line_width=2)
+line = Line(x='Time', y='operating')
 motor_fig.add_glyph(source_box, line, selection_glyph=line, nonselection_glyph=line)
 
 #export plot to html and return
