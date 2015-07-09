@@ -157,8 +157,28 @@ source_motor = ColumnDataSource(
 		total = N.total,
 	)
 )
+source_box = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+callback = Callback(args=dict(source=source_box), code="""
+    // get data source from Callback args
+    var data = source.get('data');
+    /// get BoxSelectTool dimensions from cb_data parameter of Callback
+    var geometry = cb_data['geometry'];
+    /// calculate Rect attributes
+    var width = geometry['x1'] - geometry['x0'];
+    var height = geometry['y1'] - geometry['y0'];
+    var x = geometry['x0'] + width/2;
+    var y = geometry['y0'] + height/2;
+    /// update data source with new Rect attributes
+    data['x'].push(x);
+    data['y'].push(y);
+    data['width'].push(width);
+    data['height'].push(height);
+    // trigger update of data source
+    source.trigger('change');
+""")
+box_select = BoxSelectTool(callback=callback)
 motor_fig = figure(title='Number of Motors', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='box_select,reset,hover,crosshair', 
+	y_axis_label='Number of motors', tools=[box_select], 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
@@ -183,31 +203,12 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-source_box = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
-callback = Callback(args=dict(source=source), code="""
-    // get data source from Callback args
-    var data = source.get('data');
-    /// get BoxSelectTool dimensions from cb_data parameter of Callback
-    var geometry = cb_data['geometry'];
-    /// calculate Rect attributes
-    var width = geometry['x1'] - geometry['x0'];
-    var height = geometry['y1'] - geometry['y0'];
-    var x = geometry['x0'] + width/2;
-    var y = geometry['y0'] + height/2;
-    /// update data source with new Rect attributes
-    data['x'].push(x);
-    data['y'].push(y);
-    data['width'].push(width);
-    data['height'].push(height);
-    // trigger update of data source
-    source.trigger('change');
-""")
-box_select = BoxSelectTool(callback=callback)
-rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=0.3, fill_color='#009933')
+rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=1.0, fill_color='#009933')
 motor_fig.add_glyph(source_box, rect, selection_glyph=rect, nonselection_glyph=rect)
 
 #export plot to html and return
-plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
+#plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
+plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig)
 show(plot_grid, new='tab')
 
 
