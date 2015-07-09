@@ -118,6 +118,16 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
     if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
+#store results to file
+motors_local = motors
+import pickle
+fp = open('motors.dat', 'w')
+pickle.dump(motors_local, fp)
+fp.close()
+
+import os
+os.exit()
+
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
 motors_local = motors.collect()
