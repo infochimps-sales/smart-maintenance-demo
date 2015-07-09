@@ -21,4 +21,4 @@ for host in "${hosts[@]}"; do
 done
 
 #start webserver in background, to browse output
-#/home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
+/home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &

@@ -40,9 +40,14 @@ Monitor this job's progress using the Spark UI by browsing:
     Cloudera Manager -> Home -> Yarn -> Resource Manager UI -> application_ID# -> Application Master
 
 
-The output of this spark job is three png images that can be viewed by browsing
+Execute a python script that dashboards the results of the smart-maintenance simulation:
 
-    http://cdh-foyer.platform.infochimps:12321/dashboard.html    
+    /home/$USER/anaconda/bin/python dashboard.py
+
+
+and browse that dashboard here:
+
+    http://cdh-foyer.platform.infochimps:12321/dashboard.html
 
 
 ###The demo's storyline:
@@ -121,3 +126,12 @@ And to undo the above changes:
  
     sudo rm /usr/bin/python /usr/bin/ipython
     sudo ln -s /usr/bin/python2.6 /usr/bin/python
+
+ 
+###Old notes
+
+The output of this spark job is three png images that can be viewed by browsing
+
+    http://cdh-foyer.platform.infochimps:12321/dashboard.html    
+
+
