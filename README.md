@@ -40,7 +40,8 @@ Monitor this job's progress using the Spark UI by browsing:
     Cloudera Manager -> Home -> Yarn -> Resource Manager UI -> application_ID# -> Application Master
 
 
-Execute a python script that dashboards the results of the smart-maintenance simulation:
+After the spark job completes, execute this script to dashboard the results of the 
+smart-maintenance simulation:
 
     /home/$USER/anaconda/bin/python dashboard.py
 

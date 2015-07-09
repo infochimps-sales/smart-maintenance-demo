@@ -11,7 +11,8 @@ import numpy as np
 import pandas as pd
 import pickle
 from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-from bokeh.models import HoverTool, Callback
+from bokeh.models import HoverTool, Callback, BoxSelectTool, Rect
+from bokeh.models.widgets import DataTable, TableColumn
 from bokeh.io import vform
 
 #read output of smart_maint.py
@@ -92,7 +93,8 @@ earn_fig.title_text_font_size = '15pt'
 earn_fig.xaxis.axis_label_text_font_size = '11pt'
 earn_fig.yaxis.axis_label_text_font_size = '11pt'
 earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
-earn_fig.line('t', 'expenses', color='red', source=source, line_width=5, legend='expenses')
+earn_fig.line('t', 'expenses', color='red', source=source, line_width=5, legend='expenses', 
+    alpha=0.8)
 earn_fig.legend.orientation = "bottom_right"
 earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
 	line_width=0)
@@ -140,11 +142,13 @@ hover.tooltips = [
 	(" revenue (M$)", "@revenue"),
 ]
 
+source = None
+
 #plot number of motors vs time
 N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
 N.fillna(value=0, inplace=True)
 N['total'] = N.maintenance + N.operating + N.repair
-s1 = ColumnDataSource(
+source_motor = ColumnDataSource(
 	data=dict(
 		Time = N.Time,
 		operating = N.operating,
@@ -154,18 +158,18 @@ s1 = ColumnDataSource(
 	)
 )
 motor_fig = figure(title='Number of Motors', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair', 
+	y_axis_label='Number of motors', tools='box_select,reset,hover,crosshair', 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.line('Time', 'total', color='blue', source=s1, line_width=3, legend='total', 
+motor_fig.line('Time', 'total', color='blue', source=source_motor, line_width=3, legend='total', 
     alpha=1.0)
-motor_fig.line('Time', 'operating', color='green', source=s1, line_width=3, legend='operating', 
+motor_fig.line('Time', 'operating', color='green', source=source_motor, line_width=3, legend='operating', 
     alpha=1.0)
-motor_fig.line('Time', 'maintenance', color='orange', source=s1, line_width=3, 
+motor_fig.line('Time', 'maintenance', color='orange', source=source_motor, line_width=3, 
     legend='maintenance', alpha=0.75)
-motor_fig.line('Time', 'repair', color='red', source=s1, line_width=3, legend='repair', 
+motor_fig.line('Time', 'repair', color='red', source=source_motor, line_width=3, legend='repair', 
     alpha=1.0)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
@@ -174,43 +178,71 @@ motor_fig.patch([200, 400, 400, 200], [-10, -10, 210, 210], color='gold', alpha=
 	line_width=0)
 motor_fig.patch([400, 1200, 1200, 400], [-10, -10, 210, 210], color='darkseagreen', 
 	alpha=0.35, line_width=0)   
-motor_fig.text([45], [173], ['run-to-fail'])
+motor_fig.text([ 45], [173], ['run-to-fail'])
 motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-
-#display N table
-from bokeh.models.widgets import DataTable, TableColumn
-from bokeh.io import vform
-columns = [
-	TableColumn(field='Time', title='Time'),
-	TableColumn(field='operating', title='operating'),
-	TableColumn(field='maintenance', title='maintenance'),
-	TableColumn(field='repair', title='repair'),
-	TableColumn(field='total', title='total'),
-]
-s2 = s1.clone()
-N_table = DataTable(source=s2, columns=columns, width=600, height=300)
-s1.callback = Callback(args=dict(s2=s2), code="""
-	var inds = cb_obj.get('selected')['1d'].indices;
-	var d1 = cb_obj.get('data');
-	var d2 = s2.get('data');
-	d2['Time'] = []
-	d2['operating'] = []
-	d2['maintenance'] = []
-	d2['repair'] = []
-	d2['total'] = []
-	for (i = 0; i < inds.length; i++) {
-		d2['Time'].push(d1['Time'][inds[i]])
-		d2['operating'].push(d1['operating'][inds[i]])
-		d2['maintenance'].push(d1['maintenance'][inds[i]])
-		d2['repair'].push(d1['repair'][inds[i]])
-		d2['total'].push(d1['total'][inds[i]])
-	}
-	s2.trigger('change');
+source_box = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+callback = Callback(args=dict(source=source), code="""
+    // get data source from Callback args
+    var data = source.get('data');
+    /// get BoxSelectTool dimensions from cb_data parameter of Callback
+    var geometry = cb_data['geometry'];
+    /// calculate Rect attributes
+    var width = geometry['x1'] - geometry['x0'];
+    var height = geometry['y1'] - geometry['y0'];
+    var x = geometry['x0'] + width/2;
+    var y = geometry['y0'] + height/2;
+    /// update data source with new Rect attributes
+    data['x'].push(x);
+    data['y'].push(y);
+    data['width'].push(width);
+    data['height'].push(height);
+    // trigger update of data source
+    source.trigger('change');
 """)
+box_select = BoxSelectTool(callback=callback)
+rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=0.3, fill_color='#009933')
+motor_fig.add_glyph(source_box, rect, selection_glyph=rect, nonselection_glyph=rect)
 
 #export plot to html and return
 plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
 show(plot_grid, new='tab')
+
+
+##display N table
+#columns = [
+#	TableColumn(field='Time', title='Time'),
+#	TableColumn(field='operating', title='operating'),
+#	TableColumn(field='maintenance', title='maintenance'),
+#	TableColumn(field='repair', title='repair'),
+#	TableColumn(field='total', title='total'),
+#]
+#s2 = ColumnDataSource(
+#	data=dict(
+#		Time = [],
+#		operating = [],
+#		maintenance = [],
+#		repair = [],
+#		total = [],
+#	)
+#)
+#N_table = DataTable(source=s2, columns=columns, width=600, height=300)
+#callback = Callback(args=dict(source=source), code="""
+#    var data = source.get('data')
+#    data['Time'].push([0, 1, 2])
+#    data['operating'].push([11, 12, 13])
+#    data['maintenance'].push([222, 333, 444])
+#    data['repair'].push([567, 890, 1023])
+#    data['total'].push([4, 4, 4])
+#    source.trigger('change');
+#""")
+
+#    for (i = 0; i < inds.length; i++) {
+#        d2['Time'].push(d1['Time'][inds[i]])
+#        d2['operating'].push(d1['operating'][inds[i]])
+#        d2['maintenance'].push(d1['maintenance'][inds[i]])
+#        d2['repair'].push(d1['repair'][inds[i]])
+#        d2['total'].push(d1['total'][inds[i]])
+#    }
