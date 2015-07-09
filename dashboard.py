@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import pickle
 from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-from bokeh.models import HoverTool, Callback, BoxSelectTool, Rect
+from bokeh.models import HoverTool, Callback, BoxSelectTool, Line
 from bokeh.models.widgets import DataTable, TableColumn
 from bokeh.io import vform
 
@@ -150,30 +150,38 @@ N.fillna(value=0, inplace=True)
 N['total'] = N.maintenance + N.operating + N.repair
 source_motor = ColumnDataSource(
 	data=dict(
-		Time = N.Time,
-		operating = N.operating,
-		maintenance = N.maintenance,
-		repair = N.repair,
-		total = N.total,
+		Time = N.Time.tolist(),
+		operating = N.operating.tolist(),
+		maintenance = N.maintenance.tolist(),
+		repair = N.repair.tolist(),
+		total = N.total.tolist(),
 	)
 )
-source_box = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+source_box = ColumnDataSource(
+	data=dict(
+		Time = [],
+		operating = [],
+		maintenance = [],
+		repair = [],
+		total = [],
+	)
+)
 callback = Callback(args=dict(source=source_box), code="""
-    // get data source from Callback args
-    var data = source.get('data');
-    /// get BoxSelectTool dimensions from cb_data parameter of Callback
-    var geometry = cb_data['geometry'];
-    /// calculate Rect attributes
-    var width = geometry['x1'] - geometry['x0'];
-    var height = geometry['y1'] - geometry['y0'];
-    var x = geometry['x0'] + width/2;
-    var y = geometry['y0'] + height/2;
-    /// update data source with new Rect attributes
-    data['x'].push(x);
-    data['y'].push(y);
-    data['width'].push(width);
-    data['height'].push(height);
-    // trigger update of data source
+    var inds = cb_obj.get('selected')['1d'].indices;
+    var d1 = cb_obj.get('data');
+    var d2 = source.get('data');
+    d2['Time'] = []
+    d2['operating'] = []
+    d2['maintenance'] = []
+    d2['repair'] = []
+    d2['total'] = []
+    for (i = 0; i < inds.length; i++) {
+        d2['Time'].push(d1['Time'][inds[i]])
+        d2['operating'].push(d1['operating'][inds[i]])
+        d2['maintenance'].push(d1['maintenance'][inds[i]])
+        d2['repair'].push(d1['repair'][inds[i]])
+        d2['total'].push(d1['total'][inds[i]])
+    }
     source.trigger('change');
 """)
 box_select = BoxSelectTool(callback=callback)
@@ -203,8 +211,8 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=0.35, fill_color='#009933')
-motor_fig.add_glyph(source_box, rect, selection_glyph=rect, nonselection_glyph=rect)
+line = Line(x='Time', y='repair', line_color='black', line_width=2)
+motor_fig.add_glyph(source_box, line, selection_glyph=line, nonselection_glyph=line)
 
 #export plot to html and return
 #plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
