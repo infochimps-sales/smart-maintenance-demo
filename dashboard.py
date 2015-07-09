@@ -14,9 +14,10 @@ from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
 from bokeh.models import HoverTool, Callback
 from bokeh.io import vform
 
-#read smart maintenance results
+#read output of smart_maint.py
 fp = open('events.pkl', 'r')
-[events, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval] = pickle.load(fp)
+[events, xy_train, one_motor, operating_earnings, maintenance_cost, repair_cost, 
+    run_interval] = pickle.load(fp)
 fp.close()
 
 #calculate earnings, expenses, and revenue
