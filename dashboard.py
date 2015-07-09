@@ -59,7 +59,8 @@ source = ColumnDataSource(
 		size = 0.6*xy_train.time_to_fail,
 	)
 )    
-dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], title='SVM Decision Surface',
+dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], 
+    title='SVM Decision Surface    (click-drag to zoom)',
 	x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover,crosshair', 
 	width=600, plot_height=600)
 dec_fig.title_text_font_size = '18pt'
@@ -86,8 +87,9 @@ source = ColumnDataSource(
 		zero = money.cumulative_revenue*0,
 	)
 )
-earn_fig = figure(title='Cumulative Earnings & Expenses', x_axis_label='Time', 
-	y_axis_label='Earnings & Expenses    (M$)', tools='box_zoom,reset,hover,crosshair', 
+earn_fig = figure(title='Cumulative Earnings & Expenses    (click-drag to zoom)', 
+    x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)', 
+    tools='box_zoom,reset,hover,crosshair', 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[0, 120])
 earn_fig.title_text_font_size = '15pt'
 earn_fig.xaxis.axis_label_text_font_size = '11pt'
@@ -115,7 +117,7 @@ hover.tooltips = [
 ]
 
 #plot revenue vs time
-rev_fig = figure(title='Cumulative Revenue', x_axis_label='Time', 
+rev_fig = figure(title='Cumulative Revenue    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover,crosshair', 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-15, 10])
 rev_fig.title_text_font_size = '15pt'
@@ -141,8 +143,6 @@ hover.tooltips = [
 	("         Time", "@t"),
 	(" revenue (M$)", "@revenue"),
 ]
-
-source = None
 
 #plot number of motors vs time
 N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
@@ -177,7 +177,7 @@ callback = Callback(args=dict(source=source_box), code="""
     source.trigger('change');
 """)
 box_select = BoxSelectTool(callback=callback)
-motor_fig = figure(title='Number of Motors', x_axis_label='Time', 
+motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools=[box_select], 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
@@ -203,7 +203,7 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=1.0, fill_color='#009933')
+rect = Rect(x='x', y='y', width='width', height='height', fill_alpha=0.35, fill_color='#009933')
 motor_fig.add_glyph(source_box, rect, selection_glyph=rect, nonselection_glyph=rect)
 
 #export plot to html and return
