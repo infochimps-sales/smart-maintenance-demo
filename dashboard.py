@@ -1,39 +1,55 @@
-def make_dashboard(motors, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval):
+#dashboard.py
+#
+#dashboard the results of the smart maintenance demo
+#by Joe Hahn, jhahn@infochimps.com, 9 July 2015 
+#
+#to execute:    /home/$USER/anaconda/bin/python dashboard.py
+#
 
-    #calculate revenue vs time dataframe 
-    print '...generating dashboard...'
-    events = get_events(motors)
-    events['earnings'] = 0.0
-    events.loc[events.state == 'operating', 'earnings'] = operating_earnings
-    events['expenses'] = 0.0
-    events.loc[events.state == 'maintenance', 'expenses'] = maintenance_cost
-    events.loc[events.state == 'repair', 'expenses'] = repair_cost
-    money = events.groupby('Time').sum()[['earnings', 'expenses']]
-    money['revenue'] = money.earnings - money.expenses
-    money['cumulative_earnings'] = money.earnings.cumsum()
-    money['cumulative_expenses'] = money.expenses.cumsum()
-    money['cumulative_revenue'] = money.revenue.cumsum()
-    #map the (P,T) decision surface
-    T_min = 50
-    T_max = 150
-    P_min = 0
-    P_max = 100
-    T_axis = np.arange(T_min, T_max, 0.5)
-    P_axis = np.arange(P_min, P_max, 0.5)
-    x, y = np.meshgrid(T_axis, P_axis)
-    ttf = np.zeros((len(P_axis), len(T_axis)))
-    import copy
-    m = copy.deepcopy(motors[0])
-    for p_idx in np.arange(len(P_axis)):
-        for t_idx in np.arange(len(T_axis)):
-            m.Temp = T_axis[t_idx]
-            m.Pressure = P_axis[p_idx]
-            ttf[p_idx, t_idx] = m.predicted_time_to_fail()
+#get imports 
+import numpy as np
+import pandas as pd
+import pickle
+from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
+from bokeh.models import HoverTool, Callback
+from bokeh.io import vform
+
+#read smart maintenance results
+fp = open('events.pkl', 'r')
+[events, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval] = pickle.load(fp)
+fp.close()
+
+#calculate earnings, expenses, and revenue
+events['earnings'] = 0.0
+events.loc[events.state == 'operating', 'earnings'] = operating_earnings
+events['expenses'] = 0.0
+events.loc[events.state == 'maintenance', 'expenses'] = maintenance_cost
+events.loc[events.state == 'repair', 'expenses'] = repair_cost
+money = events.groupby('Time').sum()[['earnings', 'expenses']]
+money['revenue'] = money.earnings - money.expenses
+money['cumulative_earnings'] = money.earnings.cumsum()
+money['cumulative_expenses'] = money.expenses.cumsum()
+money['cumulative_revenue'] = money.revenue.cumsum()
+
+#map the (P,T) decision surface
+T_min = 50
+T_max = 150
+P_min = 0
+P_max = 100
+T_axis = np.arange(T_min, T_max, 0.5)
+P_axis = np.arange(P_min, P_max, 0.5)
+x, y = np.meshgrid(T_axis, P_axis)
+ttf = np.zeros((len(P_axis), len(T_axis)))
+import copy
+m = copy.deepcopy(motors[0])
+for p_idx in np.arange(len(P_axis)):
+	for t_idx in np.arange(len(T_axis)):
+		m.Temp = T_axis[t_idx]
+		m.Pressure = P_axis[p_idx]
+		ttf[p_idx, t_idx] = m.predicted_time_to_fail()
 
     #plot decision surface
-    from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-    from bokeh.models import HoverTool, Callback
-    from bokeh.io import vform
+
     output_file('dashboard.html', title='Smart Maintenance Dashboard')
     source = ColumnDataSource(
         data=dict(

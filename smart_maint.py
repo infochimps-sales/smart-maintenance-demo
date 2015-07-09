@@ -123,7 +123,7 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
 events = get_events(motors.collect())
 import pickle
 fp = open('events.pkl', 'w')
-pickle.dump(events, fp)
+pickle.dump([events, xy_train, operating_earnings, maintenance_cost, repair_cost, run_interval], fp)
 fp.close()
 
 ##get operating stats
