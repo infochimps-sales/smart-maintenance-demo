@@ -118,39 +118,37 @@ for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
     if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
 
-#store results to file
-motors_local = motors
+
+#write all events to file
+events = get_events(motors.collect())
 import pickle
-fp = open('motors.dat', 'w')
-pickle.dump(motors_local, fp)
+fp = open('events.pkl', 'w')
+pickle.dump(events, fp)
 fp.close()
 
-import os
-os.exit()
+##get operating stats
+#pd.set_option('display.expand_frame_repr', False)
+#motors_local = motors.collect()
+#N = motor_stats(motors_local)
+#print N
 
-#get operating stats
-pd.set_option('display.expand_frame_repr', False)
-motors_local = motors.collect()
-N = motor_stats(motors_local)
-print N
-
-#store all events in this file and write to HDFS
-file = open('events.json','w')
-for m in motors_local:
-    for d in m.events:
-        file.write(str(d) + '\n')
-
-file.close()
+##write all events in this file
+#file = open('events.json','w')
+#for m in motors_local:
+#    for d in m.events:
+#        file.write(str(d) + '\n')
+#
+#file.close()
 
 #generate dashboard and report results
 #money, events = plot_results(motors_local, xy_train, operating_earnings, maintenance_cost, 
 #    repair_cost, run_interval)
-money, events, N = make_dashboard(motors_local, xy_train, operating_earnings, maintenance_cost, 
-    repair_cost, run_interval)
-print 'cumulative revenue at completion of run-to-fail               (M$) = ', \
-    money[money.index  <= Time_stop_runtofail].cumulative_revenue.values[-1]/1.0e6
-print 'cumulative revenue at completion of scheduled-maintenance     (M$) = ', \
-    money[money.index  <= Time_stop_sched_maint].cumulative_revenue.values[-1]/1.0e6
-print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
-    money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
+#money, events, N = make_dashboard(motors_local, xy_train, operating_earnings, maintenance_cost, 
+#    repair_cost, run_interval)
+#print 'cumulative revenue at completion of run-to-fail               (M$) = ', \
+#    money[money.index  <= Time_stop_runtofail].cumulative_revenue.values[-1]/1.0e6
+#print 'cumulative revenue at completion of scheduled-maintenance     (M$) = ', \
+#    money[money.index  <= Time_stop_sched_maint].cumulative_revenue.values[-1]/1.0e6
+#print 'cumulative revenue at completion of predictive-maintenance    (M$) = ', \
+#    money[money.index  <= Time_stop_pred_maint].cumulative_revenue.values[-1]/1.0e6
 #print 'execution time (minutes) = ', (time.clock() - start_time_sec)/60.0
