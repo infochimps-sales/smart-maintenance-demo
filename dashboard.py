@@ -80,7 +80,7 @@ hover.tooltips = [
 #plot earnings vs time
 source = ColumnDataSource(
 	data=dict(
-		t = money.index,
+		Time = money.index,
 		earnings = money.cumulative_earnings/1.e6,
 		expenses = money.cumulative_expenses/1.e6,
 		revenue  = money.cumulative_revenue/1.e6,
