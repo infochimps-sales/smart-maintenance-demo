@@ -163,13 +163,13 @@ motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_labe
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.line('Time', 'total', color='blue', source=source_motor, line_width=3, legend='total', 
+motor_fig.line('Time', 'total', color='blue', source=motor_source, line_width=3, legend='total', 
     alpha=1.0)
-motor_fig.line('Time', 'operating', color='green', source=source_motor, line_width=3, legend='operating', 
+motor_fig.line('Time', 'operating', color='green', source=motor_source, line_width=3, legend='operating', 
     alpha=1.0)
-motor_fig.line('Time', 'maintenance', color='orange', source=source_motor, line_width=3, 
+motor_fig.line('Time', 'maintenance', color='orange', source=motor_source, line_width=3, 
     legend='maintenance', alpha=0.75)
-motor_fig.line('Time', 'repair', color='red', source=source_motor, line_width=3, legend='repair', 
+motor_fig.line('Time', 'repair', color='red', source=motor_source, line_width=3, legend='repair', 
     alpha=1.0)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
