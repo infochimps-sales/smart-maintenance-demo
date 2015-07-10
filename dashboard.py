@@ -246,28 +246,3 @@ show(plot_grid, new='tab')
 #	)
 #)
 #N_table = DataTable(source=s2, columns=columns, width=600, height=300)
-#callback = Callback(args=dict(source=source), code="""
-#    var data = source.get('data')
-#    data['Time'].push([0, 1, 2])
-#    data['operating'].push([11, 12, 13])
-#    data['maintenance'].push([222, 333, 444])
-#    data['repair'].push([567, 890, 1023])
-#    data['total'].push([4, 4, 4])
-#    source.trigger('change');
-#""")
-
-#    for (i = 0; i < inds.length; i++) {
-#        d2['Time'].push(d1['Time'][inds[i]])
-#        d2['operating'].push(d1['operating'][inds[i]])
-#        d2['maintenance'].push(d1['maintenance'][inds[i]])
-#        d2['repair'].push(d1['repair'][inds[i]])
-#        d2['total'].push(d1['total'][inds[i]])
-#    }
-
-    for (i = 0; i < inds.length; i++) {
-        d2['Time'].push(d1['Time'][inds[i]])
-        d2['operating'].push(d1['operating'][inds[i]])
-        d2['maintenance'].push(d1['maintenance'][inds[i]])
-        d2['repair'].push(d1['repair'][inds[i]])
-        d2['total'].push(d1['total'][inds[i]])
-    }
