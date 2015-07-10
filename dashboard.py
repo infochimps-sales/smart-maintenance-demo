@@ -60,7 +60,7 @@ source = ColumnDataSource(
 	)
 )    
 dec_fig = figure(x_range=[T_min, T_max], y_range=[P_min, P_max], 
-    title='SVM Decision Surface    (click-drag to zoom)',
+    title='SVM Decision Surface    \r(click-drag to zoom)',
 	x_axis_label='Temperature', y_axis_label='Pressure', tools='box_zoom,reset,hover,crosshair', 
 	width=600, plot_height=600)
 dec_fig.title_text_font_size = '18pt'
