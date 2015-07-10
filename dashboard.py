@@ -10,8 +10,8 @@
 import numpy as np
 import pandas as pd
 import pickle
-from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-from bokeh.models import HoverTool, Callback, BoxSelectTool, Line, Rect
+from bokeh.plotting import figure, show, output_file, vplot
+from bokeh.models import HoverTool, Callback, ColumnDataSource, BoxSelectTool, Line, Rect
 from bokeh.models.widgets import DataTable, TableColumn
 from bokeh.io import vform
 
@@ -160,7 +160,7 @@ motor_source = ColumnDataSource(
 	)
 )
 motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
+	y_axis_label='Number of motors', tools='lasso_select',
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
@@ -194,7 +194,7 @@ hover.tooltips = [
 	("      total", "@total"),
 ]
 	
-fig2_source = ColumnDataSource(
+s2 = ColumnDataSource(
 	data=dict(
 		Time = [],
 		operating = [],
@@ -204,21 +204,33 @@ fig2_source = ColumnDataSource(
 	)
 )
 fig2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
+	y_axis_label='Number of motors', tools='',
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 fig2.title_text_font_size = '15pt'
 fig2.xaxis.axis_label_text_font_size = '11pt'
 fig2.yaxis.axis_label_text_font_size = '11pt'
-fig2.line('Time', 'total', color='blue', source=fig2_source, line_width=3, legend='total', alpha=1.0)
-fig2.line('Time', 'operating', color='green', source=fig2_source, line_width=3, legend='operating', alpha=1.0)
-fig2.line('Time', 'maintenance', color='orange', source=fig2_source, line_width=3, legend='maintenance', alpha=0.75)
-fig2.line('Time', 'repair', color='red', source=fig2_source, line_width=3, legend='repair', alpha=1.0)
+fig2.line('Time', 'total', color='blue', source=s2, line_width=3, legend='total', alpha=1.0)
+fig2.line('Time', 'operating', color='green', source=s2, line_width=3, legend='operating', alpha=1.0)
+fig2.line('Time', 'maintenance', color='orange', source=s2, line_width=3, legend='maintenance', alpha=0.75)
+fig2.line('Time', 'repair', color='red', source=s2, line_width=3, legend='repair', alpha=1.0)
 fig2.legend.orientation = "top_right"
 
-motor_source.callback = Callback(args=dict(s2=fig2_source), code="""
+motor_source.callback = Callback(args=dict(s2=s2), code="""
     var inds = cb_obj.get('selected')['1d'].indices;
     var d1 = cb_obj.get('data');
-    var d2 = d1;
+    var d2 = s2.get('data');
+    d2['Time'] = []
+    d2['operating'] = []
+    d2['maintenance'] = []
+    d2['repair'] = []
+    d2['total'] = []
+    for (i = 0; i < inds.length; i++) {
+        d2['Time'].push(d1['Time'][inds[i]])
+        d2['operating'].push(d1['operating'][inds[i]])
+        d2['maintenance'].push(d1['maintenance'][inds[i]])
+        d2['repair'].push(d1['repair'][inds[i]])
+        d2['total'].push(d1['total'][inds[i]])
+    }
     s2.trigger('change');
 """)
 
