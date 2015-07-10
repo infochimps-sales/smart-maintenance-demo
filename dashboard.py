@@ -94,8 +94,8 @@ earn_fig = figure(title='Cumulative Earnings & Expenses    (click-drag to zoom)'
 earn_fig.title_text_font_size = '15pt'
 earn_fig.xaxis.axis_label_text_font_size = '11pt'
 earn_fig.yaxis.axis_label_text_font_size = '11pt'
-earn_fig.line('t', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
-earn_fig.line('t', 'expenses', color='red', source=source, line_width=5, legend='expenses', 
+earn_fig.line('Time', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
+earn_fig.line('Time', 'expenses', color='red', source=source, line_width=5, legend='expenses', 
     alpha=0.8)
 earn_fig.legend.orientation = "bottom_right"
 earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
@@ -111,7 +111,7 @@ earn_fig.text([445], [101], ['predictive'])
 earn_fig.text([445], [90], ['maintenance'])
 hover = earn_fig.select(dict(type=HoverTool))
 hover.tooltips = [
-	("         Time", "@t"),
+	("         Time", "@Time"),
 	(" earning (M$)", "@earnings"),
 	("expenses (M$)", "@expenses"),
 ]
@@ -123,8 +123,8 @@ rev_fig = figure(title='Cumulative Revenue    (click-drag to zoom)', x_axis_labe
 rev_fig.title_text_font_size = '15pt'
 rev_fig.xaxis.axis_label_text_font_size = '11pt'
 rev_fig.yaxis.axis_label_text_font_size = '11pt'
-rev_fig.line('t', 'revenue', color='green', source=source, line_width=5, legend='revenue')
-rev_fig.line('t', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
+rev_fig.line('Time', 'revenue', color='green', source=source, line_width=5, legend='revenue')
+rev_fig.line('Time', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
 	line_dash=[10, 5])
 rev_fig.legend.orientation = "bottom_right"
 rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
@@ -140,7 +140,7 @@ rev_fig.text([445], [5.3], ['predictive'])
 rev_fig.text([445], [2.7], ['maintenance'])
 hover = rev_fig.select(dict(type=HoverTool))
 hover.tooltips = [
-	("         Time", "@t"),
+	("         Time", "@Time"),
 	(" revenue (M$)", "@revenue"),
 ]
 
@@ -185,7 +185,15 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-
+hover = rev_fig.select(dict(type=HoverTool))
+hover.tooltips = [
+	("        Time", "@Time"),
+	("operating", "@operating"),
+	("maintenance", "@maintenance"),
+	("repair", "@repair"),
+	("total", "@total"),
+]
+	
 fig2_source = motor_source.clone()
 fig2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
