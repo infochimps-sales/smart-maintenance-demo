@@ -130,11 +130,4 @@ And to undo the above changes:
     sudo rm /usr/bin/python /usr/bin/ipython
     sudo ln -s /usr/bin/python2.6 /usr/bin/python
 
- 
-###Old notes
-
-The output of this spark job is three png images that can be viewed by browsing
-
-    http://cdh-foyer.platform.infochimps:12321/dashboard.html    
-
 

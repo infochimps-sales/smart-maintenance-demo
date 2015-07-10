@@ -95,7 +95,7 @@ earn_fig.title_text_font_size = '15pt'
 earn_fig.xaxis.axis_label_text_font_size = '11pt'
 earn_fig.yaxis.axis_label_text_font_size = '11pt'
 earn_fig.line('Time', 'earnings', color='blue', source=source, line_width=5, legend='earnings')
-earn_fig.line('Time', 'expenses', color='red', source=source, line_width=5, legend='expenses', 
+earn_fig.line('Time', 'expenses', color='red', source=source, line_width=5,  legend='expenses', 
     alpha=0.8)
 earn_fig.legend.orientation = "bottom_right"
 earn_fig.patch([0, 200, 200, 0], [0, 0, 120, 120], color='lightsalmon', alpha=0.35, 
@@ -165,14 +165,14 @@ motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_labe
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.line('Time', 'total', color='blue', source=motor_source, line_width=3, legend='total', 
-    alpha=1.0)
-motor_fig.line('Time', 'operating', color='green', source=motor_source, line_width=3, legend='operating', 
-    alpha=1.0)
+motor_fig.line('Time', 'total', color='blue', source=motor_source, line_width=3, 
+    legend='total', alpha=1.0)
+motor_fig.line('Time', 'operating', color='green', source=motor_source, line_width=3, 
+    legend='operating', alpha=1.0)
 motor_fig.line('Time', 'maintenance', color='orange', source=motor_source, line_width=3, 
     legend='maintenance', alpha=0.75)
-motor_fig.line('Time', 'repair', color='red', source=motor_source, line_width=3, legend='repair', 
-    alpha=1.0)
+motor_fig.line('Time', 'repair', color='red', source=motor_source, line_width=3, 
+    legend='repair', alpha=1.0)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
 	line_width=0)
@@ -185,16 +185,24 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
-hover = rev_fig.select(dict(type=HoverTool))
+hover = motor_fig.select(dict(type=HoverTool))
 hover.tooltips = [
-	("        Time", "@Time"),
-	("operating", "@operating"),
+	("       Time", "@Time"),
+	("  operating", "@operating"),
 	("maintenance", "@maintenance"),
-	("repair", "@repair"),
-	("total", "@total"),
+	("     repair", "@repair"),
+	("      total", "@total"),
 ]
 	
-fig2_source = motor_source.clone()
+fig2_source = ColumnDataSource(
+	data=dict(
+		Time = [],
+		operating = [],
+		maintenance = [],
+		repair = [],
+		total = [],
+	)
+)
 fig2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
@@ -207,23 +215,11 @@ fig2.line('Time', 'maintenance', color='orange', source=fig2_source, line_width=
 fig2.line('Time', 'repair', color='red', source=fig2_source, line_width=3, legend='repair', alpha=1.0)
 fig2.legend.orientation = "top_right"
 
-motor_source.callback = Callback(args=dict(m1=motor_source, s2=fig2_source), code="""
-  var inds = cb_obj.get('selected')['1d'].indices;
-  var d1 = m1.get('data');
-  var d2 = s2.get('data');
-  d2['Time'] = []
-  d2['operating'] = []
-  d2['maintenance'] = []
-  d2['repair'] = []
-  d2['total'] = []
-  for (i = 0; i < inds.length; i++) {
-    d2['Time'].push(d1['Time'][inds[i]])
-    d2['operating'].push(d1['operating'][inds[i]])
-    d2['maintenance'].push(d1['maintenance'][inds[i]])
-    d2['repair'].push(d1['repair'][inds[i]])
-    d2['total'].push(d1['total'][inds[i]])
-  }
-  s2.trigger('change'); 
+motor_source.callback = Callback(args=dict(s2=fig2_source), code="""
+    var inds = cb_obj.get('selected')['1d'].indices;
+    var d1 = cb_obj.get('data');
+    var d2 = d1;
+    s2.trigger('change');
 """)
 
 #export plot to html and return
@@ -267,3 +263,11 @@ show(plot_grid, new='tab')
 #        d2['repair'].push(d1['repair'][inds[i]])
 #        d2['total'].push(d1['total'][inds[i]])
 #    }
+
+    for (i = 0; i < inds.length; i++) {
+        d2['Time'].push(d1['Time'][inds[i]])
+        d2['operating'].push(d1['operating'][inds[i]])
+        d2['maintenance'].push(d1['maintenance'][inds[i]])
+        d2['repair'].push(d1['repair'][inds[i]])
+        d2['total'].push(d1['total'][inds[i]])
+    }
