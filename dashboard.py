@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import pickle
 from bokeh.plotting import figure, show, output_file, ColumnDataSource, vplot
-from bokeh.models import HoverTool, Callback, BoxSelectTool, Line
+from bokeh.models import HoverTool, Callback, BoxSelectTool, Line, Rect
 from bokeh.models.widgets import DataTable, TableColumn
 from bokeh.io import vform
 
@@ -144,10 +144,12 @@ hover.tooltips = [
 	(" revenue (M$)", "@revenue"),
 ]
 
-#plot number of motors vs time
+#calculate the number of working & broken motors vs time
 N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
 N.fillna(value=0, inplace=True)
 N['total'] = N.maintenance + N.operating + N.repair
+
+#plot number of working & broken motors versus time
 motor_source = ColumnDataSource(
 	data=dict(
 		Time = N.Time.tolist(),
@@ -184,9 +186,41 @@ motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
 
+fig2_source = motor_source.clone()
+fig2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
+	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
+	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
+fig2.title_text_font_size = '15pt'
+fig2.xaxis.axis_label_text_font_size = '11pt'
+fig2.yaxis.axis_label_text_font_size = '11pt'
+fig2.line('Time', 'total', color='blue', source=fig2_source, line_width=3, legend='total', alpha=1.0)
+fig2.line('Time', 'operating', color='green', source=fig2_source, line_width=3, legend='operating', alpha=1.0)
+fig2.line('Time', 'maintenance', color='orange', source=fig2_source, line_width=3, legend='maintenance', alpha=0.75)
+fig2.line('Time', 'repair', color='red', source=fig2_source, line_width=3, legend='repair', alpha=1.0)
+fig2.legend.orientation = "top_right"
+
+motor_source.callback = Callback(args=dict(m1=motor_source, s2=fig2_source), code="""
+  var inds = cb_obj.get('selected')['1d'].indices;
+  var d1 = m1.get('data');
+  var d2 = s2.get('data');
+  d2['Time'] = []
+  d2['operating'] = []
+  d2['maintenance'] = []
+  d2['repair'] = []
+  d2['total'] = []
+  for (i = 0; i < inds.length; i++) {
+    d2['Time'].push(d1['Time'][inds[i]])
+    d2['operating'].push(d1['operating'][inds[i]])
+    d2['maintenance'].push(d1['maintenance'][inds[i]])
+    d2['repair'].push(d1['repair'][inds[i]])
+    d2['total'].push(d1['total'][inds[i]])
+  }
+  s2.trigger('change'); 
+""")
+
 #export plot to html and return
 #plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
-plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig)
+plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, fig2)
 show(plot_grid, new='tab')
 
 
