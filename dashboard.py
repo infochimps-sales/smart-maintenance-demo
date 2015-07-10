@@ -158,8 +158,7 @@ motor_source = ColumnDataSource(
 	)
 )
 motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools=[box_select], 
-	tools='box_zoom,reset,hover,crosshair',
+	y_axis_label='Number of motors', tools='box_zoom,reset,hover,crosshair',
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
