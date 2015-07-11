@@ -51,6 +51,9 @@ and browse that dashboard here:
     http://cdh-foyer.platform.infochimps:12321/dashboard.html
 
 
+Note about ELinks...
+
+
 ###The demo's storyline:
 
 This demo calculates the operational history of 200 simulated motors over time. Initially these
