@@ -46,12 +46,10 @@ smart-maintenance simulation:
     /home/$USER/anaconda/bin/python dashboard.py
 
 
-and browse that dashboard here:
+and press q, y to dismiss the ELinks console then appears. And browse the
+resulting dashboard here:
 
     http://cdh-foyer.platform.infochimps:12321/dashboard.html
-
-
-Note about ELinks...
 
 
 ###The demo's storyline:
@@ -97,6 +95,17 @@ by time t=870, and have earned $6M at the end of this simulation.
 So this demo's main punchline is: _get Smart Maintenance on the BDPaas to optimize
 equipment maintenance schedules and to  dramatically reduce expenses and grow earnings._
 
+
+###Known issues:
+
+If the dashboard is not visible in the browser, the webserver likely needs to be restarted:
+
+    /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
+
+
+dashboard.py also launches an ELinks console that isn't needed, that code needs to be
+tweaked so that doesn't happen.
+ 
 
 ###Debugging notes:
         
