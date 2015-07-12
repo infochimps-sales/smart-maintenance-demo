@@ -236,7 +236,7 @@ motor_source.callback = Callback(args=dict(s2=s2), code="""
 
 #testplot
 from random import random
-x = [random() for x in range(500)]
+x = N.Time.tolist()
 y = [random() for y in range(500)]
 s1 = ColumnDataSource(data=dict(x=x, y=y))
 p1 = figure(plot_width=400, plot_height=400, tools="lasso_select", title="Select Here")
