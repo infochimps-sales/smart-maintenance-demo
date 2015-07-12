@@ -160,19 +160,15 @@ motor_source = ColumnDataSource(
 	)
 )
 motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='lasso_select',
-	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
+	y_axis_label='Number of motors', tools='box_select, hover, reset',
+	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.line('Time', 'total', color='blue', source=motor_source, line_width=3, 
-    legend='total', alpha=1.0)
-motor_fig.line('Time', 'operating', color='green', source=motor_source, line_width=3, 
-    legend='operating', alpha=1.0)
-motor_fig.line('Time', 'maintenance', color='orange', source=motor_source, line_width=3, 
-    legend='maintenance', alpha=0.75)
-motor_fig.line('Time', 'repair', color='red', source=motor_source, line_width=3, 
-    legend='repair', alpha=1.0)
+motor_fig.circle('Time', 'total', color='blue', source=motor_source, legend='total', alpha=1.0)
+motor_fig.circle('Time', 'operating', color='green', source=motor_source, legend='operating', alpha=1.0)
+motor_fig.circle('Time', 'maintenance', color='orange', source=motor_source, legend='maintenance', alpha=0.75)
+motor_fig.circle('Time', 'repair', color='red', source=motor_source, legend='repair', alpha=1.0)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
 	line_width=0)
@@ -193,73 +189,72 @@ hover.tooltips = [
 	("     repair", "@repair"),
 	("      total", "@total"),
 ]
-	
-s2 = ColumnDataSource(
+
+#plot number of working & broken motors versus time
+motor_source = ColumnDataSource(
 	data=dict(
-		Time = [],
-		operating = [],
-		maintenance = [],
-		repair = [],
-		total = [],
+		x = N.Time.tolist(),
+		y = N.operating.tolist(),
+		z = N.maintenance.tolist(),
 	)
 )
-fig2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='',
-	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
-fig2.title_text_font_size = '15pt'
-fig2.xaxis.axis_label_text_font_size = '11pt'
-fig2.yaxis.axis_label_text_font_size = '11pt'
-fig2.line('Time', 'total', color='blue', source=s2, line_width=3, legend='total', alpha=1.0)
-fig2.line('Time', 'operating', color='green', source=s2, line_width=3, legend='operating', alpha=1.0)
-fig2.line('Time', 'maintenance', color='orange', source=s2, line_width=3, legend='maintenance', alpha=0.75)
-fig2.line('Time', 'repair', color='red', source=s2, line_width=3, legend='repair', alpha=1.0)
-fig2.legend.orientation = "top_right"
-
+motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
+	y_axis_label='Number of motors', tools='box_select, hover, reset',
+	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
+motor_fig.title_text_font_size = '15pt'
+motor_fig.xaxis.axis_label_text_font_size = '11pt'
+motor_fig.yaxis.axis_label_text_font_size = '11pt'
+motor_fig.circle('x', 'y', color='blue', source=motor_source, legend='total', alpha=1.0)
+motor_fig.circle('x', 'z', color='orange', source=motor_source, legend='maintenance', alpha=0.75)
+motor_fig.legend.orientation = "top_right"
+motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
+	line_width=0)
+motor_fig.patch([200, 400, 400, 200], [-10, -10, 210, 210], color='gold', alpha=0.35, 
+	line_width=0)
+motor_fig.patch([400, 1200, 1200, 400], [-10, -10, 210, 210], color='darkseagreen', 
+	alpha=0.35, line_width=0)   
+motor_fig.text([ 45], [173], ['run-to-fail'])
+motor_fig.text([245], [173], ['scheduled'])
+motor_fig.text([245], [155], ['maintenance'])
+motor_fig.text([445], [173], ['predictive'])
+motor_fig.text([445], [155], ['maintenance'])
+hover = motor_fig.select(dict(type=HoverTool))
+hover.tooltips = [
+	("x", "@x"),
+	("y", "@y"),
+	("z", "@z"),
+]
+s2 = ColumnDataSource(
+	data=dict(
+		x = [],
+		y = [],
+		z = [],
+	)
+)
+p2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
+	y_axis_label='Number of motors', tools='box_select, hover, reset',
+	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
+p2.circle('x', 'y', color='blue', source=s2, legend='total', alpha=1.0)
+p2.circle('x', 'z', color='orange', source=s2, legend='maintenance', alpha=0.75)
 motor_source.callback = Callback(args=dict(s2=s2), code="""
-    var inds = cb_obj.get('selected')['1d'].indices;
-    var d1 = cb_obj.get('data');
-    var d2 = s2.get('data');
-    d2['Time'] = []
-    d2['operating'] = []
-    d2['maintenance'] = []
-    d2['repair'] = []
-    d2['total'] = []
-    for (i = 0; i < inds.length; i++) {
-        d2['Time'].push(d1['Time'][inds[i]])
-        d2['operating'].push(d1['operating'][inds[i]])
-        d2['maintenance'].push(d1['maintenance'][inds[i]])
-        d2['repair'].push(d1['repair'][inds[i]])
-        d2['total'].push(d1['total'][inds[i]])
-    }
-    s2.trigger('change');
-""")
-
-#testplot
-from random import random
-x = N.Time.tolist()
-y = [random() for y in range(500)]
-s1 = ColumnDataSource(data=dict(x=x, y=y))
-p1 = figure(plot_width=400, plot_height=400, tools="lasso_select", title="Select Here")
-p1.circle('x', 'y', source=s1, alpha=0.6)
-s2 = ColumnDataSource(data=dict(x=[], y=[]))
-p2 = figure(plot_width=400, plot_height=400, x_range=(0,1), y_range=(0,1), tools="", title="Watch Here")
-p2.circle('x', 'y', source=s2, alpha=0.6)
-s1.callback = Callback(args=dict(s2=s2), code="""
     var inds = cb_obj.get('selected')['1d'].indices;
     var d1 = cb_obj.get('data');
     var d2 = s2.get('data');
     d2['x'] = []
     d2['y'] = []
+    d2['z'] = []
     for (i = 0; i < inds.length; i++) {
         d2['x'].push(d1['x'][inds[i]])
         d2['y'].push(d1['y'][inds[i]])
+        d2['z'].push(d1['z'][inds[i]])
     }
     s2.trigger('change');
 """)
 
+
 #export plot to html and return
 #plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
-plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, fig2, p1, p2)
+plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, p2)
 show(plot_grid, new='tab')
 
 
