@@ -204,8 +204,10 @@ motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_labe
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.circle('x', 'y', color='blue', source=motor_source, legend='total', alpha=1.0)
-motor_fig.circle('x', 'z', color='orange', source=motor_source, legend='maintenance', alpha=0.75)
+motor_fig.circle('x', 'y', color='blue', source=motor_source, legend='total', 
+    line_width=3, alpha=1.0)
+motor_fig.circle('x', 'z', color='orange', source=motor_source, legend='maintenance', 
+    line_width=3, alpha=0.75)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
 	line_width=0)
