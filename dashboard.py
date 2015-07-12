@@ -210,6 +210,14 @@ motor_fig.x_range.callback = Callback(
 motor_fig.y_range.callback = Callback(
     args=dict(source=motor_source, range=motor_fig.y_range), code=jscode % ('y', 'height'))
 
+#export plot to html and return
+#plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
+plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig)
+show(plot_grid, browser=None)
+
+import sys
+sys.exit()
+
 s2 = motor_source.clone()
 p2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='',
