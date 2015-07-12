@@ -242,10 +242,10 @@ s2 = ColumnDataSource(
 p2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_select, hover, reset',
 	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
-p2.circle('Time', 'total', color='blue', source=s2, legend='total', 
-    line_width=3, alpha=1.0)
-p2.circle('Time', 'maintenance', color='orange', source=s2, legend='maintenance', 
-    line_width=3, alpha=0.75)
+p2.circle('Time', 'total', color='blue', source=s2, legend='total', alpha=1.0)
+p2.circle('Time', 'operating', color='green', source=s2, legend='operating', alpha=1.0)
+p2.circle('Time', 'maintenance', color='orange', source=s2, legend='maintenance', alpha=0.75)
+p2.circle('Time', 'repair', color='red', source=s2, legend='repair', alpha=1.0)
 motor_source.callback = Callback(args=dict(s2=s2), code="""
     var inds = cb_obj.get('selected')['1d'].indices;
     var d1 = cb_obj.get('data');
