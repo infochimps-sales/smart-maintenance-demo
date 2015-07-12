@@ -193,9 +193,11 @@ hover.tooltips = [
 #plot number of working & broken motors versus time
 motor_source = ColumnDataSource(
 	data=dict(
-		x = N.Time.tolist(),
-		y = N.operating.tolist(),
-		z = N.maintenance.tolist(),
+		Time = N.Time.tolist(),
+		operating = N.operating.tolist(),
+		maintenance = N.maintenance.tolist(),
+		repair = N.repair.tolist(),
+		total = N.total.tolist(),
 	)
 )
 motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
@@ -204,10 +206,10 @@ motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_labe
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
-motor_fig.circle('x', 'y', color='blue', source=motor_source, legend='total', 
-    line_width=3, alpha=1.0)
-motor_fig.circle('x', 'z', color='orange', source=motor_source, legend='maintenance', 
-    line_width=3, alpha=0.75)
+motor_fig.circle('Time', 'total', color='blue', source=motor_source, legend='total', alpha=1.0)
+motor_fig.circle('Time', 'operating', color='green', source=motor_source, legend='operating', alpha=1.0)
+motor_fig.circle('Time', 'maintenance', color='orange', source=motor_source, legend='maintenance', alpha=0.75)
+motor_fig.circle('Time', 'repair', color='red', source=motor_source, legend='repair', alpha=1.0)
 motor_fig.legend.orientation = "top_right"
 motor_fig.patch([0, 200, 200, 0], [-10, -10, 210, 210], color='lightsalmon', alpha=0.35, 
 	line_width=0)
@@ -222,33 +224,43 @@ motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
 hover = motor_fig.select(dict(type=HoverTool))
 hover.tooltips = [
-	("x", "@x"),
-	("y", "@y"),
-	("z", "@z"),
+	("Time", "@Time"),
+	("total", "@total"),
+	("maintenance", "@maintenance"),
+	("     repair", "@repair"),
+	("      total", "@total"),
 ]
 s2 = ColumnDataSource(
 	data=dict(
-		x = [],
-		y = [],
-		z = [],
+		Time = [],
+		operating = [],
+		maintenance = [],
+		repair = [],
+		total = [],
 	)
 )
 p2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_select, hover, reset',
 	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
-p2.circle('x', 'y', color='blue', source=s2, legend='total', alpha=1.0)
-p2.circle('x', 'z', color='orange', source=s2, legend='maintenance', alpha=0.75)
+p2.circle('Time', 'total', color='blue', source=s2, legend='total', 
+    line_width=3, alpha=1.0)
+p2.circle('Time', 'maintenance', color='orange', source=s2, legend='maintenance', 
+    line_width=3, alpha=0.75)
 motor_source.callback = Callback(args=dict(s2=s2), code="""
     var inds = cb_obj.get('selected')['1d'].indices;
     var d1 = cb_obj.get('data');
     var d2 = s2.get('data');
-    d2['x'] = []
-    d2['y'] = []
-    d2['z'] = []
+    d2['Time'] = []
+    d2['operating'] = []
+    d2['maintenance'] = []
+    d2['repair'] = []
+    d2['total'] = []
     for (i = 0; i < inds.length; i++) {
-        d2['x'].push(d1['x'][inds[i]])
-        d2['y'].push(d1['y'][inds[i]])
-        d2['z'].push(d1['z'][inds[i]])
+        d2['Time'].push(d1['Time'][inds[i]])
+        d2['operating'].push(d1['operating'][inds[i]])
+        d2['maintenance'].push(d1['maintenance'][inds[i]])
+        d2['repair'].push(d1['repair'][inds[i]])
+        d2['total'].push(d1['total'][inds[i]])
     }
     s2.trigger('change');
 """)
@@ -257,7 +269,7 @@ motor_source.callback = Callback(args=dict(s2=s2), code="""
 #export plot to html and return
 #plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
 plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, p2)
-show(plot_grid, new='tab')
+show(plot_grid, browser=None)
 
 
 ##display N table
