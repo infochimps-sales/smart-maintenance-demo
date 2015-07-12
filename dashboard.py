@@ -157,14 +157,10 @@ motor_source = ColumnDataSource(
 		maintenance = N.maintenance.tolist(),
 		repair = N.repair.tolist(),
 		total = N.total.tolist(),
-		x = [],
-		y = [],
-		width = [],
-		height = [],
 	)
 )
 motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
-	y_axis_label='Number of motors', tools='box_select, hover, reset',
+	y_axis_label='Number of motors', tools='box_zoom, box_select, hover, reset',
 	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
@@ -192,11 +188,8 @@ hover.tooltips = [
 	("maintenance", "@maintenance"),
 	("     repair", "@repair"),
 	("      total", "@total"),
-	("      x", "@x"),
-	("      y", "@y"),
-	("  width", "@width"),
-	(" height", "@height"),
 ]
+range_source = ColumnDataSource( data={ 'x':[], 'y':[], 'width':[], 'height':[] } )
 jscode="""
     var data = source.get('data');
     var start = range.get('start');
@@ -206,17 +199,9 @@ jscode="""
     source.trigger('change');
 """
 motor_fig.x_range.callback = Callback(
-    args=dict(source=motor_source, range=motor_fig.x_range), code=jscode % ('x', 'width'))
+    args=dict(source=range_source, range=motor_fig.x_range), code=jscode%('x', 'width'))
 motor_fig.y_range.callback = Callback(
-    args=dict(source=motor_source, range=motor_fig.y_range), code=jscode % ('y', 'height'))
-
-#export plot to html and return
-#plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
-plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig)
-show(plot_grid, browser=None)
-
-import sys
-sys.exit()
+    args=dict(source=range_source, range=motor_fig.y_range), code=jscode%('y', 'height'))
 
 s2 = motor_source.clone()
 p2 = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
