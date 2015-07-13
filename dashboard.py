@@ -256,7 +256,7 @@ columns = [
 	TableColumn(field='repair', title='repair'),
 	TableColumn(field='total', title='total'),
 ]
-N_table = DataTable(source=s2, columns=columns, width=800, height=300)
+N_table = DataTable(source=s2, columns=columns, width=1000, height=300)
 
 #export plot to html and return
 plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
