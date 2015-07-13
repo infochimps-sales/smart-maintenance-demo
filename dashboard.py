@@ -70,9 +70,9 @@ dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max 
 	palette='RdYlGn8')
 dec_fig.x('x', 'y', size='size', source=source, fill_alpha=0.5, fill_color='navy', 
 	line_color='navy', line_width=1, line_alpha=0.5)
-dec_fig.text([100], [15], ['click-drag to zoom &'], text_color=['lightslategray'], 
+dec_fig.text([100], [15], ['click-drag to zoom &'], text_color=['black'], text_alpha=1.0, 
     text_font_style='italic', text_font_size=['16pt'])
-dec_fig.text([100], [10], ['mouse-over to view data'], text_color=['lightslategray'], 
+dec_fig.text([100], [10], ['mouse-over to view data'], text_color=['black'], text_alpha=0.8, 
     text_font_style='italic', text_font_size=['16pt'])
 hover = dec_fig.select(dict(type=HoverTool))
 hover.tooltips = [
