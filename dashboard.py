@@ -70,8 +70,10 @@ dec_fig.image(image=[-ttf], x=[T_min], y=[P_min], dw=[T_max - T_min], dh=[P_max 
 	palette='RdYlGn8')
 dec_fig.x('x', 'y', size='size', source=source, fill_alpha=0.5, fill_color='navy', 
 	line_color='navy', line_width=1, line_alpha=0.5)
-dec_fig.text([115], [15], ['click-drag to zoom'])
-dec_fig.text([115], [8], ['& mouse-over to see data'])
+dec_fig.text([100], [15], ['click-drag to zoom &'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['16pt'])
+dec_fig.text([100], [10], ['mouse-over to view data'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['16pt'])
 hover = dec_fig.select(dict(type=HoverTool))
 hover.tooltips = [
 	("Temperature", "@x"),
@@ -89,7 +91,7 @@ source = ColumnDataSource(
 		zero = money.cumulative_revenue*0,
 	)
 )
-earn_fig = figure(title='Cumulative Earnings & Expenses    (click-drag to zoom)', 
+earn_fig = figure(title='Cumulative Earnings & Expenses', 
     x_axis_label='Time', y_axis_label='Earnings & Expenses    (M$)', 
     tools='box_zoom,reset,hover,crosshair', 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[0, 120])
@@ -111,6 +113,8 @@ earn_fig.text([245], [101], ['scheduled'])
 earn_fig.text([245], [90], ['maintenance'])
 earn_fig.text([445], [101], ['predictive'])
 earn_fig.text([445], [90], ['maintenance'])
+earn_fig.text([880], [44], ['click-drag & mouse-over'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['14pt'])
 hover = earn_fig.select(dict(type=HoverTool))
 hover.tooltips = [
 	("         Time", "@Time"),
@@ -119,16 +123,15 @@ hover.tooltips = [
 ]
 
 #plot revenue vs time
-rev_fig = figure(title='Cumulative Revenue    (click-drag to zoom)', x_axis_label='Time', 
+rev_fig = figure(title='Cumulative Revenue', x_axis_label='Time', 
 	y_axis_label='Revenue    (M$)', tools='box_zoom,reset,hover,crosshair', 
 	width=1000, plot_height=300, x_range=[0, 1200], y_range=[-15, 10])
 rev_fig.title_text_font_size = '15pt'
 rev_fig.xaxis.axis_label_text_font_size = '11pt'
 rev_fig.yaxis.axis_label_text_font_size = '11pt'
-rev_fig.line('Time', 'revenue', color='green', source=source, line_width=5, legend='revenue')
+rev_fig.line('Time', 'revenue', color='green', source=source, line_width=5)
 rev_fig.line('Time', 'zero', color='purple', source=source, line_width=3, alpha=0.5, 
 	line_dash=[10, 5])
-rev_fig.legend.orientation = "bottom_right"
 rev_fig.patch([0, 200, 200, 0], [-15, -15, 10, 10], color='lightsalmon', alpha=0.35, 
 	line_width=0)
 rev_fig.patch([200, 400, 400, 200], [-15, -15, 10, 10], color='gold', alpha=0.35, 
@@ -140,11 +143,18 @@ rev_fig.text([245], [5.3], ['scheduled'])
 rev_fig.text([245], [2.7], ['maintenance'])
 rev_fig.text([445], [5.3], ['predictive'])
 rev_fig.text([445], [2.7], ['maintenance'])
+rev_fig.text([880], [-9], ['click-drag & mouse-over'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['14pt'])
 hover = rev_fig.select(dict(type=HoverTool))
 hover.tooltips = [
 	("         Time", "@Time"),
 	(" revenue (M$)", "@revenue"),
 ]
+
+plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
+show(plot_grid, browser=None)
+
+
 
 #calculate the number of working & broken motors vs time
 N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
