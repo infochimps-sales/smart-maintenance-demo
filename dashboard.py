@@ -159,20 +159,21 @@ motor_source = ColumnDataSource(
 		total = N.total.tolist(),
 	)
 )
-motor_fig = figure(title='Number of Motors    (click-drag to zoom)', x_axis_label='Time', 
+ttl = "Number of Motors:    click-drag to zoom, then click `Box Select' icon & click-drag to see updates in table below"
+motor_fig = figure(title=ttl, x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_zoom, box_select, hover, reset',
 	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
 motor_fig.title_text_font_size = '15pt'
 motor_fig.xaxis.axis_label_text_font_size = '11pt'
 motor_fig.yaxis.axis_label_text_font_size = '11pt'
 motor_fig.circle('Time', 'total', color='blue', source=motor_source, legend='total', 
-    alpha=1.0, size=5)
+    alpha=1.0, size=3.5)
 motor_fig.circle('Time', 'operating', color='green', source=motor_source, legend='operating', 
-    alpha=1.0, size=5)
+    alpha=1.0, size=3.5)
 motor_fig.circle('Time', 'maintenance', color='orange', source=motor_source,
-    legend='maintenance', alpha=0.75, size=5)
+    legend='maintenance', alpha=0.75, size=3.5)
 motor_fig.circle('Time', 'repair', color='red', source=motor_source, legend='repair', 
-     alpha=1.0, size=5)
+     alpha=1.0, size=3.5)
 motor_fig.line('Time', 'total', color='blue', source=motor_source, legend='total', 
     alpha=1.0, line_width=2)
 motor_fig.line('Time', 'operating', color='green', source=motor_source, legend='operating', 
