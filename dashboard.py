@@ -151,11 +151,6 @@ hover.tooltips = [
 	(" revenue (M$)", "@revenue"),
 ]
 
-plot_grid = vplot(dec_fig, earn_fig, rev_fig, motor_fig, vform(N_table))
-show(plot_grid, browser=None)
-
-
-
 #calculate the number of working & broken motors vs time
 N = events.groupby(['Time', 'state']).count().unstack()['id'].reset_index()
 N.fillna(value=0, inplace=True)
