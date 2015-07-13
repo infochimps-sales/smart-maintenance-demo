@@ -3,7 +3,7 @@
 #dashboard the results of the smart maintenance demo
 #by Joe Hahn, jhahn@infochimps.com, 9 July 2015 
 #
-#to execute:    /home/$USER/anaconda/bin/python dashboard.py
+#to execute:    /home/$USER/anaconda/bin/python dashboard.py > /dev/null
 #
 
 #get imports 

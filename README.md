@@ -41,13 +41,12 @@ Monitor this job's progress using the Spark UI by browsing:
 
 
 After the spark job completes, execute this script to dashboard the results of the 
-smart-maintenance simulation:
+smart-maintenance simulation,
 
-    /home/$USER/anaconda/bin/python dashboard.py
+    /home/$USER/anaconda/bin/python dashboard.py > /dev/null
 
 
-and press q, y to dismiss the ELinks console then appears. And browse the
-resulting dashboard here:
+and then browse the resulting dashboard at
 
     http://cdh-foyer.platform.infochimps:12321/dashboard.html
 
