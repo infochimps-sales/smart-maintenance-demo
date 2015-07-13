@@ -100,11 +100,11 @@ by time t=870, and have earned $6M at the end of this simulation.
 So this demo's main punchline is: _get Smart Maintenance on the BDPaas to optimize
 equipment maintenance schedules and to  dramatically reduce expenses and grow earnings._
 
-The following plot is some additional dashboard-fu. Again
-click-drag to zoom in on region in the plot. 
+The following plot is some additional dashboard-fu. Again,
+click-drag to zoom in some region within this plot. 
 Then click the _Box Select_ icon in the upper right and click-drag again. This plot is also
 linked to the table below, and clicking on any column heading there will force the table
-to update and display only data that is highlighted in the plot above.
+to update and display only those datapoints that are highlighted in the upper plot.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/motors.png)
 
