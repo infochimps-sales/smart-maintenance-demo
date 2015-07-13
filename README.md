@@ -55,12 +55,17 @@ and then browse the resulting dashboard at
 
 This demo calculates the operational history of 200 simulated motors over time. Initially these
 motors are evolved using a _run-to-fail_ maintenance strategy. Each motor has two knobs,
-Pressure (P) and Temperature (T), and the size of the dots in the following scatterplot
-shows that the longest-lived motors have (P,T) settings in these intervals: 40 < P < 60 and T < 100,
-with motors being progressively shorter-lived the further their P,T setting are from the
-sweet spot at P~50 and T<100: 
+Pressure (P) and Temperature (T), and those motors having (P,T) settings in the interval
+40 < P < 60 and T < 100 are longest-lived, while motors having P,T setting further from the
+sweet spot at P~50 and T<100 are progressively shorter lived. This design trend is also
+indicated by the sizes of the crossed in the following scatterplot, which indicate
+engine lifetime versus (P,T).
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/decision_surface.png)
+
+All plots in this demo's dashboard (which you browse at http://cdh-foyer.platform.infochimps:12321/dashboard.html)
+are interactive, click-drag to zoom on a selection, and mouse-over individual data
+to see their their values.
 
 The demo evolves these motors in run-to-fail mode until time t=200, and then (just for kicks)
 it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400.
