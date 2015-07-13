@@ -117,10 +117,6 @@ If the dashboard is not visible in the browser, the webserver likely needs to be
     /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
 
 
-dashboard.py also launches an ELinks console that isn't needed, that code needs to be
-tweaked so that doesn't happen.
- 
-
 ###Debugging notes:
         
 
