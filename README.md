@@ -65,7 +65,7 @@ how engine lifetime varies with P,T.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/decision_surface.png)
 
-All plots in this demo's dashboard (which you browse at http://cdh-foyer.platform.infochimps:12321/dashboard.html)
+All plots in this demo's dashboard (see http://cdh-foyer.platform.infochimps:12321/dashboard.html)
 are interactive; click-drag to zoom in on a region, and mouse-over individual data
 to see their their values.
 
