@@ -87,7 +87,7 @@ zone is rather fluid.
 
 Each operating engine also generate earnings at a rate of $1000/day, while engines that are
 being maintained instead generate modest expenses (-$200/day), with failed engines generating
-larger expenses (-$2000/day) while in the shop for repairs. The following shows
+larger expenses (-$2000/day) while in the shop for repairs. The following plots show
 that operating these engines in _run-to-fail_ mode is very expensive, resulting in
 cumulative losses of -$13M by time t=200. This plot also shows that operating these
 engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly balancing expenses.
@@ -97,10 +97,16 @@ by time t=870, and have earned $6M at the end of this simulation.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/revenue.png)
 
-![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/motors.png)
-
 So this demo's main punchline is: _get Smart Maintenance on the BDPaas to optimize
 equipment maintenance schedules and to  dramatically reduce expenses and grow earnings._
+
+The following plot is merely some dashboard-fu. Click-drag to zoom in on region in the plot. 
+Then click the _Box Select_ icon in the upper right and click-drag again. This plot is also
+linked to the table below, and clicking on any column heading there will force the table
+to update and display only data that is highlighted in the plot above.
+
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/motors.png)
+
 
 
 ###Known issues:
