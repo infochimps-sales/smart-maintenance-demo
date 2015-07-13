@@ -77,6 +77,11 @@ hover.tooltips = [
 	("measured lifetime", "@ttf"),
 ]
 
+
+import sys
+sys.exit()
+
+
 #plot earnings vs time
 source = ColumnDataSource(
 	data=dict(
