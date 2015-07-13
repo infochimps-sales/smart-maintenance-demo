@@ -55,7 +55,7 @@ and then browse the resulting dashboard at
 
 This demo calculates the operational history of 200 simulated motors over time. Initially these
 motors are evolved using a _run-to-fail_ maintenance strategy, and the motor data collected
-then is shown below. Each motor has two knobs,
+during this period is shown below. Each motor has two knobs,
 Pressure (P) and Temperature (T), and motors having P,T settings in the interval
 40 < P < 60 and T < 100 are by design longest lived, while motors 
 having P,T setting further from the
