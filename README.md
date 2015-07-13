@@ -78,14 +78,12 @@ engine lifetimes versus their (P,T) settings. Once trained, the SVM algorithm is
 able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
 estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved using
 _predictive-maintenance_, which simply sends an engine into maintenance
-when its predicted time-to-fail is one day hence. The coloring in the above diagram
+when its predicted time-to-fail is one day hence. The coloring in the above plot
 also shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
-(P,T) parameter space. Note that the SVM's predicted time-to-fail does indeed recover
+P,T parameter space. Note that the SVM's predicted time-to-fail does indeed recover
 the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
 zone is rather fluid.
-
-![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/revenue.png)
 
 Each operating engine also generate earnings at a rate of $1000/day, while engines that are
 being maintained instead generate modest expenses (-$200/day), with failed engines generating
@@ -96,6 +94,8 @@ engines using a _scheduled-maintenance_ strategy is a wash, with earnings nearly
 But switching to a _predictive-maintenance_ strategy at t=400 then results in earnings that
 exceeds expenses, so much so that the operators of these engines recover all lost earnings
 by time t=870, and have earned $6M at the end of this simulation.
+
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/revenue.png)
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/motors.png)
 
