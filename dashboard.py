@@ -166,7 +166,7 @@ motor_source = ColumnDataSource(
 		total = N.total.tolist(),
 	)
 )
-ttl = "Number of Motors:    click-drag to zoom, then click `Box Select' icon & click-drag to see updates in table below"
+ttl = "Number of Motors: this plot is linked to table below"
 motor_fig = figure(title=ttl, x_axis_label='Time', 
 	y_axis_label='Number of motors', tools='box_zoom, box_select, hover, reset',
 	plot_width=1000, plot_height=300, x_range=[0, 1200], y_range=[-10, 210])
@@ -201,6 +201,11 @@ motor_fig.text([245], [173], ['scheduled'])
 motor_fig.text([245], [155], ['maintenance'])
 motor_fig.text([445], [173], ['predictive'])
 motor_fig.text([445], [155], ['maintenance'])
+motor_fig.text([670], [160], ['click-drag to zoom & then'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['14pt'])
+motor_fig.text([670], [140], ['click Box Select icon & click-drag'], text_color=['lightslategray'], 
+    text_font_style='italic', text_font_size=['14pt'])
+
 hover = motor_fig.select(dict(type=HoverTool))
 hover.tooltips = [
 	("Time", "@Time"),
@@ -245,7 +250,7 @@ motor_source.callback = Callback(args=dict(s2=s2), code="""
 
 #display N table
 columns = [
-	TableColumn(field='Time', title='Time'),
+	TableColumn(field='Time', title='Time: click to update table'),
 	TableColumn(field='operating', title='operating'),
 	TableColumn(field='maintenance', title='maintenance'),
 	TableColumn(field='repair', title='repair'),
