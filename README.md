@@ -56,17 +56,17 @@ and then browse the resulting dashboard at
 This demo calculates the operational history of 200 simulated motors over time. Initially these
 motors are evolved using a _run-to-fail_ maintenance strategy, and the motor data collected
 then is shown below. Each motor has two knobs,
-Pressure (P) and Temperature (T), and motors having (P,T) settings in the interval
+Pressure (P) and Temperature (T), and motors having P,T settings in the interval
 40 < P < 60 and T < 100 are by design longest lived, while motors 
 having P,T setting further from the
 sweet spot at P~50 and T<100 are progressively shorter lived. This trend is also
 indicated by the size of the crosses in the following scatterplot, which shows
-how engine lifetime varies with (P,T).
+how engine lifetime varies with P,T.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/decision_surface.png)
 
 All plots in this demo's dashboard (which you browse at http://cdh-foyer.platform.infochimps:12321/dashboard.html)
-are interactive, click-drag to zoom on a selection, and mouse-over individual data
+are interactive; click-drag to zoom in on a region, and mouse-over individual data
 to see their their values.
 
 The demo evolves these motors in run-to-fail mode until time t=200, and then (just for kicks)
@@ -78,11 +78,12 @@ engine lifetimes versus their (P,T) settings. Once trained, the SVM algorithm is
 able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
 estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved using
 _predictive-maintenance_, which simply sends an engine into maintenance
-when its predicted time-to-fail is one day hence. The following diagram shows the SVM's
+when its predicted time-to-fail is one day hence. The coloring in the above diagram
+also shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
-(P,T) parameter space. Note that SVM's predicted time-to-fail does indeed recover
+(P,T) parameter space. Note that the SVM's predicted time-to-fail does indeed recover
 the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
-zone is somewhat ragged.
+zone is rather fluid.
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/revenue.png)
 
