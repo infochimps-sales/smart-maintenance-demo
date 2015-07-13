@@ -60,7 +60,7 @@ shows that the longest-lived motors have (P,T) settings in these intervals: 40 <
 with motors being progressively shorter-lived the further their P,T setting are from the
 sweet spot at P~50 and T<100: 
 
-![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/fail_factor.png)
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/decision_surface.png)
 
 The demo evolves these motors in run-to-fail mode until time t=200, and then (just for kicks)
 it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400.
@@ -77,7 +77,7 @@ so-called _prediction surface_, which map's the engines' predicted time-to-fail 
 the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
 zone is somewhat ragged.
 
-![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/predicted_time_to_fail.png)
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/revenue.png)
 
 Each operating engine also generate earnings at a rate of $1000/day, while engines that are
 being maintained instead generate modest expenses (-$200/day), with failed engines generating
@@ -89,7 +89,7 @@ But switching to a _predictive-maintenance_ strategy at t=400 then results in ea
 exceeds expenses, so much so that the operators of these engines recover all lost earnings
 by time t=870, and have earned $6M at the end of this simulation.
 
-![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/figs/revenue.png)
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/master/slides/motors.png)
 
 So this demo's main punchline is: _get Smart Maintenance on the BDPaas to optimize
 equipment maintenance schedules and to  dramatically reduce expenses and grow earnings._
