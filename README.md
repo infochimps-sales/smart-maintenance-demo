@@ -83,7 +83,7 @@ also shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
 P,T parameter space. Note that the SVM's predicted time-to-fail does indeed recover
 the engines' sweet-spot at 40 < P < 60 and T < 100, though the edges of the predicted stable
-zone is rather fluid.
+zone are rather fluid.
 
 Each operating engine also generate earnings at a rate of $1000/day, while engines that are
 being maintained instead generate modest expenses (-$200/day), with failed engines generating
