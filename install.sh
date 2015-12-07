@@ -9,14 +9,14 @@ hosts=( 'cdh-foyer' 'cdh-nn' 'cdh-rm' 'cdh-hh' )
 for host in "${hosts[@]}"; do
     ssh -A $host 'echo; echo; echo installing python libraries on $(hostname)...;
         echo; echo;
-        rm -rf Anaconda-2.1.0-Linux-x86_64.sh* anaconda;
+        rm -rf Anaconda-2.1.0-Linux-x86_64.sh* Anaconda-2.3.0-Linux-x86_64.sh* anaconda;
         #download anaconda
         #wget -nv http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh;
         wget -nv https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda-2.3.0-Linux-x86_64.sh;
         #install anaconda
-        chmod +x Anaconda-2.3.0-Linux-x86_64.sh;
-        ./Anaconda-2.1.0-Linux-x86_64.sh -b;
-        rm -rf Anaconda-2.1.0-Linux-x86_64.sh;
+        chmod +x Anaconda-2.3.0-Linux-x86_64.sh
+        ./Anaconda-2.3.0-Linux-x86_64.sh -b
+        rm -rf Anaconda-2.3.0-Linux-x86_64.sh;
         #upgrade bokeh
         echo y | /home/$USER/anaconda/bin/conda install bokeh;'
 done
