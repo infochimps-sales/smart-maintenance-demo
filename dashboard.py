@@ -223,30 +223,30 @@ jscode="""
     data['%s'] = [end - start];
     source.trigger('change');
 """
-motor_fig.x_range.callback = Callback(
-    args=dict(source=range_source, range=motor_fig.x_range), code=jscode%('x', 'width'))
-motor_fig.y_range.callback = Callback(
-    args=dict(source=range_source, range=motor_fig.y_range), code=jscode%('y', 'height'))
+#motor_fig.x_range.callback = Callback(
+#    args=dict(source=range_source, range=motor_fig.x_range), code=jscode%('x', 'width'))
+#motor_fig.y_range.callback = Callback(
+#    args=dict(source=range_source, range=motor_fig.y_range), code=jscode%('y', 'height'))
 
 s2 = motor_source.clone()
-motor_source.callback = Callback(args=dict(s2=s2), code="""
-    var inds = cb_obj.get('selected')['1d'].indices;
-    var d1 = cb_obj.get('data');
-    var d2 = s2.get('data');
-    d2['Time'] = [];
-    d2['operating'] = [];
-    d2['maintenance'] = [];
-    d2['repair'] = [];
-    d2['total'] = [];
-    for (i = 0; i < inds.length; i++) {
-        d2['Time'].push(d1['Time'][inds[i]]);
-        d2['operating'].push(d1['operating'][inds[i]]);
-        d2['maintenance'].push(d1['maintenance'][inds[i]]);
-        d2['repair'].push(d1['repair'][inds[i]]);
-        d2['total'].push(d1['total'][inds[i]]);
-    }
-    s2.trigger('change');
-""")
+#motor_source.callback = Callback(args=dict(s2=s2), code="""
+#    var inds = cb_obj.get('selected')['1d'].indices;
+#    var d1 = cb_obj.get('data');
+#    var d2 = s2.get('data');
+#    d2['Time'] = [];
+#    d2['operating'] = [];
+#    d2['maintenance'] = [];
+#    d2['repair'] = [];
+#    d2['total'] = [];
+#    for (i = 0; i < inds.length; i++) {
+#        d2['Time'].push(d1['Time'][inds[i]]);
+#        d2['operating'].push(d1['operating'][inds[i]]);
+#        d2['maintenance'].push(d1['maintenance'][inds[i]]);
+#        d2['repair'].push(d1['repair'][inds[i]]);
+#        d2['total'].push(d1['total'][inds[i]]);
+#    }
+#    s2.trigger('change');
+#""")
 
 #display N table
 columns = [
