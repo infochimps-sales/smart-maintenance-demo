@@ -27,7 +27,7 @@ hadoop nodes, and is done in 5 minutes:
 
 ###To execute:
 
-To submit this spark job to Yarn for execution:
+To submit this spark job to Yarn for execution: 
 
     PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit --master yarn-client \
         --num-executors 3 --executor-cores 6 --executor-memory 1G smart_maint.py
