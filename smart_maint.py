@@ -98,8 +98,6 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
-import sys
-sys.exit()
 print 'maintenance mode:', motors.first().maint_type
 import sys
 sys.exit()
