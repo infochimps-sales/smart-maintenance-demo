@@ -103,7 +103,7 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
     #if (t%10 == 9): motors = motors.sortBy(lambda m: m.id)
-    motors = motors.sortBy(lambda m: m.id)
+    print t
 
 import sys
 sys.exit()
