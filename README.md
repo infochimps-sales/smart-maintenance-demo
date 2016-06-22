@@ -97,13 +97,6 @@ by time t=950, and have earned $6M at the end of this simulation.
 So this demo's main punchline is: _get Smart Maintenance on CAPS to optimize
 equipment maintenance schedules and to dramatically reduce expenses and grow earnings._
 
-###Known issues:
-
-
-If the png images are not browse-able, restart the webserver on the hadoop foyer node:
-
-    /home/$USER/anaconda/bin/python -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
-
 
 ###Debugging notes:
         
@@ -119,21 +112,8 @@ To benchmark spark's commandline settings:
 One can also execute this demo line-by-line at the python command line using pyspark,
 this is useful when debugging code:
 
-    PYSPARK_PYTHON=ipython pyspark
+    PYSPARK_PYTHON=apython pyspark
 
 
 Then copy-n-past each line from smart_maint_spark.py into the python command line, 
 EXCEPT for line 25: sc = SparkContext(conf=conf... 
-
-To get pyspark to use ipython (rather than python):
-
-    sudo rm -f /usr/bin/python /usr/bin/ipython
-    sudo ln -s /home/$USER/anaconda/bin/python /usr/bin/python
-    sudo ln -s /home/$USER/anaconda/bin/ipython /usr/bin/ipython
-    IPYTHON=1 pyspark
-
-
-And to undo the above changes:
- 
-    sudo rm /usr/bin/python /usr/bin/ipython
-    sudo ln -s /usr/bin/python2.6 /usr/bin/python

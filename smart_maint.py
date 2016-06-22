@@ -4,7 +4,7 @@
 #by Joe Hahn, jhahn@infochimps.com, 22 June 2015 
 #
 #submit this job to Yarn using spark-submit:
-#    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit smart_maint.py
+#    PYSPARK_PYTHON=apython spark-submit smart_maint.py
 #
 #execution time = 2.5 minutes
 
