@@ -91,7 +91,7 @@ motors = sc.parallelize(
     for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
 
 #run motors using run-to-fail maintenance 
-print 'maintenance mode:', motors.first().maint_type
+print 'maintenance mode: ' + motors.first().maint_type + '\n\n'
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
@@ -100,8 +100,7 @@ for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
-print 'maintenance mode:', motors.first().maint_type
-print
+print 'maintenance mode: ' + motors.first().maint_type + '\n\n'
 for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
@@ -115,12 +114,12 @@ motors = motors.map(lambda m: m.train_motors(clf, x_avg, x_std))
 #run motors using predictive maintenance
 maint_type = 'predictive'
 motors = motors.map(lambda m: m.set_maint_type(maint_type))
-print 'maintenance mode:', motors.first().maint_type
+print 'maintenance mode: ' + motors.first().maint_type  + '\n\n'
 print
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
+    if (t%200 == 199): motors = motors.sortBy(lambda m: m.id)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
