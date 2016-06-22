@@ -114,7 +114,7 @@ To benchmark spark's commandline settings:
 One can also execute this demo line-by-line at the python command line using pyspark,
 this is useful when debugging code:
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python pyspark
+    PYSPARK_PYTHON=ipython pyspark
 
 
 Then copy-n-past each line from smart_maint_spark.py into the python command line, 
