@@ -27,22 +27,14 @@ First clone this github repo to your home directory on the hadoop foyer node:
     git fetch --all
     git checkout vanilla
     git branch -a
-    
-   
-Then execute the installer, this will download and install some python libraries to all 
-hadoop nodes, and is done in 5 minutes:
-
-    ./install.sh
 
 
 ###To execute:
 
 To submit this spark job to Yarn for execution:
 
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
-        --master yarn-client --num-executors 3 --executor-cores 6 --executor-memory 4G \
-        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
-        smart_maint.py
+    PYSPARK_PYTHON=apython spark-submit --master yarn --num-executors 13 --executor-cores 5 \
+        --executor-memory 1G --driver-memory 1G smart_maint.py
 
 
 Monitor this job's progress using the Spark UI by browsing:
