@@ -12,17 +12,18 @@ maintenance on 200 simulated motors, with most of the computations being done in
 parallell across the Hadoop cluster's datanodes using Spark.
 
 
-###assumptions:
+###Assumptions:
 
 This repo is installed and executed on a vanilla-cdh Hadoop cluster that was created
 per https://github.com/infochimps-sales/vanilla-cdh-launch/tree/ubuntu14.04
 
 
-###To install:
+###Installation:
 
 First clone this github repo to your home directory on the hadoop foyer node:
 
     cd; git clone git@github.com:infochimps-sales/smart-maintenance-demo.git
+    cd smart-maintenance-demo
     git fetch --all
     git checkout vanilla
     git branch -a
@@ -31,7 +32,6 @@ First clone this github repo to your home directory on the hadoop foyer node:
 Then execute the installer, this will download and install some python libraries to all 
 hadoop nodes, and is done in 5 minutes:
 
-    cd smart-maintenance-demo
     ./install.sh
 
 
