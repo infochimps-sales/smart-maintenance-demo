@@ -28,7 +28,7 @@ First clone this github repo to your home directory on the hadoop foyer node:
     git branch -a
 
 
-###To execute:
+###Execution:
 
 To submit this spark job to Yarn for execution:
 
