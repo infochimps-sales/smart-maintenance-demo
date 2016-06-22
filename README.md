@@ -2,18 +2,30 @@
 
 by Joe Hahn,
 joe.hahn@infochimps.com,
-20 May 2015
+22 June 2016
+git branch=vanilla
 
-This is the Github repository for the v2.0 branch of the Smart Maintenance Demo for Hadoop.
+This is the Github repository for the _vanilla_ branch of the Smart Maintenance Demo
+that was adapted to run on the vanilla-cdh Hadoop cluster.
 This demo uses the Support Vector Machines (SVM) algorithm to perform predictive
 maintenance on 200 simulated motors, with most of the computations being done in
 parallell across the Hadoop cluster's datanodes using Spark.
+
+
+###assumptions:
+
+This repo is installed and executed on a vanilla-cdh Hadoop cluster that was created
+per https://github.com/infochimps-sales/vanilla-cdh-launch/tree/ubuntu14.04
+
 
 ###To install:
 
 First clone this github repo to your home directory on the hadoop foyer node:
 
-    cd; git clone git@github.com:infochimps-sales/smart-maintenance-demo.git 
+    cd; git clone git@github.com:infochimps-sales/smart-maintenance-demo.git
+    git fetch --all
+    git checkout vanilla
+    git branch -a
     
    
 Then execute the installer, this will download and install some python libraries to all 
