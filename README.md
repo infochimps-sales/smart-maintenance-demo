@@ -104,10 +104,8 @@ If the png images are not browse-able, restart the webserver on the hadoop foyer
 To benchmark spark's commandline settings:
 
     START=$(date +%s); \
-    PYSPARK_PYTHON=/home/$USER/anaconda/bin/python spark-submit \
-        --master yarn-client --num-executors 3 --executor-cores 6 --executor-memory 4G \
-        --driver-java-options "-Dlog4j.configuration=file:///home/$USER/smart-maintenance-demo/log4j.warn-only.properties" \
-        smart_maint.py; \
+    PYSPARK_PYTHON=apython spark-submit --master yarn --num-executors 13 --executor-cores 5 \
+        --executor-memory 1G --driver-memory 1G smart_maint.py; \
     echo "execution time (seconds) = "$(( $(date +%s) - $START ))
 
 
