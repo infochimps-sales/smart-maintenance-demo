@@ -95,7 +95,10 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
+    #if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
+
+#inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
+motors = motors.sortBy(lambda m: m.id)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
