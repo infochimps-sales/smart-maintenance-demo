@@ -36,13 +36,12 @@ To submit this spark job to Yarn for execution:
         --executor-memory 1G --driver-memory 1G smart_maint.py
 
 
-Monitor this job's progress using by browsing the Yarn Resource Manager at:
+Monitor this job's progress using by browsing the Yarn Resource Manager at
 
-    http://rm.ec2.internal:7180/cmf/home
+    http://rm.ec2.internal:8088/cluster
 
 
-and selecting Cloudera Manager > Home > Yarn > Resource Manager UI > application_ID# > Application Master
-
+and selecting application_ID# > Application Master
 
 This spark job's output is three png images that can be viewed by first starting
 a webserver via
