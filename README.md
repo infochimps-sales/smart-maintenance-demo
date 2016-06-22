@@ -1,9 +1,9 @@
 ## The Smart Maintenance Demo
 
-by Joe Hahn,
-joe.hahn@infochimps.com,
-22 June 2016
-git branch=vanilla
+by Joe Hahn,<br />
+joe.hahn@infochimps.com,<br />
+22 June 2016<br />
+git branch=vanilla<br />
 
 This is the Github repository for the _vanilla_ branch of the Smart Maintenance Demo
 that was adapted to run on the vanilla-cdh Hadoop cluster.
