@@ -80,6 +80,9 @@ start_time_sec = time.clock()
 #set maintenance type to: 'run-to-fail', 'scheduled', or 'predictive'
 maint_type = 'run-to-fail'
 
+import sys
+sys.exit()
+
 #create parallelized list of motors
 #num_partitions = 3*7*1    #3datanotes*(7 of 8 vcpus on m3.2xl)*1partitions_per_cpu exec_time=155sec
 num_partitions = 3*7*2     #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu exec_time=150sec
