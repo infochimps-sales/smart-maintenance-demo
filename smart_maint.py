@@ -95,10 +95,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_runtofail, Time_stop_runtofail):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    #if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
-
-#inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-motors = motors.sortBy(lambda m: m.id)
+    if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
 
 #run motors using scheduled maintenance
 maint_type = 'scheduled'
@@ -108,9 +105,6 @@ for t in np.arange(Time_start_sched_maint, Time_stop_sched_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
     if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
-
-import sys
-sys.exit()
 
 #train SVM to do predictive maintenance 
 motors_local = motors.collect()
@@ -124,7 +118,7 @@ print 'maintenance mode:', motors.first().maint_type
 for t in np.arange(Time_start_pred_maint, Time_stop_pred_maint):
     motors = motors.map(lambda m: m.operate())
     #inelegant way to trigger lazy execution and avoid 'excessively deep recursion' error
-    if (t%300 == 299): motors = motors.sortBy(lambda m: m.id)
+    if (t%100 == 99): motors = motors.sortBy(lambda m: m.id)
 
 #get operating stats
 pd.set_option('display.expand_frame_repr', False)
