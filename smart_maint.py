@@ -80,9 +80,6 @@ start_time_sec = time.clock()
 #set maintenance type to: 'run-to-fail', 'scheduled', or 'predictive'
 maint_type = 'run-to-fail'
 
-import sys
-sys.exit()
-
 #create parallelized list of motors
 #num_partitions = 3*7*1    #3datanotes*(7 of 8 vcpus on m3.2xl)*1partitions_per_cpu exec_time=155sec
 num_partitions = 3*7*2     #3datanotes*(7 of 8 vcpus on m3.2xl)*2partitions_per_cpu exec_time=150sec
@@ -92,6 +89,9 @@ motors = sc.parallelize(
         Temp_0, delta_Temp, Pressure_0, delta_Pressure, maint_interval, maint_duration, 
         repair_duration, pred_maint_buffer_Time, training_axes, prediction_axis)
     for motor_id in np.arange(N_motors) ], numSlices=num_partitions )
+
+import sys
+sys.exit()
 
 #run motors using run-to-fail maintenance 
 print 'maintenance mode:', motors.first().maint_type
