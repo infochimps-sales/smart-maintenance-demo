@@ -24,7 +24,6 @@ First clone this github repo to your home directory on the hadoop foyer node:
 
     cd; git clone git@github.com:infochimps-sales/smart-maintenance-demo.git
     cd smart-maintenance-demo
-    git fetch --all
     git checkout vanilla
     git branch -a
 
