@@ -42,9 +42,15 @@ Monitor this job's progress using the Spark UI by browsing:
     Cloudera Manager -> Home -> Yarn -> Resource Manager UI -> application_ID# -> Application Master
 
 
-The output of this spark job is three png images that can be viewed by browsing
+This spark job's output is three png images that can be viewed by first starting
+a webserver via
 
-    http://cdh-foyer.platform.infochimps:12321/figs
+    apython -m SimpleHTTPServer 12321 > /dev/null 2>&1 &
+
+
+and then browsing
+
+    foyer.ec2.internal:12321/figs
     
 
 ###The demo's storyline:
