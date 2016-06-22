@@ -71,7 +71,7 @@ During scheduled-maintenance operation, every engine is sent to maintenance ever
 this simply removes some cruft and temporarily reduces the likelihood of motor failure.
 Meanwhile the SVM algorithm is trained on the run-to-fail data, which is simply the observed
 engine lifetimes versus their (P,T) settings. Once trained, the SVM algorithm is now 
-able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
+able to use an engine's (P,T) settings to predict that engine's
 estimated time-to-fail. Thereafter (at times t > 400 days) the engines are evolved using
 _predictive-maintenance_, which simply sends an engine into maintenance
 when its predicted time-to-fail is one day hence. The following diagram shows the SVM's
@@ -92,7 +92,7 @@ But switching to a _predictive-maintenance_ strategy at t=400 then results in ea
 exceeds expenses, so much so that the operators of these engines recover all lost earnings
 by time t=870, and have earned $6M at the end of this simulation.
 
-![](https://github.com/infochimps-sales/smart-maintenance-demo/vanilla/master/figs/revenue.png)
+![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/vanilla/master/figs/revenue.png)
 
 So this demo's main punchline is: _get Smart Maintenance on CAPS to optimize
 equipment maintenance schedules and to dramatically reduce expenses and grow earnings._
