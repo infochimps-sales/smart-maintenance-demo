@@ -65,14 +65,14 @@ sweet spot at P~50 and T<100:
 
 ![](https://github.com/infochimps-sales/smart-maintenance-demo/blob/vanilla/figs/fail_factor.png)
 
-The demo evolves these motors in run-to-fail mode until time t=200, and then (just for kicks)
-it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400.
+The demo evolves these motors in run-to-fail mode until time t=200 days, and then (just for kicks)
+it switches to a _scheduled-maintenance_ strategy during times 200 < t < 400 days.
 During scheduled-maintenance operation, every engine is sent to maintenance every 5 days,
 this simply removes some cruft and temporarily reduces the likelihood of motor failure.
 Meanwhile the SVM algorithm is trained on the run-to-fail data, which is simply the observed
 engine lifetimes versus their (P,T) settings. Once trained, the SVM algorithm is now 
 able to use an engine's (P,T) settings to predict that engine's lifetime ie its 
-estimated time-to-fail. Thereafter (at times t > 400) the engines are evolved using
+estimated time-to-fail. Thereafter (at times t > 400 days) the engines are evolved using
 _predictive-maintenance_, which simply sends an engine into maintenance
 when its predicted time-to-fail is one day hence. The following diagram shows the SVM's
 so-called _prediction surface_, which map's the engines' predicted time-to-fail across the
